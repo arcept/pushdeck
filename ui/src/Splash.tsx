@@ -4,7 +4,7 @@ import "./splash.css";
 // The launch splash (Photoshop style): a black text panel on the left, an illustration on the right.
 // Drop your artwork at ui/src/assets/splash-art.png (or .jpg / .webp) and it replaces the placeholder tiles automatically.
 // Add ?nosplash to the address to skip it while developing, or ?splashhold to keep it on screen. Click or press any key to skip.
-const art = Object.values(import.meta.glob("./assets/splash-art.{png,jpg,jpeg,webp}", { eager: true, query: "?url", import: "default" }))[0] as string | undefined;
+const art = Object.values(import.meta.glob("./assets/splash-art.*", { eager: true, query: "?url", import: "default" }))[0] as string | undefined;
 const ART_CREDIT = ""; // e.g. "Artwork by Jane Doe": shown under the name once the artwork is in
 
 const PAD = ["#4f8cff", "#ff9a3c", "#a06bff", "#2fc8b8", "#ff5fa8", "#3cdc78", "#ffc93c", "#ff5a5a"];
