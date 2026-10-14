@@ -9,7 +9,7 @@ const art = Object.values(import.meta.glob("./assets/splash-art.*", { eager: tru
 const ART_CREDIT = ""; // e.g. "Artwork by Jane Doe": shown under the name once the artwork is in
 
 const PAD = ["#4f8cff", "#ff9a3c", "#a06bff", "#2fc8b8", "#ff5fa8", "#3cdc78", "#ffc93c", "#ff5a5a"];
-const MIN_LINE_MS = 380, HOLD_MS = 550, FADE_MS = 450;
+const MIN_LINE_MS = 380, HOLD_MS = 550, FADE_MS = 450, MIN_SHOW_MS = 3000;   // the splash stays up at least this long, so it can be read
 const qs = typeof location !== "undefined" ? new URLSearchParams(location.search) : new URLSearchParams();
 const hold = qs.has("splashhold");
 // In the Mac app the splash is its own small window (?splashwin) and the main window (?shell) waits behind it for the app to say go.
@@ -38,6 +38,7 @@ export default function Splash({ connected, hello, usb, profiles }: { connected:
     "Ready",
   ], [usb, profiles]);
   const target = !connected ? 0 : !hello ? 1 : lines.length - 1;
+  const born = useRef(Date.now());
   const leave = useRef(() => {});
   leave.current = () => { if (!leaving) { setLeaving(true); booted(); window.setTimeout(() => setGone(true), FADE_MS); } };
 
@@ -48,7 +49,7 @@ export default function Splash({ connected, hello, usb, profiles }: { connected:
   }, [shown, target]);
   useEffect(() => { // all steps shown: hold a moment, then fade out
     if (shown < lines.length - 1 || hold) return;
-    const t = window.setTimeout(() => leave.current(), HOLD_MS);
+    const t = window.setTimeout(() => leave.current(), Math.max(HOLD_MS, MIN_SHOW_MS - (Date.now() - born.current)));
     return () => clearTimeout(t);
   }, [shown, lines.length]);
   useEffect(() => {

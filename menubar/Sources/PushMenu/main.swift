@@ -18,6 +18,7 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationWillTerminate(_ n: Notification) { DaemonHost.shared.stop() }
 
     func applicationDidFinishLaunching(_ n: Notification) {
+        Theme.registerFonts()
         store.onIcon = { [weak self] in self?.refreshIcon() }
         refreshIcon()
         item.button?.target = self

@@ -4,6 +4,9 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- The menu bar panel now uses the same look as the app and the setup: near-black card, soft glow, one lavender accent, Quicksand type, the animated pad mark and the pale primary button.
+- Fixed: the splash window was never put on screen. It now shows, and stays at least 3 seconds.
+
 - The splash is now its own small window with a soft shadow; the main window opens at its own size once the splash is done (in a browser it still sits on the page). The setup's Permissions page fits without scrolling.
 
 - Fixed: the app no longer freezes while macOS asks to read the Downloads folder (it is read in the background).

@@ -41,9 +41,8 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         win.isOpaque = false; win.backgroundColor = .clear; win.hasShadow = false
         win.level = .floating; win.isReleasedWhenClosed = false
         win.center()
-        win.alphaValue = 0
-        win.makeKeyAndOrderFront(nil)
-        NSAnimationContext.runAnimationGroup { $0.duration = 0.25; win.animator().alphaValue = 1 }
+        win.makeKeyAndOrderFront(nil)   // fully opaque from the start: macOS does not put a window with alpha 0 on screen; the page fades its card in
+        win.orderFrontRegardless()
         splash = win
         w.load(URLRequest(url: URL(string: "?splashwin=1", relativeTo: Self.base)!))
         DispatchQueue.main.asyncAfter(deadline: .now() + 25) { [weak self] in self?.splashFinished() }   // never leave the user without a window
