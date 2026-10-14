@@ -7,9 +7,8 @@ daemon/nowplaying/libmr.dylib
 daemon/audiotap/audiotap
 experiments/display-images/*.webp
 settings.json
-menubar/Push Deck*.app/
 menubar/icon-preview.png
-.build/
+build/
 ui/dist/
 __pycache__/
 *.pyc

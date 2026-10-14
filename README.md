@@ -37,13 +37,13 @@ cd ui && npm install && npm run build && cd ..
 
 Then open <http://127.0.0.1:8472>. Keep the terminal open; closing it stops the daemon. To use another port, set `PUSH_PORT`.
 
-**Build the app**
+**Build and install the app**
 
 ```bash
-menubar/build_app.sh --install
+./install.sh
 ```
 
-This builds the standalone "Push Deck.app" into `/Applications`. It contains the daemon, the UI and its own Python environment, opens the UI in its own window, and keeps your settings and profiles in `~/Library/Application Support/Push Deck`. Its Settings tab has an "Open at login" switch.
+This builds the standalone "Push Deck.app" (it contains the daemon, the UI and its own Python environment) and puts it in `/Applications`. It asks before replacing an installed copy, and offers to quit and relaunch it. The build leftovers live in the git-ignored `build/` folder. The app opens the UI in its own window and keeps your settings and profiles in `~/Library/Application Support/Push Deck`. Its Settings tab has an "Open at login" switch.
 
 Push Deck is signed ad hoc (there is no paid Apple Developer ID behind it), so macOS calls it an unidentified developer the first time. **Right-click the app, choose Open, then Open again.** You only do this once.
 
@@ -121,8 +121,11 @@ The usage widgets show Claude's 5-hour and weekly limits and Codex's rate limits
 
 ## Development
 
+**Dev mode is the test version.** `./dev.sh` runs the daemon from this folder (with the repo's own `settings.json` and `profiles/`) and rebuilds the UI on every save. Test there; run `./install.sh` once you are happy with it.
+
 ```bash
-cd ui && npm run dev        # the UI with hot reload; it proxies /ws to the daemon
+./dev.sh                    # the test version: daemon + UI rebuilt on save, at http://127.0.0.1:8472
+cd ui && npm run dev        # alternative: the UI with hot reload; it proxies /ws to the daemon
 cd ui && npm run build      # type-checks, then builds ui/dist (served by the daemon)
 PYTHONPATH=daemon .venv/bin/python -m push_daemon.display.tokens   # rewrite ui/src/display/tokens.json from the Python design tokens
 ```
