@@ -18,6 +18,7 @@ export default function Tour() {
   const [i, setI] = useState(0);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const cap = useRef<HTMLDivElement>(null);
+  const spot = useRef<HTMLDivElement>(null), blur = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ left: -999, top: -999 });
   useEffect(() => { const f = () => { setI(0); setOn(true); }; window.addEventListener("push-tour", f); return () => window.removeEventListener("push-tour", f); }, []);
 
@@ -33,6 +34,31 @@ export default function Tour() {
     else { left = rect.left + (rect.width - W) / 2; top = rect.top + 14; }
     setPos({ left: Math.max(16, Math.min(left, vw - W - 16)), top: Math.max(16, Math.min(top, vh - h - 16)) });
   }, [rect, i]);
+  useEffect(() => { // the blur follows the spotlight every frame (also while it glides): strongest at the lit area's edges, fading out to the window edges, none inside
+    if (!on) return;
+    let id = 0;
+    const tick = () => {
+      const sp = spot.current, bl = blur.current;
+      if (sp && bl) {
+        const r = sp.getBoundingClientRect();
+        if (r.width > 4) {
+          const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          const rx = r.width / 2 * 1.42 + window.innerWidth * 0.32, ry = r.height / 2 * 1.42 + window.innerHeight * 0.32;
+          const inner = Math.round(Math.min((r.width / 2 * 1.42) / rx, (r.height / 2 * 1.42) / ry) * 100);
+          const set = (k: string, v: string) => { bl.style.setProperty(k, v); bl.style.setProperty("-webkit-" + k, v); };
+          set("mask-image", `radial-gradient(ellipse ${rx}px ${ry}px at ${cx}px ${cy}px, #000 ${inner}%, transparent 100%), linear-gradient(#000, #000)`);
+          set("mask-size", `100% 100%, ${r.width}px ${r.height}px`);
+          set("mask-position", `0 0, ${r.left}px ${r.top}px`);
+          set("mask-repeat", "no-repeat");
+          bl.style.setProperty("mask-composite", "subtract"); bl.style.setProperty("-webkit-mask-composite", "source-out");
+          bl.dataset.ready = "1"; // only show the blur once its mask is in place
+        }
+      }
+      id = requestAnimationFrame(tick);
+    };
+    id = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(id);
+  }, [on]);
   const close = useCallback(() => setOn(false), []);
   useEffect(() => {
     if (!on) return;
@@ -44,7 +70,8 @@ export default function Tour() {
   const st = STOPS[i], last = i === STOPS.length - 1;
   return (
     <div className="tour" role="dialog" aria-label="Guided tour">
-      <div className="spot" style={rect ? { left: rect.left - PAD, top: rect.top - PAD, width: rect.width + PAD * 2, height: rect.height + PAD * 2 } : { left: "50%", top: "50%", width: 0, height: 0 }} />
+      <div ref={blur} className="tblur" />
+      <div ref={spot} className="spot" style={rect ? { left: rect.left - PAD, top: rect.top - PAD, width: rect.width + PAD * 2, height: rect.height + PAD * 2 } : { left: "50%", top: "50%", width: 0, height: 0 }} />
       <div ref={cap} className="tourcap" style={{ left: pos.left, top: pos.top, width: W }} key={i}>
         <div className="tourhead"><span className="tico">{st.icon}</span><b>{st.title}</b></div>
         <p>{st.text}</p>

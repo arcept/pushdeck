@@ -915,6 +915,9 @@ class Engine:
             self.broadcast({"type": "settings", "settings": self.settings})
         elif t == "permissions":  # the first-run setup asks while it is open
             self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation()})
+        elif t == "ask_automation":  # the setup's Allow button: macOS shows its own prompt; answer in a thread so nothing else waits
+            await asyncio.get_running_loop().run_in_executor(None, permissions.ask_automation, msg.get("bundle"))
+            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation()})
         elif t == "audio_check":  # the setup's System audio row: run the audio helper for a while so it can report whether macOS lets it listen
             self.media.want_viz_until = time.time() + 25
         elif t == "open_privacy":  # open one System Settings > Privacy page (only the names in permissions.PANES)

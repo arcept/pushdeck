@@ -2,6 +2,7 @@
 the first time a feature needs them, so for those the setup just opens the right System Settings page."""
 import ctypes
 import subprocess
+import time
 
 PANES = {"accessibility": "Privacy_Accessibility", "automation": "Privacy_Automation", "audio": "Privacy_AudioCapture"}
 
@@ -16,38 +17,52 @@ def accessibility():
         return None
 
 
-# Automation: ask macOS, without prompting, whether we may send Apple events to each app we control. Only works while the app is running.
-TARGETS = {"com.google.Chrome": "Google Chrome", "com.spotify.client": "Spotify", "com.apple.systemevents": "System Events"}
+# Automation: ask macOS whether we may send Apple events to each app we control. Only answers while the app is running.
+# System Events is the hidden part of macOS that presses keys for shortcut actions; it is started quietly so it can be checked.
+TARGETS = {"com.apple.systemevents": "System Events", "com.google.Chrome": "Google Chrome", "com.spotify.client": "Spotify"}
 _STATE = {0: "granted", -1743: "denied", -1744: "unknown", -600: "not_running"}
+_started = {"systemevents": 0.0}
+
+
+def _determine(bundle, ask):
+    lib = ctypes.CDLL("/System/Library/Frameworks/ApplicationServices.framework/ApplicationServices")
+
+    class AEDesc(ctypes.Structure):
+        _fields_ = [("descriptorType", ctypes.c_uint32), ("dataHandle", ctypes.c_void_p)]
+
+    lib.AECreateDesc.argtypes = [ctypes.c_uint32, ctypes.c_void_p, ctypes.c_long, ctypes.POINTER(AEDesc)]
+    lib.AECreateDesc.restype = ctypes.c_int16
+    lib.AEDeterminePermissionToAutomateTarget.argtypes = [ctypes.POINTER(AEDesc), ctypes.c_uint32, ctypes.c_uint32, ctypes.c_ubyte]
+    lib.AEDeterminePermissionToAutomateTarget.restype = ctypes.c_int32
+    lib.AEDisposeDesc.argtypes = [ctypes.POINTER(AEDesc)]
+    fcc = lambda t: int.from_bytes(t.encode(), "big")
+    raw, desc = bundle.encode(), AEDesc()
+    if lib.AECreateDesc(fcc("bund"), raw, len(raw), ctypes.byref(desc)) != 0:
+        return "unknown"
+    status = lib.AEDeterminePermissionToAutomateTarget(ctypes.byref(desc), fcc("****"), fcc("****"), 1 if ask else 0)
+    lib.AEDisposeDesc(ctypes.byref(desc))
+    return _STATE.get(status, "unknown")
 
 
 def automation():
-    """{bundle id: granted | denied | unknown (never asked) | not_running}, or None when the check is not available."""
+    """{bundle id: granted | denied | unknown (never asked) | not_running}, or None when the check is not available. Never prompts."""
     try:
-        lib = ctypes.CDLL("/System/Library/Frameworks/ApplicationServices.framework/ApplicationServices")
-
-        class AEDesc(ctypes.Structure):
-            _fields_ = [("descriptorType", ctypes.c_uint32), ("dataHandle", ctypes.c_void_p)]
-
-        lib.AECreateDesc.argtypes = [ctypes.c_uint32, ctypes.c_void_p, ctypes.c_long, ctypes.POINTER(AEDesc)]
-        lib.AECreateDesc.restype = ctypes.c_int16
-        lib.AEDeterminePermissionToAutomateTarget.argtypes = [ctypes.POINTER(AEDesc), ctypes.c_uint32, ctypes.c_uint32, ctypes.c_ubyte]
-        lib.AEDeterminePermissionToAutomateTarget.restype = ctypes.c_int32
-        lib.AEDisposeDesc.argtypes = [ctypes.POINTER(AEDesc)]
-        fcc = lambda s: int.from_bytes(s.encode(), "big")
-        out = {}
-        for bundle in TARGETS:
-            raw = bundle.encode()
-            desc = AEDesc()
-            if lib.AECreateDesc(fcc("bund"), raw, len(raw), ctypes.byref(desc)) != 0:
-                out[bundle] = "unknown"
-                continue
-            status = lib.AEDeterminePermissionToAutomateTarget(ctypes.byref(desc), fcc("****"), fcc("****"), 0)
-            lib.AEDisposeDesc(ctypes.byref(desc))
-            out[bundle] = _STATE.get(status, "unknown")
+        out = {b: _determine(b, False) for b in TARGETS}
+        if out.get("com.apple.systemevents") == "not_running" and time.time() - _started["systemevents"] > 10:
+            _started["systemevents"] = time.time()   # start it hidden; the next check (1.5 s later) can read it
+            subprocess.Popen(["open", "-g", "-j", "-b", "com.apple.systemevents"])
         return out
     except Exception:
         return None
+
+
+def ask_automation(bundle):
+    """Show macOS's own "allow Push Deck to control …" prompt for one app (blocks until answered; run it off the event loop)."""
+    if bundle in TARGETS:
+        try:
+            _determine(bundle, True)
+        except Exception:
+            pass
 
 
 def open_pane(name):
