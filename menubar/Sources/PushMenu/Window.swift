@@ -43,7 +43,11 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         win.isOpaque = false; win.backgroundColor = .clear; win.hasShadow = false
         win.level = .floating; win.isReleasedWhenClosed = false
         win.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]   // shows over whatever Space (or full-screen app) you are in
-        win.center()
+        // centre it on the screen the main window will open on (it remembers where you left it), so both always appear together
+        if let f = window?.frame {
+            let screen = NSScreen.screens.max { a, b in a.frame.intersection(f).width * a.frame.intersection(f).height < b.frame.intersection(f).width * b.frame.intersection(f).height } ?? NSScreen.main
+            if let v = screen?.visibleFrame { win.setFrameOrigin(NSPoint(x: v.midX - win.frame.width / 2, y: v.midY - win.frame.height / 2)) } else { win.center() }
+        } else { win.center() }
         splash = win; splashWeb = w   // shown once its page has loaded (see showSplashWindow), so there is never a blank window
         w.load(URLRequest(url: Self.url("?splashwin=1")))
         DispatchQueue.main.asyncAfter(deadline: .now() + 25) { [weak self] in self?.splashFinished() }   // never leave the user without a window
