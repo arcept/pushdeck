@@ -1,0 +1,25 @@
+{
+  "name": "pushdeck-site",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "device": "node scripts/device.mjs",
+    "predev": "node scripts/device.mjs",
+    "dev": "next dev -p 3100",
+    "prebuild": "node scripts/device.mjs",
+    "build": "next build"
+  },
+  "dependencies": {
+    "gsap": "3.15.0",
+    "next": "15.5.27",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@webgpu/types": "^0.1.74",
+    "typescript": "^5.6.0"
+  }
+}

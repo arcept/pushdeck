@@ -70,7 +70,7 @@ mkdir -p "$AT/Contents/MacOS"
 cp "$ROOT/daemon/audiotap/Info.plist" "$AT/Contents/Info.plist"
 cp "$ROOT/daemon/audiotap/audiotap.swift" "$R/root/daemon/audiotap/audiotap.swift"
 swiftc -O "$ROOT/daemon/audiotap/audiotap.swift" -o "$AT/Contents/MacOS/audiotap"
-codesign --force --sign - "$AT"
+codesign --force --sign - -r="designated => identifier \"com.arcept.pushdeck.audio\"" "$AT"   # a rule tied to the name, not the build: see the note at the end
 
 # the now-playing helper (a tiny C library) is built here too, so a Mac without the developer tools never has to run clang
 NP="$R/root/daemon/nowplaying"
@@ -80,5 +80,7 @@ clang -dynamiclib -fblocks -framework CoreFoundation -o "$NP/libmr.dylib" "$NP/m
 codesign --force --sign - "$NP/libmr.dylib"
 
 find "$R" -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
-codesign --force --deep --sign - "$APP"
+# Signed ad hoc (no paid Apple ID). An ad hoc signature normally makes macOS remember the exact build, so Accessibility, Automation and the other
+# permissions are forgotten on every update. Giving it an explicit rule, "identifier = the app's name", makes macOS recognise the next build as the same app.
+codesign --force --deep --sign - -r="designated => identifier \"com.arcept.pushdeck.menubar\"" "$APP"
 echo "built $APP  ($VER)"

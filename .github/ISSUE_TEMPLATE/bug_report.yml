@@ -1,0 +1,50 @@
+name: Bug report
+description: Something does not work the way it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Please do not paste tokens, passwords or anything private. Pull requests are by invitation only for now, so an issue is the best way to help.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, what you saw instead. Screenshots help.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Push Deck version
+      description: Shown in the setup screen and the splash, for example v0.1.0
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and Mac
+      placeholder: "macOS 15.4, MacBook Pro M2"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part?
+      options:
+        - Pads, buttons or knobs
+        - The Push display
+        - Media player or visualizer
+        - Profiles or actions
+        - The app window or menu bar
+        - Setup or permissions
+        - Install or update
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional)
+      description: "The end of ~/Library/Logs/Push Deck.log is often useful. Remove anything private first."
+      render: shell

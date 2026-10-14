@@ -1,0 +1,19 @@
+name: Push 2 hardware note
+description: Something you found out about the Push 2 (firmware, USB, MIDI, display, LEDs)
+labels: ["hardware"]
+body:
+  - type: textarea
+    id: note
+    attributes:
+      label: What did you find?
+      description: The more exact, the better: what you sent or measured, and what the Push did.
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Push 2 firmware (if you know it)
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version

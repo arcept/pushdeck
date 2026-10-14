@@ -4,6 +4,9 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Permissions now survive updates: the app is signed with a rule tied to its name instead of the exact build, so macOS no longer forgets Accessibility, Automation and the other grants every time Push Deck is updated.
+- Repository extras: issue templates, a security policy (private reporting is on), a contributing guide, a pull request notice and a social preview image.
+
 - README reworked: shorter, with a jump bar, screenshots and a recording of the display.
 - Ready for the first release: `get.sh` (one-line installer that checks the download's checksum) and a Homebrew cask template in `packaging/homebrew/`.
 

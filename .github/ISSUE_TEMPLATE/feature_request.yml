@@ -1,0 +1,16 @@
+name: Idea or feature request
+description: Something you would like Push Deck to do
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to do?
+      description: Describe the job first (what you are trying to get done), then any idea for how it could work.
+    validations:
+      required: true
+  - type: textarea
+    id: apps
+    attributes:
+      label: Which app or workflow is it for?
+      description: For a new profile idea, name the app and the actions you reach for most.

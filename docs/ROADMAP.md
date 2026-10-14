@@ -90,9 +90,8 @@ Goal: make the Push a daily-use device: control apps, show ambient info, switch 
 
 **Later:**
 - In-app "update available" (check GitHub Releases).
-- Apple Developer ID signing and notarisation to remove the "unidentified developer" step (paid account).
-- An Intel (x86_64) build; the workflow and scripts already pick the architecture.
-- More starter profiles (Figma, Photoshop, Slack, Notion, Spotify) and a profile library; issue templates, SECURITY.md, a GitHub social preview image.
-- Claude question card on the Push: test the hook in a new session, test "Other" dictation, polish the card and reminders, usage-limit alerts.
+- More starter profiles (Figma, Photoshop, Slack, Notion, Spotify) and a profile library.
 - Media: queue and playlist polish, lyrics, seek and volume polish, half-screen button set.
-- Auto-start LaunchAgent (`com.arcept.pushdeck.daemon.plist` exists, deliberately not installed; the app's own "Open at login" covers most of it).
+- The auto-start LaunchAgent (`com.arcept.pushdeck.daemon.plist`) exists but is deliberately not installed; the app's own "Open at login" covers most of it.
+
+**Decided not to do (2026-10-14):** Apple Developer ID signing (no paid account; the "unidentified developer" note stays on the README and the site), an Intel build (only if someone asks for it), and the Claude question card on the Push with its dictation fallback (dropped).
