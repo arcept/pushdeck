@@ -9,11 +9,11 @@
 
 .splashleft { display:flex; flex-direction:column; padding:44px 44px 36px; min-width:0; }
 .splashname { margin:0; font-size:inherit; }
-/* the shared brand lockup (Brand.tsx), scaled up for the splash */
-:root .splash .splashname .brand { font-size:60px; gap:22px; padding:0; letter-spacing:-.02em; color:#fff; }
-:root .splash .splashname .brand .mark { width:64px; height:64px; gap:6px; }
+/* the shared brand lockup (Brand.tsx, stacked), scaled up for the splash: same mark, same font, name on two lines */
+:root .splash .splashname .brand { font-size:46px; gap:20px; padding:0; letter-spacing:-.02em; color:#fff; align-items:center; }
+:root .splash .splashname .brand .mark { width:76px; height:76px; gap:6px; }
 :root .splash .splashname .brand .mark i { border-radius:6px; }
-:root .splash .splashname .brand .name { display:inline; }
+:root .splash .splashname .brand .name { display:flex; flex-direction:column; line-height:.95; }
 
 .splashinfo { margin-top:auto; font-size:13.5px; line-height:1.5; color:var(--accent); }
 .splashinfo p { margin:0 0 14px; }

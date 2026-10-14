@@ -52,7 +52,7 @@ export default function Splash({ connected, hello, usb, profiles }: { connected:
     <div className={"splash" + (leaving ? " leaving" : "")} role="dialog" aria-label="Push Deck is starting" onClick={() => leave.current()}>
       <div className="splashcard">
         <div className="splashleft">
-          <h1 className="splashname"><Brand /></h1>
+          <h1 className="splashname"><Brand stacked /></h1>
 
           <div className="splashinfo">
             <p className="tag">Your Push 2, your desk, your rules.</p>
