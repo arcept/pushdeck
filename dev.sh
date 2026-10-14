@@ -8,4 +8,4 @@ pkill -f "Push Deck.app" 2>/dev/null; pkill -f push_daemon 2>/dev/null; sleep 1
 PYTHONPATH=daemon .venv/bin/python -m push_daemon &
 DAEMON=$!
 trap 'kill $DAEMON 2>/dev/null' EXIT INT TERM
-cd ui && npx vite build --watch
+cd ui && PUSH_DEV=1 npx vite build --watch

@@ -1,9 +1,9 @@
 import react from "@vitejs/plugin-react";
-import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { defineConfig } from "vite";
 
-// The version shown on the splash: the git tag + commit, or "dev" when git is not available.
-const version = (() => { try { return execSync("git describe --tags --always --dirty", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch { return "dev"; } })();
+// The version shown on the splash: the number in ../VERSION, or "dev" in dev mode (./dev.sh sets PUSH_DEV).
+const version = process.env.PUSH_DEV ? "dev" : (() => { try { return readFileSync(new URL("../VERSION", import.meta.url), "utf8").trim(); } catch { return "dev"; } })();
 
 export default defineConfig({
   plugins: [react()],

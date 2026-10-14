@@ -3,7 +3,7 @@
 # ./install.sh calls this and then puts the app in /Applications, and the release .dmg workflow can call it too.
 # Everything the build creates lives in build/ (Swift output in build/swift, UI bundle in build/ui). Nothing is created in menubar/.
 # Usage: menubar/build_app.sh [output-folder]      (default: <repo>/build)
-# Signed ad hoc: macOS lists it by name and icon, but without an Apple Developer ID it still says the developer is unidentified.
+# The version comes from the VERSION file. Signed ad hoc: macOS lists it by name and icon, but without an Apple Developer ID it still says the developer is unidentified.
 set -e
 cd "$(dirname "$0")"
 ROOT="$(cd .. && pwd)"
@@ -12,7 +12,7 @@ mkdir -p "$OUT"
 OUT="$(cd "$OUT" && pwd)"
 swift build -c release --scratch-path "$OUT/swift"
 APP="$OUT/Push Deck.app"
-VER="$(git describe --tags --always --dirty 2>/dev/null || echo dev)"
+VER="$(tr -d '[:space:]' < "$ROOT/VERSION")"   # a clean number from the VERSION file, never a commit hash
 NUM="$(git rev-list --count HEAD 2>/dev/null || echo 1)"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
