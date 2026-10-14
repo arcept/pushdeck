@@ -6,10 +6,12 @@ import WebKit
 final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, WKScriptMessageHandler {
     static let shared = UIWindow()
     static let base = URL(string: "http://127.0.0.1:\(ProcessInfo.processInfo.environment["PUSH_PORT"] ?? "8472")/")!
+    static func url(_ q: String) -> URL { URL(string: base.absoluteString + q)! }
     private var window: NSWindow?
     private var web: WKWebView?
-    private var retry = 0
+    private var retries: [ObjectIdentifier: Int] = [:]   // per web view: the daemon can take several seconds to start
     private var splash: NSWindow?
+    private var splashWeb: WKWebView?
     private var launched = false
     private var released = false
 
@@ -22,7 +24,7 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         if !launched {
             launched = true
             let dev = CommandLine.arguments.contains("--ui-snapshot") || CommandLine.arguments.contains("--no-splash")
-            if !dev { showSplash(); NSApp.activate(ignoringOtherApps: true); return }
+            if !dev { NSApp.activate(ignoringOtherApps: true); showSplash(); return }
             release()
         }
         window?.makeKeyAndOrderFront(nil)
@@ -40,12 +42,17 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         win.contentView = w
         win.isOpaque = false; win.backgroundColor = .clear; win.hasShadow = false
         win.level = .floating; win.isReleasedWhenClosed = false
+        win.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]   // shows over whatever Space (or full-screen app) you are in
         win.center()
-        win.makeKeyAndOrderFront(nil)   // fully opaque from the start: macOS does not put a window with alpha 0 on screen; the page fades its card in
-        win.orderFrontRegardless()
-        splash = win
-        w.load(URLRequest(url: URL(string: "?splashwin=1", relativeTo: Self.base)!))
+        splash = win; splashWeb = w   // shown once its page has loaded (see showSplashWindow), so there is never a blank window
+        w.load(URLRequest(url: Self.url("?splashwin=1")))
         DispatchQueue.main.asyncAfter(deadline: .now() + 25) { [weak self] in self?.splashFinished() }   // never leave the user without a window
+    }
+
+    private func showSplashWindow() {
+        guard !released, let win = splash, !win.isVisible else { return }
+        win.makeKeyAndOrderFront(nil)
+        win.orderFrontRegardless()
     }
 
     func userContentController(_ c: WKUserContentController, didReceive m: WKScriptMessage) { if m.name == "splashDone" { splashFinished() } }
@@ -83,6 +90,7 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         win.contentMinSize = NSSize(width: 1280, height: 720)   // the lowest-resolution Mac screens; below this the layout breaks
         win.isReleasedWhenClosed = false
         win.backgroundColor = .black
+        win.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]   // opens where you are, not on the Space the app last used
         win.delegate = self
         win.setFrameAutosaveName("PushDeckWindow")
         if !win.setFrameUsingName("PushDeckWindow") { win.center() }
@@ -90,20 +98,22 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
             win.setFrame(NSRect(x: vis.minX, y: vis.minY, width: min(win.frame.width, vis.width), height: min(win.frame.height, vis.height)), display: false)
         }
         window = win; web = w
-        w.load(URLRequest(url: URL(string: "?shell=1", relativeTo: Self.base)!))
+        w.load(URLRequest(url: Self.url("?shell=1")))
     }
 
     func windowWillClose(_ n: Notification) { NSApp.setActivationPolicy(.accessory) }   // back to menu bar only
 
     // The daemon may still be starting: try again for a few seconds.
     func webView(_ w: WKWebView, didFailProvisionalNavigation n: WKNavigation!, withError e: Error) {
-        guard retry < 20 else { return }
-        retry += 1
+        let id = ObjectIdentifier(w), tries = retries[id] ?? 0
+        guard tries < 120 else { return }
+        retries[id] = tries + 1
         let u = (e as NSError).userInfo[NSURLErrorFailingURLErrorKey] as? URL ?? Self.base
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { w.load(URLRequest(url: u)) }
     }
     func webView(_ w: WKWebView, didFinish n: WKNavigation!) {
-        retry = 0
+        retries[ObjectIdentifier(w)] = 0
+        if w === splashWeb { showSplashWindow(); return }
         guard w === web else { return }
         if released { runRelease() }   // the page finished loading after the splash was done
         if let k = CommandLine.arguments.firstIndex(of: "--ui-pre-eval"), k + 1 < CommandLine.arguments.count { w.evaluateJavaScript(CommandLine.arguments[k + 1], completionHandler: nil) }   // developer aid: run JS as soon as the page has loaded
