@@ -35,7 +35,7 @@ A Push 2 replica you can click, drag onto and edit that is a true two-way mirror
 Dark workspace; the replica SVG sits in the middle and stays. Display typography as above. Project may be open-sourced; keep names and structure clean.
 
 ## Evidence on Hand
-`ui/src/assets/push2.svg`, `design/` mocks (font specimens, label zones, HUD), `PUSH2_NOTES.md` (verified hardware facts), `ROADMAP.md`. No usage analytics, testimonials, or public users exist; do not invent any.
+`ui/src/assets/push2.svg`, `design/` mocks (font specimens, label zones, HUD), `docs/PUSH2_NOTES.md` (verified hardware facts), `docs/ROADMAP.md`. No usage analytics, testimonials, or public users exist; do not invent any.
 
 ## Product Principles
 1. The hardware is the hero: the UI mirrors and serves the Push, never competes with it.

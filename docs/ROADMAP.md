@@ -1,6 +1,6 @@
 # Push Deck: roadmap and parked ideas
 
-Status as of 2026-10-09. Hardware is fully mapped (see `PUSH2_NOTES.md`, `BUTTONS.md`, `push2_registry.json`). Nothing below is built unless marked done.
+Status as of 2026-10-09. Hardware is fully mapped (see `docs/PUSH2_NOTES.md`, `docs/BUTTONS.md`, `push2_registry.json`). Nothing below is built unless marked done.
 
 ## 0. Decisions (2026-10-11, from the 20-question session)
 
