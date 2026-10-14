@@ -20,5 +20,5 @@ favicons3/
 # local-only AI/dev workflow files
 CLAUDE.md
 .claude/
-HANDOVER.md
+HANDOVER*.md
 .impeccable/

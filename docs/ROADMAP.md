@@ -82,6 +82,17 @@ Goal: make the Push a daily-use device: control apps, show ambient info, switch 
 - Keep the 12 V adapter plugged in for full brightness (USB-only works but is dimmer).
 - Display needs continuous frames (about 50 fps max, 30 fps reliable).
 
-## Pending before the open-source release
-- Make the app fully standalone: bundle a portable Python (python-build-standalone, arm64) instead of pointing at Xcode's Python 3.9, reinstall the libraries into it, and re-sign. Needs a download; decide with the owner first. Also consider a free/paid Apple Developer ID (signing + notarising) to remove the "unidentified developer" warning.
-- Performance/size pass (measured 2026-10-12): daemon Python ~14-22 % of one core and ~400 MB RSS; WebKit GPU 40-87 % while the window is visible (animated backdrop + 30 fps display canvas), ~0 when hidden. Ideas: pause the backdrop/mirror when the window is hidden or unfocused, lower the preview frame rate, find what holds 400 MB in the daemon (icon/art caches, numpy frames), idle the display loop when nothing changes.
+## Release status (updated 2026-10-14)
+
+**Done:** standalone app (bundled Python 3.12, prebuilt helpers, no Xcode needed), `.dmg` script, release workflow, one-line installer (`get.sh`), Homebrew cask template, smoke test, performance pass (daemon ~100 MB, window GPU about 9%), README with screenshots, public repo.
+
+**Next:** landing page; first release (tag `v0.1.0` when the owner says); Homebrew tap repo (`arcept/homebrew-tap`).
+
+**Later:**
+- In-app "update available" (check GitHub Releases).
+- Apple Developer ID signing and notarisation to remove the "unidentified developer" step (paid account).
+- An Intel (x86_64) build; the workflow and scripts already pick the architecture.
+- More starter profiles (Figma, Photoshop, Slack, Notion, Spotify) and a profile library; issue templates, SECURITY.md, a GitHub social preview image.
+- Claude question card on the Push: test the hook in a new session, test "Other" dictation, polish the card and reminders, usage-limit alerts.
+- Media: queue and playlist polish, lyrics, seek and volume polish, half-screen button set.
+- Auto-start LaunchAgent (`com.arcept.pushdeck.daemon.plist` exists, deliberately not installed; the app's own "Open at login" covers most of it).
