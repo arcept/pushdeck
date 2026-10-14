@@ -1,0 +1,25 @@
+private/
+daemon/audiotap/PushAudioTap.app/
+.venv/
+node_modules/
+.DS_Store
+daemon/nowplaying/libmr.dylib
+daemon/audiotap/audiotap
+experiments/display-images/*.webp
+settings.json
+menubar/Push Deck*.app/
+menubar/icon-preview.png
+.build/
+ui/dist/
+__pycache__/
+*.pyc
+backups/
+favicons/
+favicons2/
+favicons3/
+
+# local-only AI/dev workflow files
+CLAUDE.md
+.claude/
+HANDOVER.md
+.impeccable/

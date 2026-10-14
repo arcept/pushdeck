@@ -1,0 +1,1925 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="1500" viewBox="0 0 1600 1500">
+  <title>Ableton Push 2 — orthographic interactive controller, LEDs off</title>
+  <desc>Hand-coded vector reconstruction from the two supplied photographs. Device body ratio 1420:1142. Additional canvas height accommodates the attached rear USB and 12 V power cables. No embedded bitmap. Each physical control has a stable group ID, a base shape, and a separate LED element with fill-opacity zero. All shadows are in the shadows layer; labels and glass are separate. Coordinates within device-space follow the front-on reference photograph.</desc>
+  <defs>
+    <linearGradient id="body-matte" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2b2e31"/><stop offset="0.42" stop-color="#181a1d"/><stop offset="1" stop-color="#111214"/>
+    </linearGradient>
+    <linearGradient id="body-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#55585a"/><stop offset="0.12" stop-color="#343639"/><stop offset="0.8" stop-color="#111214"/><stop offset="1" stop-color="#030405"/>
+    </linearGradient>
+    <linearGradient id="button-matte" x1="0" y1="0" x2="0.8" y2="1">
+      <stop stop-color="#2c3034"/><stop offset="0.45" stop-color="#25292e"/><stop offset="1" stop-color="#1d2126"/>
+    </linearGradient>
+    <linearGradient id="edge-highlight" x1="0" y1="0" x2="0.3" y2="1">
+      <stop stop-color="#85898d" stop-opacity="0.34"/><stop offset="1" stop-color="#85898d" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="pad-rubber" cx="0.27" cy="0.18" r="0.95">
+      <stop stop-color="#b0b1b3"/><stop offset="0.52" stop-color="#989a9d"/><stop offset="1" stop-color="#7a7d81"/>
+    </radialGradient>
+    <radialGradient id="knob-cap" cx="0.27" cy="0.24" r="0.88">
+      <stop stop-color="#42474b"/><stop offset="0.46" stop-color="#2d3237"/><stop offset="1" stop-color="#1b1e23"/>
+    </radialGradient>
+    <linearGradient id="knob-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#7a7d7f"/><stop offset="0.3" stop-color="#303338"/><stop offset="1" stop-color="#101216"/>
+    </linearGradient>
+    <linearGradient id="strip-matte" x1="0" y1="0" x2="1" y2="0.9">
+      <stop stop-color="#14161a"/><stop offset="0.55" stop-color="#101216"/><stop offset="1" stop-color="#1b1d21"/>
+    </linearGradient>
+    <linearGradient id="cable-matte" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#3d4144"/><stop offset="0.3" stop-color="#25282a"/><stop offset="1" stop-color="#111214"/>
+    </linearGradient>
+    <linearGradient id="recess-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#000" stop-opacity="0.55"/><stop offset="0.4" stop-color="#000" stop-opacity="0.2"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glass-reflection" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#fff" stop-opacity="0.05"/><stop offset="0.45" stop-color="#fff" stop-opacity="0.012"/><stop offset="0.46" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Fine vector stipple, not a raster noise image. -->
+    <pattern id="fine-matte" width="5.8" height="5.8" patternUnits="userSpaceOnUse">
+      <circle cx="0.9" cy="1.1" r="0.24" fill="#fff" opacity="0.10"/>
+      <circle cx="3.6" cy="4.1" r="0.3" fill="#000" opacity="0.16"/>
+      <circle cx="4.9" cy="2.2" r="0.18" fill="#fff" opacity="0.06"/>
+    </pattern>
+    <pattern id="rubber-grain" width="4.1" height="4.9" patternUnits="userSpaceOnUse">
+      <circle cx="0.7" cy="1.1" r="0.24" fill="#111" opacity="0.13"/>
+      <circle cx="2.7" cy="3.6" r="0.22" fill="#fff" opacity="0.19"/>
+    </pattern>
+    <!-- Outside-only shadows can be placed above the shapes without darkening them. -->
+    <filter id="body-shadow" x="-10%" y="-12%" width="125%" height="130%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="24"/><feOffset dx="12" dy="12"/>
+      <feComposite in2="SourceAlpha" operator="out" result="outside"/><feFlood flood-color="#000" flood-opacity="0.35"/><feComposite operator="in" in2="outside"/>
+    </filter>
+    <filter id="button-shadow" x="-45%" y="-55%" width="210%" height="230%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/><feOffset in="blur" dx="2" dy="2" result="offset"/>
+      <feComposite in="offset" in2="SourceAlpha" operator="out" result="outside"/><feFlood flood-opacity="0.6"/><feComposite in2="outside" operator="in"/>
+    </filter>
+    <filter id="knob-shadow" x="-80%" y="-80%" width="280%" height="280%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/><feOffset dx="4" dy="4" result="offset"/>
+      <feComposite in="offset" in2="SourceAlpha" operator="out" result="outside"/><feFlood flood-opacity="0.65"/><feComposite in2="outside" operator="in"/>
+    </filter>
+    <filter id="cable-shadow" x="-100%" y="-20%" width="350%" height="155%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="9"/><feOffset dx="12" dy="12" result="offset"/>
+      <feComposite in="offset" in2="SourceAlpha" operator="out" result="outside"/><feFlood flood-opacity="0.35"/><feComposite in2="outside" operator="in"/>
+    </filter>
+    <filter id="pad-inner-shadow" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feComponentTransfer in="SourceAlpha"><feFuncA type="table" tableValues="1 0"/></feComponentTransfer>
+      <feGaussianBlur stdDeviation="1.4"/><feOffset dx="1.4" dy="1.4"/>
+      <feComposite in2="SourceAlpha" operator="in" result="inner"/><feFlood flood-color="#000" flood-opacity="0.4"/><feComposite in2="inner" operator="in"/>
+    </filter>
+    <filter id="led-bloom" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="1.2"/></filter>
+  </defs>
+  <!-- Uniform scale only: flat top-down, no perspective transform. -->
+  <g id="device-space" transform="translate(-33.803 12.366) scale(1.042253521)">
+
+    <g id="cable-power" aria-label="12 V power cable">
+      <g id="cable-power-geometry">
+        <path d="M 215 -50 C 215 15 218 40 218 72 L 218 185" fill="none" stroke="url(#cable-matte)" stroke-width="5.5" stroke-linecap="round"/>
+        <path d="M 214 -50 C 214 15 217 40 217 72 L 217 185" fill="none" stroke="#697074" stroke-opacity="0.3" stroke-width="1"/>
+        <rect x="201" y="21" width="34" height="80" rx="11" fill="url(#cable-matte)" stroke="#121417"/>
+        <path d="M 204 45 H 232 M 203 52 H 233 M 203 59 H 233 M 204 66 H 232" fill="none" stroke="#111315" stroke-width="2"/>
+        <rect x="207" y="184" width="22" height="44" rx="3" fill="url(#cable-matte)" stroke="#090b0d"/>
+        <path d="M 210 161 L 207 184 H 229 L 226 161 Z" fill="url(#cable-matte)"/>
+        <path d="M 210 165 H 226 M 209 170 H 227 M 208 175 H 228 M 208 180 H 228 M 208 192 H 228 M 208 196 H 228" fill="none" stroke="#0a0c0d" stroke-width="1.5"/>
+      </g>
+    </g>
+    <g id="cable-usb" aria-label="USB cable">
+      <g id="cable-usb-geometry">
+        <path d="M 869 -50 C 869 58 876 113 844 154 C 817 189 764 196 725 195 L 383 205" fill="none" stroke="url(#cable-matte)" stroke-width="13" stroke-linecap="round"/>
+        <path d="M 865 -50 C 865 58 872 111 841 150 C 815 185 764 192 725 191 L 383 201" fill="none" stroke="#687075" stroke-opacity="0.32" stroke-width="2.1"/>
+        <rect x="543" y="177" width="91" height="49" rx="5" fill="url(#cable-matte)" stroke="#111315"/>
+        <path d="M 320 228 V 207 Q 320 199 328 199 H 365 V 222 H 342 V 228 Z" fill="url(#cable-matte)" stroke="#0c0f11" stroke-width="1.5"/>
+        <rect x="364" y="201" width="23" height="19" rx="3" fill="#191d20"/>
+        <path d="M 370 201 V 220 M 377 200 V 220 M 384 199 V 219" stroke="#41464a" stroke-width="2"/>
+        <path d="M 325 205 H 349 M 325 209 H 349 M 325 213 H 345" stroke="#646a6f" stroke-opacity="0.34" stroke-width="1"/>
+      </g>
+    </g>
+    <g id="body">
+      <rect id="body-base" x="90" y="228" width="1420" height="1142" rx="3" fill="url(#body-edge)"/>
+      <rect x="92" y="230" width="1416" height="1138" rx="2" fill="url(#body-matte)"/>
+      <rect x="92" y="230" width="1416" height="1138" rx="2" fill="url(#fine-matte)" opacity="0.7"/>
+      <path d="M 91 1367 V 231 Q 91 229 94 229 H 1507" fill="none" stroke="#a4a8aa" stroke-opacity="0.23" stroke-width="1.3"/>
+      <path d="M 1509 231 V 1369 H 93" fill="none" stroke="#030405" stroke-width="2"/>
+    </g>
+    <!-- Top encoder bank: Tempo, Swing, eight display encoders, Master. -->
+    <g id="knob-tempo" class="control knob" transform="translate(143 275)">
+      <circle id="knob-tempo-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-tempo-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-swing" class="control knob" transform="translate(257 275)">
+      <circle id="knob-swing-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-swing-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-1" class="control knob" transform="translate(391 275)">
+      <circle id="knob-1-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-1-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-2" class="control knob" transform="translate(501 275)">
+      <circle id="knob-2-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-2-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-3" class="control knob" transform="translate(612 275)">
+      <circle id="knob-3-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-3-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-4" class="control knob" transform="translate(723 275)">
+      <circle id="knob-4-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-4-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-5" class="control knob" transform="translate(833 275)">
+      <circle id="knob-5-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-5-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-6" class="control knob" transform="translate(943 275)">
+      <circle id="knob-6-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-6-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-7" class="control knob" transform="translate(1054 275)">
+      <circle id="knob-7-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-7-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-8" class="control knob" transform="translate(1165 275)">
+      <circle id="knob-8-base" r="24" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 21.600 0.000 L 23.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 2.117 L 23.387 2.303" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 4.214 L 23.048 4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 6.270 L 22.488 6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 8.266 L 21.711 8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 10.182 L 20.725 11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 12.000 L 19.540 13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 16.697 13.703 L 18.166 14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.274 15.274 L 16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.703 16.697 L 14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 12.000 17.960 L 13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 10.182 19.049 L 11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 8.266 19.956 L 8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 6.270 20.670 L 6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.214 21.185 L 4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.117 21.496 L 2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 21.600 L 0.000 23.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.117 21.496 L -2.303 23.387" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.214 21.185 L -4.585 23.048" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -6.270 20.670 L -6.822 22.488" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -8.266 19.956 L -8.993 21.711" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -10.182 19.049 L -11.078 20.725" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -12.000 17.960 L -13.056 19.540" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.703 16.697 L -14.908 18.166" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.274 15.274 L -16.617 16.617" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -16.697 13.703 L -18.166 14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 12.000 L -19.540 13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 10.182 L -20.725 11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 8.266 L -21.711 8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 6.270 L -22.488 6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 4.214 L -23.048 4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 2.117 L -23.387 2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.600 0.000 L -23.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.496 -2.117 L -23.387 -2.303" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.185 -4.214 L -23.048 -4.585" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.670 -6.270 L -22.488 -6.822" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.956 -8.266 L -21.711 -8.993" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.049 -10.182 L -20.725 -11.078" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.960 -12.000 L -19.540 -13.056" stroke="#63676a" opacity="0.45"/>
+        <path d="M -16.697 -13.703 L -18.166 -14.908" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.274 -15.274 L -16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.703 -16.697 L -14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M -12.000 -17.960 L -13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M -10.182 -19.049 L -11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M -8.266 -19.956 L -8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M -6.270 -20.670 L -6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.214 -21.185 L -4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.117 -21.496 L -2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -21.600 L -0.000 -23.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.117 -21.496 L 2.303 -23.387" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.214 -21.185 L 4.585 -23.048" stroke="#63676a" opacity="0.45"/>
+        <path d="M 6.270 -20.670 L 6.822 -22.488" stroke="#63676a" opacity="0.45"/>
+        <path d="M 8.266 -19.956 L 8.993 -21.711" stroke="#63676a" opacity="0.45"/>
+        <path d="M 10.182 -19.049 L 11.078 -20.725" stroke="#63676a" opacity="0.45"/>
+        <path d="M 12.000 -17.960 L 13.056 -19.540" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.703 -16.697 L 14.908 -18.166" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.274 -15.274 L 16.617 -16.617" stroke="#63676a" opacity="0.45"/>
+        <path d="M 16.697 -13.703 L 18.166 -14.908" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.960 -12.000 L 19.540 -13.056" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.049 -10.182 L 20.725 -11.078" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.956 -8.266 L 21.711 -8.993" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.670 -6.270 L 22.488 -6.822" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.185 -4.214 L 23.048 -4.585" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.496 -2.117 L 23.387 -2.303" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="22" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="22" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -18 L -6 -14" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-8-led" class="led" r="22" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="knob-master" class="control knob" transform="translate(1426 275)">
+      <circle id="knob-master-base" r="27" fill="url(#knob-edge)" stroke="#111317" stroke-width="1.2"/>
+      <g class="knurling" fill="none" stroke-width="0.65">
+        <path d="M 24.600 0.000 L 26.500 0.000" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 24.482 2.411 L 26.372 2.597" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 24.127 4.799 L 25.991 5.170" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 23.541 7.141 L 25.359 7.693" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 22.727 9.414 L 24.483 10.141" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.695 11.596 L 23.371 12.492" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.454 13.667 L 22.034 14.723" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 19.016 15.606 L 20.485 16.811" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 17.395 17.395 L 18.738 18.738" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 15.606 19.016 L 16.811 20.485" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 13.667 20.454 L 14.723 22.034" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 11.596 21.695 L 12.492 23.371" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 9.414 22.727 L 10.141 24.483" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 7.141 23.541 L 7.693 25.359" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 4.799 24.127 L 5.170 25.991" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 2.411 24.482 L 2.597 26.372" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 0.000 24.600 L 0.000 26.500" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -2.411 24.482 L -2.597 26.372" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -4.799 24.127 L -5.170 25.991" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -7.141 23.541 L -7.693 25.359" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -9.414 22.727 L -10.141 24.483" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -11.596 21.695 L -12.492 23.371" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -13.667 20.454 L -14.723 22.034" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -15.606 19.016 L -16.811 20.485" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -17.395 17.395 L -18.738 18.738" stroke="#090b0e" opacity="0.45"/>
+        <path d="M -19.016 15.606 L -20.485 16.811" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.454 13.667 L -22.034 14.723" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.695 11.596 L -23.371 12.492" stroke="#63676a" opacity="0.45"/>
+        <path d="M -22.727 9.414 L -24.483 10.141" stroke="#63676a" opacity="0.45"/>
+        <path d="M -23.541 7.141 L -25.359 7.693" stroke="#63676a" opacity="0.45"/>
+        <path d="M -24.127 4.799 L -25.991 5.170" stroke="#63676a" opacity="0.45"/>
+        <path d="M -24.482 2.411 L -26.372 2.597" stroke="#63676a" opacity="0.45"/>
+        <path d="M -24.600 0.000 L -26.500 0.000" stroke="#63676a" opacity="0.45"/>
+        <path d="M -24.482 -2.411 L -26.372 -2.597" stroke="#63676a" opacity="0.45"/>
+        <path d="M -24.127 -4.799 L -25.991 -5.170" stroke="#63676a" opacity="0.45"/>
+        <path d="M -23.541 -7.141 L -25.359 -7.693" stroke="#63676a" opacity="0.45"/>
+        <path d="M -22.727 -9.414 L -24.483 -10.141" stroke="#63676a" opacity="0.45"/>
+        <path d="M -21.695 -11.596 L -23.371 -12.492" stroke="#63676a" opacity="0.45"/>
+        <path d="M -20.454 -13.667 L -22.034 -14.723" stroke="#63676a" opacity="0.45"/>
+        <path d="M -19.016 -15.606 L -20.485 -16.811" stroke="#63676a" opacity="0.45"/>
+        <path d="M -17.395 -17.395 L -18.738 -18.738" stroke="#63676a" opacity="0.45"/>
+        <path d="M -15.606 -19.016 L -16.811 -20.485" stroke="#63676a" opacity="0.45"/>
+        <path d="M -13.667 -20.454 L -14.723 -22.034" stroke="#63676a" opacity="0.45"/>
+        <path d="M -11.596 -21.695 L -12.492 -23.371" stroke="#63676a" opacity="0.45"/>
+        <path d="M -9.414 -22.727 L -10.141 -24.483" stroke="#63676a" opacity="0.45"/>
+        <path d="M -7.141 -23.541 L -7.693 -25.359" stroke="#63676a" opacity="0.45"/>
+        <path d="M -4.799 -24.127 L -5.170 -25.991" stroke="#63676a" opacity="0.45"/>
+        <path d="M -2.411 -24.482 L -2.597 -26.372" stroke="#63676a" opacity="0.45"/>
+        <path d="M -0.000 -24.600 L -0.000 -26.500" stroke="#63676a" opacity="0.45"/>
+        <path d="M 2.411 -24.482 L 2.597 -26.372" stroke="#63676a" opacity="0.45"/>
+        <path d="M 4.799 -24.127 L 5.170 -25.991" stroke="#63676a" opacity="0.45"/>
+        <path d="M 7.141 -23.541 L 7.693 -25.359" stroke="#63676a" opacity="0.45"/>
+        <path d="M 9.414 -22.727 L 10.141 -24.483" stroke="#63676a" opacity="0.45"/>
+        <path d="M 11.596 -21.695 L 12.492 -23.371" stroke="#63676a" opacity="0.45"/>
+        <path d="M 13.667 -20.454 L 14.723 -22.034" stroke="#63676a" opacity="0.45"/>
+        <path d="M 15.606 -19.016 L 16.811 -20.485" stroke="#63676a" opacity="0.45"/>
+        <path d="M 17.395 -17.395 L 18.738 -18.738" stroke="#63676a" opacity="0.45"/>
+        <path d="M 19.016 -15.606 L 20.485 -16.811" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 20.454 -13.667 L 22.034 -14.723" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 21.695 -11.596 L 23.371 -12.492" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 22.727 -9.414 L 24.483 -10.141" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 23.541 -7.141 L 25.359 -7.693" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 24.127 -4.799 L 25.991 -5.170" stroke="#090b0e" opacity="0.45"/>
+        <path d="M 24.482 -2.411 L 26.372 -2.597" stroke="#090b0e" opacity="0.45"/>
+      </g>
+      <circle r="25" fill="url(#knob-cap)" stroke="#3a3e41" stroke-width="0.65"/>
+      <circle r="25" fill="url(#fine-matte)" opacity="0.32"/>
+      <path class="indicator" d="M -7 -21 L -6 -17" stroke="#707578" stroke-width="1.1" stroke-linecap="round" opacity="0.32"/>
+      <circle id="knob-master-led" class="led" r="25" fill="#79def5" fill-opacity="0"/>
+    </g>
+    <g id="btn-tap-tempo" class="control button" data-label="Tap Tempo" transform="translate(110 333)">
+      <rect x="0" y="0" width="97" height="40" rx="3" id="btn-tap-tempo-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 93" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="95" height="38" rx="3" class="led" id="btn-tap-tempo-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-metronome" class="control button" data-label="Metronome" transform="translate(207 333)">
+      <rect x="0" y="0" width="97" height="40" rx="3" id="btn-metronome-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 93" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="95" height="38" rx="3" class="led" id="btn-metronome-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-upper-1" class="control button" data-label="btn-upper-1" transform="translate(348 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-1-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-1-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-2" class="control button" data-label="btn-upper-2" transform="translate(457.8 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-2-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-2-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-3" class="control button" data-label="btn-upper-3" transform="translate(567.6 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-3-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-3-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-4" class="control button" data-label="btn-upper-4" transform="translate(677.4 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-4-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-4-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-5" class="control button" data-label="btn-upper-5" transform="translate(787.2 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-5-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-5-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-6" class="control button" data-label="btn-upper-6" transform="translate(897 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-6-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-6-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-7" class="control button" data-label="btn-upper-7" transform="translate(1006.8 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-7-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-7-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-upper-8" class="control button" data-label="btn-upper-8" transform="translate(1116.6 333)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-upper-8-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-upper-8-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-setup" class="control button" data-label="Setup" transform="translate(1349 333)">
+      <rect x="0" y="0" width="71" height="40" rx="3" id="btn-setup-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="38" rx="3" class="led" id="btn-setup-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-user" class="control button" data-label="User" transform="translate(1420 333)">
+      <rect x="0" y="0" width="70" height="40" rx="3" id="btn-user-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="38" rx="3" class="led" id="btn-user-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <rect id="display-bezel" x="339" y="410" width="878" height="156" rx="2" fill="#060709" stroke="#373b3e" stroke-width="1.2"/>
+    <g id="display" class="control display" aria-label="Empty 960:160 display">
+      <rect id="display-base" x="340" y="415" width="876" height="146" fill="#030405"/>
+      <rect id="display-led" class="led" x="340" y="415" width="876" height="146" fill="#6edcf1" fill-opacity="0"/>
+    </g>
+    <g id="btn-delete" class="control button" data-label="Delete" transform="translate(110 418)">
+      <rect x="0" y="0" width="69" height="69" rx="3" id="btn-delete-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 66 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="67" rx="3" class="led" id="btn-delete-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-undo" class="control button" data-label="Undo" transform="translate(110 487)">
+      <rect x="0" y="0" width="69" height="71" rx="3" id="btn-undo-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 68 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="69" rx="3" class="led" id="btn-undo-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-add-device" class="control button" data-label="Add Device" transform="translate(1255 418)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-add-device-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-add-device-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-add-track" class="control button" data-label="Add Track" transform="translate(1255 488)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-add-track-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-add-track-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-device" class="control button" data-label="Device" transform="translate(1349 418)">
+      <rect x="0" y="0" width="71" height="70" rx="3" id="btn-device-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="68" rx="3" class="led" id="btn-device-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-mix" class="control button" data-label="Mix" transform="translate(1420 418)">
+      <rect x="0" y="0" width="70" height="70" rx="3" id="btn-mix-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="68" rx="3" class="led" id="btn-mix-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-browse" class="control button" data-label="Browse" transform="translate(1349 488)">
+      <rect x="0" y="0" width="71" height="70" rx="3" id="btn-browse-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="68" rx="3" class="led" id="btn-browse-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-clip" class="control button" data-label="Clip" transform="translate(1420 488)">
+      <rect x="0" y="0" width="70" height="70" rx="3" id="btn-clip-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="68" rx="3" class="led" id="btn-clip-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-mute" class="control button" data-label="Mute" transform="translate(110 608)">
+      <rect x="0" y="0" width="64" height="40" rx="3" id="btn-mute-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 60" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="62" height="38" rx="3" class="led" id="btn-mute-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-solo" class="control button" data-label="Solo" transform="translate(174 608)">
+      <rect x="0" y="0" width="65" height="40" rx="3" id="btn-solo-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 61" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="63" height="38" rx="3" class="led" id="btn-solo-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-stop-clip" class="control button" data-label="Stop Clip" transform="translate(239 608)">
+      <rect x="0" y="0" width="65" height="40" rx="3" id="btn-stop-clip-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 61" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="63" height="38" rx="3" class="led" id="btn-stop-clip-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-lower-1" class="control button" data-label="btn-lower-1" transform="translate(348 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-1-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-1-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-2" class="control button" data-label="btn-lower-2" transform="translate(457.8 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-2-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-2-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-3" class="control button" data-label="btn-lower-3" transform="translate(567.6 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-3-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-3-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-4" class="control button" data-label="btn-lower-4" transform="translate(677.4 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-4-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-4-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-5" class="control button" data-label="btn-lower-5" transform="translate(787.2 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-5-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-5-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-6" class="control button" data-label="btn-lower-6" transform="translate(897 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-6-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-6-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-7" class="control button" data-label="btn-lower-7" transform="translate(1006.8 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-7-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-7-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-lower-8" class="control button" data-label="btn-lower-8" transform="translate(1116.6 608)">
+      <rect x="0" y="0" width="96" height="40" rx="3" id="btn-lower-8-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 92" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" fill="#343b41"/>
+      <rect x="10" y="26" width="76" height="3" rx="0" class="led" id="btn-lower-8-led" fill="#66e6ff" fill-opacity="0" filter="url(#led-bloom)"/>
+    </g>
+    <g id="btn-master" class="control button" data-label="Master" transform="translate(1255 608)">
+      <rect x="0" y="0" width="69" height="40" rx="3" id="btn-master-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="38" rx="3" class="led" id="btn-master-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="touch-strip" class="control touch-strip">
+      <rect id="touch-strip-base" x="223" y="680" width="80" height="654" rx="3" fill="url(#strip-matte)" stroke="#080a0c" stroke-width="2"/>
+      <rect x="224" y="681" width="78" height="652" rx="2" fill="url(#fine-matte)" opacity="0.38"/>
+      <path d="M 224 1333 H 297 Q 302 1333 302 1328" stroke="#666a6d" stroke-opacity="0.55" fill="none"/>
+      <rect id="touch-strip-led" class="led" x="228" y="689" width="5" height="635" rx="2" fill="#f1f1f1" fill-opacity="0"/>
+    </g>
+    <g id="btn-convert" class="control button" data-label="Convert" transform="translate(109 680)">
+      <rect x="0" y="0" width="69" height="69" rx="3" id="btn-convert-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 66 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="67" rx="3" class="led" id="btn-convert-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-double-loop" class="control button" data-label="Double Loop" transform="translate(109 749)">
+      <rect x="0" y="0" width="69" height="69" rx="3" id="btn-double-loop-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 66 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="67" rx="3" class="led" id="btn-double-loop-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-quantize" class="control button" data-label="Quantize" transform="translate(109 818)">
+      <rect x="0" y="0" width="69" height="69" rx="3" id="btn-quantize-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 66 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="67" rx="3" class="led" id="btn-quantize-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-duplicate" class="control button" data-label="Duplicate" transform="translate(109 900)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-duplicate-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-duplicate-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-new" class="control button" data-label="New" transform="translate(109 970)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-new-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-new-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-fixed-length" class="control button" data-label="Fixed Length" transform="translate(109 1054)">
+      <rect x="0" y="0" width="69" height="63" rx="3" id="btn-fixed-length-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 60 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="61" rx="3" class="led" id="btn-fixed-length-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-automate" class="control button" data-label="Automate" transform="translate(109 1117)">
+      <rect x="0" y="0" width="69" height="62" rx="3" id="btn-automate-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 59 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="60" rx="3" class="led" id="btn-automate-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-record" class="control button" data-label="btn-record" transform="translate(109 1179)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-record-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-record-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-play" class="control button" data-label="btn-play" transform="translate(109 1263)">
+      <rect x="0" y="0" width="69" height="71" rx="3" id="btn-play-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 68 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="69" rx="3" class="led" id="btn-play-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <!-- 8 × 8 rubber pads, row-major. Four centre corners have the reference chamfer. -->
+    <g id="pad-0-0" class="control pad" data-row="0" data-column="0" transform="translate(346 680)">
+      <rect id="pad-0-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-1" class="control pad" data-row="0" data-column="1" transform="translate(455.8 680)">
+      <rect id="pad-0-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-2" class="control pad" data-row="0" data-column="2" transform="translate(565.6 680)">
+      <rect id="pad-0-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-3" class="control pad" data-row="0" data-column="3" transform="translate(675.4 680)">
+      <rect id="pad-0-3-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-3-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-4" class="control pad" data-row="0" data-column="4" transform="translate(785.2 680)">
+      <rect id="pad-0-4-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-4-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-5" class="control pad" data-row="0" data-column="5" transform="translate(895 680)">
+      <rect id="pad-0-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-6" class="control pad" data-row="0" data-column="6" transform="translate(1004.8 680)">
+      <rect id="pad-0-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-0-7" class="control pad" data-row="0" data-column="7" transform="translate(1114.6 680)">
+      <rect id="pad-0-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-0-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-0" class="control pad" data-row="1" data-column="0" transform="translate(346 763.5)">
+      <rect id="pad-1-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-1" class="control pad" data-row="1" data-column="1" transform="translate(455.8 763.5)">
+      <rect id="pad-1-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-2" class="control pad" data-row="1" data-column="2" transform="translate(565.6 763.5)">
+      <rect id="pad-1-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-3" class="control pad" data-row="1" data-column="3" transform="translate(675.4 763.5)">
+      <rect id="pad-1-3-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-3-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-4" class="control pad" data-row="1" data-column="4" transform="translate(785.2 763.5)">
+      <rect id="pad-1-4-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-4-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-5" class="control pad" data-row="1" data-column="5" transform="translate(895 763.5)">
+      <rect id="pad-1-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-6" class="control pad" data-row="1" data-column="6" transform="translate(1004.8 763.5)">
+      <rect id="pad-1-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-1-7" class="control pad" data-row="1" data-column="7" transform="translate(1114.6 763.5)">
+      <rect id="pad-1-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-1-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-0" class="control pad" data-row="2" data-column="0" transform="translate(346 847)">
+      <rect id="pad-2-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-1" class="control pad" data-row="2" data-column="1" transform="translate(455.8 847)">
+      <rect id="pad-2-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-2" class="control pad" data-row="2" data-column="2" transform="translate(565.6 847)">
+      <rect id="pad-2-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-3" class="control pad" data-row="2" data-column="3" transform="translate(675.4 847)">
+      <rect id="pad-2-3-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-3-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-4" class="control pad" data-row="2" data-column="4" transform="translate(785.2 847)">
+      <rect id="pad-2-4-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-4-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-5" class="control pad" data-row="2" data-column="5" transform="translate(895 847)">
+      <rect id="pad-2-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-6" class="control pad" data-row="2" data-column="6" transform="translate(1004.8 847)">
+      <rect id="pad-2-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-2-7" class="control pad" data-row="2" data-column="7" transform="translate(1114.6 847)">
+      <rect id="pad-2-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-2-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-0" class="control pad" data-row="3" data-column="0" transform="translate(346 930.5)">
+      <rect id="pad-3-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-3-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-1" class="control pad" data-row="3" data-column="1" transform="translate(455.8 930.5)">
+      <rect id="pad-3-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-3-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-2" class="control pad" data-row="3" data-column="2" transform="translate(565.6 930.5)">
+      <rect id="pad-3-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-3-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-3" class="control pad" data-row="3" data-column="3" transform="translate(675.4 930.5)">
+      <path id="pad-3-3-base" d="M 2 0 L 96 0 L 98 58 L 86 70 L 2 70 L 0 68 L 0 2 Z" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <path d="M 2 0 L 96 0 L 98 58 L 86 70 L 2 70 L 0 68 L 0 2 Z" fill="url(#rubber-grain)" opacity="0.6"/>
+      <path d="M 2 0 L 96 0 L 98 58 L 86 70 L 2 70 L 0 68 L 0 2 Z" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <path id="pad-3-3-led" class="led" d="M 2 0 L 96 0 L 98 58 L 86 70 L 2 70 L 0 68 L 0 2 Z" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-4" class="control pad" data-row="3" data-column="4" transform="translate(785.2 930.5)">
+      <path id="pad-3-4-base" d="M 2 0 L 96 0 L 98 2 L 98 68 L 96 70 L 12 70 L 0 58 L 0 2 Z" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <path d="M 2 0 L 96 0 L 98 2 L 98 68 L 96 70 L 12 70 L 0 58 L 0 2 Z" fill="url(#rubber-grain)" opacity="0.6"/>
+      <path d="M 2 0 L 96 0 L 98 2 L 98 68 L 96 70 L 12 70 L 0 58 L 0 2 Z" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <path id="pad-3-4-led" class="led" d="M 2 0 L 96 0 L 98 2 L 98 68 L 96 70 L 12 70 L 0 58 L 0 2 Z" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-5" class="control pad" data-row="3" data-column="5" transform="translate(895 930.5)">
+      <rect id="pad-3-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-3-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-6" class="control pad" data-row="3" data-column="6" transform="translate(1004.8 930.5)">
+      <rect id="pad-3-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-3-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-3-7" class="control pad" data-row="3" data-column="7" transform="translate(1114.6 930.5)">
+      <rect id="pad-3-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-3-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-0" class="control pad" data-row="4" data-column="0" transform="translate(346 1014)">
+      <rect id="pad-4-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-4-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-1" class="control pad" data-row="4" data-column="1" transform="translate(455.8 1014)">
+      <rect id="pad-4-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-4-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-2" class="control pad" data-row="4" data-column="2" transform="translate(565.6 1014)">
+      <rect id="pad-4-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-4-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-3" class="control pad" data-row="4" data-column="3" transform="translate(675.4 1014)">
+      <path id="pad-4-3-base" d="M 2 0 L 86 0 L 98 12 L 98 68 L 96 70 L 2 70 L 0 68 L 0 2 Z" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <path d="M 2 0 L 86 0 L 98 12 L 98 68 L 96 70 L 2 70 L 0 68 L 0 2 Z" fill="url(#rubber-grain)" opacity="0.6"/>
+      <path d="M 2 0 L 86 0 L 98 12 L 98 68 L 96 70 L 2 70 L 0 68 L 0 2 Z" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <path id="pad-4-3-led" class="led" d="M 2 0 L 86 0 L 98 12 L 98 68 L 96 70 L 2 70 L 0 68 L 0 2 Z" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-4" class="control pad" data-row="4" data-column="4" transform="translate(785.2 1014)">
+      <path id="pad-4-4-base" d="M 12 0 L 96 0 L 98 2 L 98 68 L 96 70 L 2 70 L 0 68 L 0 12 Z" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <path d="M 12 0 L 96 0 L 98 2 L 98 68 L 96 70 L 2 70 L 0 68 L 0 12 Z" fill="url(#rubber-grain)" opacity="0.6"/>
+      <path d="M 12 0 L 96 0 L 98 2 L 98 68 L 96 70 L 2 70 L 0 68 L 0 12 Z" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <path id="pad-4-4-led" class="led" d="M 12 0 L 96 0 L 98 2 L 98 68 L 96 70 L 2 70 L 0 68 L 0 12 Z" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-5" class="control pad" data-row="4" data-column="5" transform="translate(895 1014)">
+      <rect id="pad-4-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-4-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-6" class="control pad" data-row="4" data-column="6" transform="translate(1004.8 1014)">
+      <rect id="pad-4-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-4-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-4-7" class="control pad" data-row="4" data-column="7" transform="translate(1114.6 1014)">
+      <rect id="pad-4-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-4-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-0" class="control pad" data-row="5" data-column="0" transform="translate(346 1097.5)">
+      <rect id="pad-5-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-1" class="control pad" data-row="5" data-column="1" transform="translate(455.8 1097.5)">
+      <rect id="pad-5-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-2" class="control pad" data-row="5" data-column="2" transform="translate(565.6 1097.5)">
+      <rect id="pad-5-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-3" class="control pad" data-row="5" data-column="3" transform="translate(675.4 1097.5)">
+      <rect id="pad-5-3-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-3-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-4" class="control pad" data-row="5" data-column="4" transform="translate(785.2 1097.5)">
+      <rect id="pad-5-4-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-4-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-5" class="control pad" data-row="5" data-column="5" transform="translate(895 1097.5)">
+      <rect id="pad-5-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-6" class="control pad" data-row="5" data-column="6" transform="translate(1004.8 1097.5)">
+      <rect id="pad-5-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-5-7" class="control pad" data-row="5" data-column="7" transform="translate(1114.6 1097.5)">
+      <rect id="pad-5-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-5-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-0" class="control pad" data-row="6" data-column="0" transform="translate(346 1181)">
+      <rect id="pad-6-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-1" class="control pad" data-row="6" data-column="1" transform="translate(455.8 1181)">
+      <rect id="pad-6-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-2" class="control pad" data-row="6" data-column="2" transform="translate(565.6 1181)">
+      <rect id="pad-6-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-3" class="control pad" data-row="6" data-column="3" transform="translate(675.4 1181)">
+      <rect id="pad-6-3-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-3-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-4" class="control pad" data-row="6" data-column="4" transform="translate(785.2 1181)">
+      <rect id="pad-6-4-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-4-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-5" class="control pad" data-row="6" data-column="5" transform="translate(895 1181)">
+      <rect id="pad-6-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-6" class="control pad" data-row="6" data-column="6" transform="translate(1004.8 1181)">
+      <rect id="pad-6-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-6-7" class="control pad" data-row="6" data-column="7" transform="translate(1114.6 1181)">
+      <rect id="pad-6-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-6-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-0" class="control pad" data-row="7" data-column="0" transform="translate(346 1264.5)">
+      <rect id="pad-7-0-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-0-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-1" class="control pad" data-row="7" data-column="1" transform="translate(455.8 1264.5)">
+      <rect id="pad-7-1-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-1-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-2" class="control pad" data-row="7" data-column="2" transform="translate(565.6 1264.5)">
+      <rect id="pad-7-2-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-2-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-3" class="control pad" data-row="7" data-column="3" transform="translate(675.4 1264.5)">
+      <rect id="pad-7-3-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-3-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-4" class="control pad" data-row="7" data-column="4" transform="translate(785.2 1264.5)">
+      <rect id="pad-7-4-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-4-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-5" class="control pad" data-row="7" data-column="5" transform="translate(895 1264.5)">
+      <rect id="pad-7-5-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-5-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-6" class="control pad" data-row="7" data-column="6" transform="translate(1004.8 1264.5)">
+      <rect id="pad-7-6-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-6-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="pad-7-7" class="control pad" data-row="7" data-column="7" transform="translate(1114.6 1264.5)">
+      <rect id="pad-7-7-base" x="0" y="0" width="98" height="70" rx="3" fill="url(#pad-rubber)" stroke="#07090b" stroke-width="2.4"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="url(#rubber-grain)" opacity="0.6"/>
+      <rect x="0" y="0" width="98" height="70" rx="3" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+      <rect id="pad-7-7-led" class="led" x="0" y="0" width="98" height="70" rx="3" fill="#61e3ad" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-32t" class="control button" data-label="1/32t" transform="translate(1255 680)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-32t-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-32t-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-32" class="control button" data-label="1/32" transform="translate(1255 763.5)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-32-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-32-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-16t" class="control button" data-label="1/16t" transform="translate(1255 847)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-16t-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-16t-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-16" class="control button" data-label="1/16" transform="translate(1255 930.5)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-16-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-16-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-8t" class="control button" data-label="1/8t" transform="translate(1255 1014)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-8t-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-8t-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-8" class="control button" data-label="1/8" transform="translate(1255 1097.5)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-8-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-8-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-4t" class="control button" data-label="1/4t" transform="translate(1255 1181)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-4t-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-4t-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-1-4" class="control button" data-label="1/4" transform="translate(1255 1264.5)">
+      <rect x="0" y="0" width="69" height="70" rx="3" id="btn-1-4-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 65" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="67" height="68" rx="3" class="led" id="btn-1-4-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="arrow-up" class="control directional-button">
+      <polygon id="arrow-up-base" points="1350,608 1489,608 1419.5,678" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="arrow-up-led" points="1350,608 1489,608 1419.5,678" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1350,608 1489,608 1419.5,678" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="arrow-right" class="control directional-button">
+      <polygon id="arrow-right-base" points="1490,609 1490,749 1420.5,679" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="arrow-right-led" points="1490,609 1490,749 1420.5,679" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1490,609 1490,749 1420.5,679" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="arrow-down" class="control directional-button">
+      <polygon id="arrow-down-base" points="1489,750 1350,750 1419.5,680" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="arrow-down-led" points="1489,750 1350,750 1419.5,680" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1489,750 1350,750 1419.5,680" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="arrow-left" class="control directional-button">
+      <polygon id="arrow-left-base" points="1349,749 1349,609 1418.5,679" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="arrow-left-led" points="1349,749 1349,609 1418.5,679" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1349,749 1349,609 1418.5,679" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="btn-repeat" class="control button" data-label="Repeat" transform="translate(1349 930)">
+      <rect x="0" y="0" width="71" height="70" rx="3" id="btn-repeat-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="68" rx="3" class="led" id="btn-repeat-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-accent" class="control button" data-label="Accent" transform="translate(1420 930)">
+      <rect x="0" y="0" width="70" height="70" rx="3" id="btn-accent-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 67 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="68" rx="3" class="led" id="btn-accent-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-scale" class="control button" data-label="Scale" transform="translate(1349 1014)">
+      <rect x="0" y="0" width="71" height="40" rx="3" id="btn-scale-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="38" rx="3" class="led" id="btn-scale-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-layout" class="control button" data-label="Layout" transform="translate(1420 1014)">
+      <rect x="0" y="0" width="70" height="40" rx="3" id="btn-layout-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="38" rx="3" class="led" id="btn-layout-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-note" class="control button" data-label="Note" transform="translate(1349 1054)">
+      <rect x="0" y="0" width="71" height="71" rx="3" id="btn-note-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 68 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="69" rx="3" class="led" id="btn-note-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-session" class="control button" data-label="Session" transform="translate(1420 1054)">
+      <rect x="0" y="0" width="70" height="71" rx="3" id="btn-session-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 68 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="69" rx="3" class="led" id="btn-session-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-octave-up" class="control directional-button">
+      <polygon id="btn-octave-up-base" points="1350,1140 1489,1140 1419.5,1209.5" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="btn-octave-up-led" points="1350,1140 1489,1140 1419.5,1209.5" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1350,1140 1489,1140 1419.5,1209.5" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="btn-page-right" class="control directional-button">
+      <polygon id="btn-page-right-base" points="1490,1141 1490,1280 1420.5,1210.5" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="btn-page-right-led" points="1490,1141 1490,1280 1420.5,1210.5" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1490,1141 1490,1280 1420.5,1210.5" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="btn-octave-down" class="control directional-button">
+      <polygon id="btn-octave-down-base" points="1489,1281 1350,1281 1419.5,1211.5" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="btn-octave-down-led" points="1489,1281 1350,1281 1419.5,1211.5" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1489,1281 1350,1281 1419.5,1211.5" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="btn-page-left" class="control directional-button">
+      <polygon id="btn-page-left-base" points="1349,1280 1349,1141 1418.5,1210.5" fill="url(#button-matte)" stroke="#080a0c" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon class="led" id="btn-page-left-led" points="1349,1280 1349,1141 1418.5,1210.5" fill="#75dbee" fill-opacity="0"/>
+      <polyline points="1349,1280 1349,1141 1418.5,1210.5" fill="none" stroke="url(#edge-highlight)" stroke-width="0.8"/>
+    </g>
+    <g id="btn-shift" class="control button" data-label="Shift" transform="translate(1349 1296)">
+      <rect x="0" y="0" width="71" height="40" rx="3" id="btn-shift-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 67" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="69" height="38" rx="3" class="led" id="btn-shift-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="btn-select" class="control button" data-label="Select" transform="translate(1420 1296)">
+      <rect x="0" y="0" width="70" height="40" rx="3" id="btn-select-base" fill="url(#button-matte)" stroke="#07090b" stroke-width="1.7"/>
+      <path d="M 3 37 V 4 Q 3 2 6 2 H 66" fill="none" stroke="url(#edge-highlight)" stroke-width="1"/>
+      <rect x="1" y="1" width="68" height="38" rx="3" class="led" id="btn-select-led" fill="#78d9ee" fill-opacity="0"/>
+    </g>
+    <g id="shadows" pointer-events="none">
+      <use href="#cable-power" filter="url(#cable-shadow)"/>
+      <use href="#cable-usb" filter="url(#cable-shadow)"/>
+      <use href="#body-base" filter="url(#body-shadow)"/>
+    <use href="#knob-tempo-base" transform="translate(143 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-swing-base" transform="translate(257 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-1-base" transform="translate(391 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-2-base" transform="translate(501 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-3-base" transform="translate(612 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-4-base" transform="translate(723 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-5-base" transform="translate(833 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-6-base" transform="translate(943 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-7-base" transform="translate(1054 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-8-base" transform="translate(1165 275)" filter="url(#knob-shadow)"/>
+    <use href="#knob-master-base" transform="translate(1426 275)" filter="url(#knob-shadow)"/>
+    <use href="#btn-tap-tempo-base" transform="translate(110 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-metronome-base" transform="translate(207 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-1-base" transform="translate(348 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-2-base" transform="translate(457.8 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-3-base" transform="translate(567.6 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-4-base" transform="translate(677.4 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-5-base" transform="translate(787.2 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-6-base" transform="translate(897 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-7-base" transform="translate(1006.8 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-upper-8-base" transform="translate(1116.6 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-setup-base" transform="translate(1349 333)" filter="url(#button-shadow)"/>
+    <use href="#btn-user-base" transform="translate(1420 333)" filter="url(#button-shadow)"/>
+    <path d="M 340 561 V 415 H 1216" fill="none" stroke="url(#recess-edge)" stroke-width="6"/>
+    <use href="#btn-delete-base" transform="translate(110 418)" filter="url(#button-shadow)"/>
+    <use href="#btn-undo-base" transform="translate(110 487)" filter="url(#button-shadow)"/>
+    <use href="#btn-add-device-base" transform="translate(1255 418)" filter="url(#button-shadow)"/>
+    <use href="#btn-add-track-base" transform="translate(1255 488)" filter="url(#button-shadow)"/>
+    <use href="#btn-device-base" transform="translate(1349 418)" filter="url(#button-shadow)"/>
+    <use href="#btn-mix-base" transform="translate(1420 418)" filter="url(#button-shadow)"/>
+    <use href="#btn-browse-base" transform="translate(1349 488)" filter="url(#button-shadow)"/>
+    <use href="#btn-clip-base" transform="translate(1420 488)" filter="url(#button-shadow)"/>
+    <use href="#btn-mute-base" transform="translate(110 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-solo-base" transform="translate(174 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-stop-clip-base" transform="translate(239 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-1-base" transform="translate(348 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-2-base" transform="translate(457.8 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-3-base" transform="translate(567.6 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-4-base" transform="translate(677.4 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-5-base" transform="translate(787.2 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-6-base" transform="translate(897 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-7-base" transform="translate(1006.8 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-lower-8-base" transform="translate(1116.6 608)" filter="url(#button-shadow)"/>
+    <use href="#btn-master-base" transform="translate(1255 608)" filter="url(#button-shadow)"/>
+    <path d="M 225 1330 V 682 H 300" fill="none" stroke="url(#recess-edge)" stroke-width="4"/>
+    <use href="#btn-convert-base" transform="translate(109 680)" filter="url(#button-shadow)"/>
+    <use href="#btn-double-loop-base" transform="translate(109 749)" filter="url(#button-shadow)"/>
+    <use href="#btn-quantize-base" transform="translate(109 818)" filter="url(#button-shadow)"/>
+    <use href="#btn-duplicate-base" transform="translate(109 900)" filter="url(#button-shadow)"/>
+    <use href="#btn-new-base" transform="translate(109 970)" filter="url(#button-shadow)"/>
+    <use href="#btn-fixed-length-base" transform="translate(109 1054)" filter="url(#button-shadow)"/>
+    <use href="#btn-automate-base" transform="translate(109 1117)" filter="url(#button-shadow)"/>
+    <use href="#btn-record-base" transform="translate(109 1179)" filter="url(#button-shadow)"/>
+    <use href="#btn-play-base" transform="translate(109 1263)" filter="url(#button-shadow)"/>
+    <use href="#pad-0-0-base" transform="translate(346 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-1-base" transform="translate(455.8 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-2-base" transform="translate(565.6 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-3-base" transform="translate(675.4 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(675.4 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-4-base" transform="translate(785.2 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(785.2 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-5-base" transform="translate(895 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-6-base" transform="translate(1004.8 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-0-7-base" transform="translate(1114.6 680)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 680)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-0-base" transform="translate(346 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-1-base" transform="translate(455.8 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-2-base" transform="translate(565.6 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-3-base" transform="translate(675.4 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(675.4 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-4-base" transform="translate(785.2 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(785.2 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-5-base" transform="translate(895 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-6-base" transform="translate(1004.8 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-1-7-base" transform="translate(1114.6 763.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 763.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-0-base" transform="translate(346 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-1-base" transform="translate(455.8 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-2-base" transform="translate(565.6 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-3-base" transform="translate(675.4 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(675.4 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-4-base" transform="translate(785.2 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(785.2 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-5-base" transform="translate(895 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-6-base" transform="translate(1004.8 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-2-7-base" transform="translate(1114.6 847)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 847)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-0-base" transform="translate(346 930.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-1-base" transform="translate(455.8 930.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-2-base" transform="translate(565.6 930.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-3-base" transform="translate(675.4 930.5)" filter="url(#pad-inner-shadow)"/>
+    <path d="M 2 0 L 96 0 L 98 58 L 86 70 L 2 70 L 0 68 L 0 2 Z" transform="translate(675.4 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-4-base" transform="translate(785.2 930.5)" filter="url(#pad-inner-shadow)"/>
+    <path d="M 2 0 L 96 0 L 98 2 L 98 68 L 96 70 L 12 70 L 0 58 L 0 2 Z" transform="translate(785.2 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-5-base" transform="translate(895 930.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-6-base" transform="translate(1004.8 930.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-3-7-base" transform="translate(1114.6 930.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 930.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-0-base" transform="translate(346 1014)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-1-base" transform="translate(455.8 1014)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-2-base" transform="translate(565.6 1014)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-3-base" transform="translate(675.4 1014)" filter="url(#pad-inner-shadow)"/>
+    <path d="M 2 0 L 86 0 L 98 12 L 98 68 L 96 70 L 2 70 L 0 68 L 0 2 Z" transform="translate(675.4 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-4-base" transform="translate(785.2 1014)" filter="url(#pad-inner-shadow)"/>
+    <path d="M 12 0 L 96 0 L 98 2 L 98 68 L 96 70 L 2 70 L 0 68 L 0 12 Z" transform="translate(785.2 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-5-base" transform="translate(895 1014)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-6-base" transform="translate(1004.8 1014)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-4-7-base" transform="translate(1114.6 1014)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 1014)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-0-base" transform="translate(346 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-1-base" transform="translate(455.8 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-2-base" transform="translate(565.6 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-3-base" transform="translate(675.4 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(675.4 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-4-base" transform="translate(785.2 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(785.2 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-5-base" transform="translate(895 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-6-base" transform="translate(1004.8 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-5-7-base" transform="translate(1114.6 1097.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 1097.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-0-base" transform="translate(346 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-1-base" transform="translate(455.8 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-2-base" transform="translate(565.6 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-3-base" transform="translate(675.4 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(675.4 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-4-base" transform="translate(785.2 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(785.2 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-5-base" transform="translate(895 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-6-base" transform="translate(1004.8 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-6-7-base" transform="translate(1114.6 1181)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 1181)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-0-base" transform="translate(346 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(346 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-1-base" transform="translate(455.8 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(455.8 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-2-base" transform="translate(565.6 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(565.6 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-3-base" transform="translate(675.4 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(675.4 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-4-base" transform="translate(785.2 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(785.2 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-5-base" transform="translate(895 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(895 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-6-base" transform="translate(1004.8 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1004.8 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#pad-7-7-base" transform="translate(1114.6 1264.5)" filter="url(#pad-inner-shadow)"/>
+    <rect x="0" y="0" width="98" height="70" rx="3" transform="translate(1114.6 1264.5)" fill="none" stroke="url(#recess-edge)" stroke-width="3.3"/>
+    <use href="#btn-1-32t-base" transform="translate(1255 680)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-32-base" transform="translate(1255 763.5)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-16t-base" transform="translate(1255 847)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-16-base" transform="translate(1255 930.5)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-8t-base" transform="translate(1255 1014)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-8-base" transform="translate(1255 1097.5)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-4t-base" transform="translate(1255 1181)" filter="url(#button-shadow)"/>
+    <use href="#btn-1-4-base" transform="translate(1255 1264.5)" filter="url(#button-shadow)"/>
+    <use href="#arrow-up-base" filter="url(#button-shadow)"/>
+    <use href="#arrow-right-base" filter="url(#button-shadow)"/>
+    <use href="#arrow-down-base" filter="url(#button-shadow)"/>
+    <use href="#arrow-left-base" filter="url(#button-shadow)"/>
+    <use href="#btn-repeat-base" transform="translate(1349 930)" filter="url(#button-shadow)"/>
+    <use href="#btn-accent-base" transform="translate(1420 930)" filter="url(#button-shadow)"/>
+    <use href="#btn-scale-base" transform="translate(1349 1014)" filter="url(#button-shadow)"/>
+    <use href="#btn-layout-base" transform="translate(1420 1014)" filter="url(#button-shadow)"/>
+    <use href="#btn-note-base" transform="translate(1349 1054)" filter="url(#button-shadow)"/>
+    <use href="#btn-session-base" transform="translate(1420 1054)" filter="url(#button-shadow)"/>
+    <use href="#btn-octave-up-base" filter="url(#button-shadow)"/>
+    <use href="#btn-page-right-base" filter="url(#button-shadow)"/>
+    <use href="#btn-octave-down-base" filter="url(#button-shadow)"/>
+    <use href="#btn-page-left-base" filter="url(#button-shadow)"/>
+    <use href="#btn-shift-base" transform="translate(1349 1296)" filter="url(#button-shadow)"/>
+    <use href="#btn-select-base" transform="translate(1420 1296)" filter="url(#button-shadow)"/>
+    </g>
+    <g id="glass" pointer-events="none">
+      <rect x="340" y="415" width="876" height="146" fill="url(#glass-reflection)"/>
+    </g>
+    <g id="labels" font-family="Arial, Helvetica, sans-serif" pointer-events="none">
+    <text data-control="btn-tap-tempo" x="120" y="352" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="120" dy="0">Tap Tempo</tspan></text>
+    <text data-control="btn-metronome" x="217" y="352" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="217" dy="0">Metronome</tspan></text>
+    <text data-control="btn-setup" x="1359" y="352" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Setup</tspan></text>
+    <text data-control="btn-user" x="1430" y="352" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1430" dy="0">User</tspan></text>
+    <text data-control="btn-delete" x="120" y="437" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="120" dy="0">Delete</tspan></text>
+    <text data-control="btn-undo" x="120" y="506" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="120" dy="0">Undo</tspan></text>
+    <text data-control="btn-add-device" x="1265" y="437" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1265" dy="0">Add</tspan><tspan x="1265" dy="11.664">Device</tspan></text>
+    <text data-control="btn-add-track" x="1265" y="507" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1265" dy="0">Add</tspan><tspan x="1265" dy="11.664">Track</tspan></text>
+    <text data-control="btn-device" x="1359" y="437" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Device</tspan></text>
+    <text data-control="btn-mix" x="1430" y="437" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1430" dy="0">Mix</tspan></text>
+    <text data-control="btn-browse" x="1359" y="507" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Browse</tspan></text>
+    <text data-control="btn-clip" x="1430" y="507" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1430" dy="0">Clip</tspan></text>
+    <text data-control="btn-mute" x="120" y="627" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="120" dy="0">Mute</tspan></text>
+    <text data-control="btn-solo" x="184" y="627" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="184" dy="0">Solo</tspan></text>
+    <text data-control="btn-stop-clip" x="249" y="627" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="249" dy="0">Stop</tspan><tspan x="249" dy="11.664">Clip</tspan></text>
+    <text data-control="btn-master" x="1265" y="627" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1265" dy="0">Master</tspan></text>
+    <text data-control="btn-convert" x="119" y="699" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="119" dy="0">Convert</tspan></text>
+    <text data-control="btn-double-loop" x="119" y="768" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="119" dy="0">Double</tspan><tspan x="119" dy="11.664">Loop</tspan></text>
+    <text data-control="btn-quantize" x="119" y="837" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="119" dy="0">Quantize</tspan></text>
+    <text data-control="btn-duplicate" x="119" y="919" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="119" dy="0">Duplicate</tspan></text>
+    <text data-control="btn-new" x="119" y="989" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="119" dy="0">New</tspan></text>
+    <text data-control="btn-fixed-length" x="119" y="1073" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="119" dy="0">Fixed</tspan><tspan x="119" dy="11.664">Length</tspan></text>
+    <text data-control="btn-automate" x="119" y="1136" font-size="10.8" font-weight="500" fill="#76424a" text-anchor="start"><tspan x="119" dy="0">Automate</tspan></text>
+    <circle data-control="btn-record" cx="143.5" cy="1214" r="15" fill="none" stroke="#babdbf" stroke-width="2.6"/>
+    <path data-control="btn-play" d="M 131 1284 L 156 1300 L 131 1316 Z" fill="none" stroke="#babdbf" stroke-width="2.6" stroke-linejoin="round"/>
+    <text data-control="btn-1-32t" x="1265" y="699" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/32t</tspan></text>
+    <path data-control="btn-1-32t" d="M 1304 713 L 1314 723 L 1304 733" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-32" x="1265" y="782.5" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/32</tspan></text>
+    <path data-control="btn-1-32" d="M 1304 796.5 L 1314 806.5 L 1304 816.5" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-16t" x="1265" y="866" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/16t</tspan></text>
+    <path data-control="btn-1-16t" d="M 1304 880 L 1314 890 L 1304 900" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-16" x="1265" y="949.5" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/16</tspan></text>
+    <path data-control="btn-1-16" d="M 1304 963.5 L 1314 973.5 L 1304 983.5" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-8t" x="1265" y="1033" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/8t</tspan></text>
+    <path data-control="btn-1-8t" d="M 1304 1047 L 1314 1057 L 1304 1067" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-8" x="1265" y="1116.5" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/8</tspan></text>
+    <path data-control="btn-1-8" d="M 1304 1130.5 L 1314 1140.5 L 1304 1150.5" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-4t" x="1265" y="1200" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/4t</tspan></text>
+    <path data-control="btn-1-4t" d="M 1304 1214 L 1314 1224 L 1304 1234" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-1-4" x="1265" y="1283.5" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1265" dy="0">1/4</tspan></text>
+    <path data-control="btn-1-4" d="M 1304 1297.5 L 1314 1307.5 L 1304 1317.5" fill="none" stroke="#41474c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path data-control="arrow-up" d="M 1399.5 643 L 1419.5 623 L 1439.5 643" fill="none" stroke="#363b40" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path data-control="arrow-down" d="M 1399.5 715 L 1419.5 735 L 1439.5 715" fill="none" stroke="#363b40" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path data-control="arrow-left" d="M 1382 659 L 1362 679 L 1382 699" fill="none" stroke="#363b40" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path data-control="arrow-right" d="M 1457 659 L 1477 679 L 1457 699" fill="none" stroke="#363b40" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-repeat" x="1359" y="949" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Repeat</tspan></text>
+    <text data-control="btn-accent" x="1430" y="949" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1430" dy="0">Accent</tspan></text>
+    <text data-control="btn-scale" x="1359" y="1033" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Scale</tspan></text>
+    <text data-control="btn-layout" x="1430" y="1033" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1430" dy="0">Layout</tspan></text>
+    <text data-control="btn-note" x="1359" y="1073" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Note</tspan></text>
+    <text data-control="btn-session" x="1430" y="1073" font-size="10.8" font-weight="500" fill="#555b60" text-anchor="start"><tspan x="1430" dy="0">Session</tspan></text>
+    <text data-control="btn-octave-up" x="1419.5" y="1168.3" font-size="10.7" font-weight="500" fill="#b8babc" text-anchor="middle"><tspan x="1419.5" dy="0">Octave</tspan></text>
+    <path data-control="btn-octave-up" d="M 1413.5 1191.5 L 1419.5 1185.5 L 1425.5 1191.5" fill="none" stroke="#b8babc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-octave-down" x="1419.5" y="1260.3" font-size="10.7" font-weight="500" fill="#b8babc" text-anchor="middle"><tspan x="1419.5" dy="0">Octave</tspan></text>
+    <path data-control="btn-octave-down" d="M 1413.5 1229.5 L 1419.5 1235.5 L 1425.5 1229.5" fill="none" stroke="#b8babc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-page-left" x="1373.5" y="1214.3" font-size="10.7" font-weight="500" fill="#b8babc" text-anchor="middle"><tspan x="1373.5" dy="0">Page</tspan></text>
+    <path data-control="btn-page-left" d="M 1400.5 1204.5 L 1394.5 1210.5 L 1400.5 1216.5" fill="none" stroke="#b8babc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-page-right" x="1465.5" y="1214.3" font-size="10.7" font-weight="500" fill="#b8babc" text-anchor="middle"><tspan x="1465.5" dy="0">Page</tspan></text>
+    <path data-control="btn-page-right" d="M 1438.5 1204.5 L 1444.5 1210.5 L 1438.5 1216.5" fill="none" stroke="#b8babc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text data-control="btn-shift" x="1359" y="1315" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1359" dy="0">Shift</tspan></text>
+    <text data-control="btn-select" x="1430" y="1315" font-size="10.8" font-weight="500" fill="#b8babc" text-anchor="start"><tspan x="1430" dy="0">Select</tspan></text>
+      <g id="project-mark" fill="#bfc1c2" aria-label="Push Deck"><rect x="1273.5" y="265" width="8" height="8" rx="1.5" opacity="1"/><rect x="1284.5" y="265" width="8" height="8" rx="1.5" opacity=".42"/><rect x="1295.5" y="265" width="8" height="8" rx="1.5" opacity=".42"/><rect x="1273.5" y="276" width="8" height="8" rx="1.5" opacity=".42"/><rect x="1284.5" y="276" width="8" height="8" rx="1.5" opacity="1"/><rect x="1295.5" y="276" width="8" height="8" rx="1.5" opacity=".42"/><rect x="1273.5" y="287" width="8" height="8" rx="1.5" opacity=".42"/><rect x="1284.5" y="287" width="8" height="8" rx="1.5" opacity=".42"/><rect x="1295.5" y="287" width="8" height="8" rx="1.5" opacity="1"/></g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,106 @@
+{
+  "id": "browser",
+  "name": "Broswer",
+  "description": "Tabs, navigation and zoom in your web browser.",
+  "author": {
+    "name": "Arcept"
+  },
+  "source": {
+    "kind": "bundled"
+  },
+  "slot": 0,
+  "match": {
+    "bundle_ids": [
+      "com.google.Chrome",
+      "com.apple.Safari",
+      "company.thebrowser.Browser",
+      "com.brave.Browser",
+      "com.microsoft.edgemac"
+    ]
+  },
+  "theme": {
+    "accent": "#1abcfe",
+    "bg": "#000000"
+  },
+  "controls": {
+    "btn-upper-3": {
+      "label": "Reload",
+      "icon": "redo",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+r"
+      }
+    },
+    "pad-7-0": {
+      "label": "New tab",
+      "color": "#1abcfe",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+t"
+      }
+    },
+    "pad-7-1": {
+      "label": "Close",
+      "color": "#f24e1e",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+w"
+      }
+    },
+    "pad-7-2": {
+      "label": "Reopen",
+      "color": "#ffcd29",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+shift+t"
+      }
+    },
+    "pad-7-3": {
+      "label": "Address",
+      "color": "#0acf83",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+l"
+      }
+    },
+    "pad-7-4": {
+      "label": "Find",
+      "color": "#a259ff",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+f"
+      }
+    },
+    "pad-7-5": {
+      "label": "Reload",
+      "color": "#8b8b99",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+r"
+      }
+    }
+  },
+  "display": {
+    "widgets": [
+      {
+        "type": "clock",
+        "col": 0,
+        "row": 0,
+        "w": 2,
+        "h": 2
+      },
+      {
+        "type": "browser",
+        "col": 2,
+        "row": 0,
+        "w": 6,
+        "h": 2
+      }
+    ],
+    "player_side": "right"
+  },
+  "icon": {
+    "type": "app",
+    "bundle": "com.google.Chrome"
+  }
+}

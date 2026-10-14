@@ -1,0 +1,120 @@
+{
+  "id": "chatgpt-codex",
+  "name": "ChatGPT / Codex",
+  "description": "Shortcuts for the ChatGPT and Codex desktop apps.",
+  "author": {
+    "name": "Arcept"
+  },
+  "source": {
+    "kind": "bundled"
+  },
+  "slot": 3,
+  "match": {
+    "bundle_ids": [
+      "com.openai.chat",
+      "com.openai.codex"
+    ]
+  },
+  "theme": {
+    "accent": "#10a37f",
+    "bg": "#000000"
+  },
+  "controls": {
+    "btn-upper-1": {
+      "label": "New",
+      "icon": "plus",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+n"
+      }
+    },
+    "btn-upper-2": {
+      "label": "Search",
+      "icon": "search",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+k"
+      }
+    },
+    "btn-upper-3": {
+      "label": "Prefs",
+      "icon": "app",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+,"
+      }
+    },
+    "btn-lower-1": {
+      "label": "Undo",
+      "icon": "undo",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+z"
+      }
+    },
+    "btn-lower-2": {
+      "label": "Redo",
+      "icon": "redo",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+shift+z"
+      }
+    },
+    "pad-7-0": {
+      "label": "New",
+      "color": "#10a37f",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+n"
+      }
+    },
+    "pad-7-1": {
+      "label": "Search",
+      "color": "#1abcfe",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+k"
+      }
+    },
+    "pad-7-2": {
+      "label": "Prefs",
+      "color": "#8b8b99",
+      "action": {
+        "type": "keys",
+        "keys": "cmd+,"
+      }
+    }
+  },
+  "icon": {
+    "type": "app",
+    "bundle": "com.openai.codex"
+  },
+  "display": {
+    "widgets": [
+      {
+        "type": "usage",
+        "provider": "codex",
+        "which": "both",
+        "col": 4,
+        "row": 0,
+        "w": 2,
+        "h": 2
+      },
+      {
+        "type": "profile",
+        "col": 6,
+        "row": 0,
+        "w": 2,
+        "h": 1
+      },
+      {
+        "type": "clock",
+        "col": 6,
+        "row": 1,
+        "w": 2,
+        "h": 1
+      }
+    ],
+    "player_side": "left"
+  }
+}

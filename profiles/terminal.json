@@ -1,0 +1,85 @@
+{
+  "id": "terminal",
+  "name": "Claude Code",
+  "description": "Claude Code slash commands and session controls.",
+  "author": {
+    "name": "Arcept"
+  },
+  "source": {
+    "kind": "bundled"
+  },
+  "slot": 1,
+  "match": {
+    "bundle_ids": [
+      "com.apple.Terminal",
+      "com.googlecode.iterm2",
+      "com.anthropic.claudefordesktop"
+    ]
+  },
+  "theme": {
+    "accent": "#d97757",
+    "bg": "#000000"
+  },
+  "controls": {
+    "pad-7-0": {
+      "label": "Compact",
+      "color": "#d97757",
+      "risky": true,
+      "action": {
+        "type": "text",
+        "text": "/compact\n\n"
+      }
+    },
+    "btn-upper-4": {
+      "label": "Model",
+      "icon": "bolt",
+      "color": "#d97757",
+      "action": {
+        "type": "text",
+        "text": "/model\n"
+      }
+    },
+    "btn-upper-3": {
+      "label": "Resume",
+      "icon": "redo",
+      "color": "#d97757",
+      "action": {
+        "type": "text",
+        "text": "/resume\n"
+      }
+    }
+  },
+  "icon": {
+    "type": "app",
+    "bundle": "com.anthropic.claudefordesktop"
+  },
+  "display": {
+    "widgets": [
+      {
+        "type": "usage",
+        "provider": "claude",
+        "which": "both",
+        "col": 2,
+        "row": 0,
+        "w": 2,
+        "h": 2,
+        "context": true
+      },
+      {
+        "type": "clock",
+        "col": 0,
+        "row": 0,
+        "w": 2,
+        "h": 2
+      },
+      {
+        "type": "claude_session",
+        "col": 4,
+        "row": 0,
+        "w": 4,
+        "h": 2
+      }
+    ],
+    "player_side": "right"
+  }
+}

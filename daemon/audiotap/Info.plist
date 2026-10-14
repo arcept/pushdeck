@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>com.arcept.pushdeck.audio</string>
+<key>CFBundleName</key><string>Push Deck Audio</string>
+<key>CFBundleDisplayName</key><string>Push Deck Audio</string>
+<key>CFBundleExecutable</key><string>audiotap</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>LSUIElement</key><true/>
+<key>LSMinimumSystemVersion</key><string>14.2</string>
+<key>NSAudioCaptureUsageDescription</key><string>Push Deck listens to what your Mac is playing so the Push display can show a visualizer. Audio is analysed on this Mac and never recorded or sent anywhere.</string>
+</dict></plist>

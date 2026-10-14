@@ -1,0 +1,313 @@
+{
+  "device": {
+    "name": "Ableton Push 2",
+    "usb_vendor": "0x2982",
+    "usb_product": "0x1967",
+    "midi_ports": [
+      "Ableton Push 2 Live Port",
+      "Ableton Push 2 User Port"
+    ],
+    "midi_mode_sysex": "F0 00 21 1D 01 01 0A 02 F7",
+    "aftertouch_poly_sysex": "F0 00 21 1D 01 01 1E 01 F7"
+  },
+  "pads": {
+    "note_first": 36,
+    "note_last": 99,
+    "columns": 8,
+    "rows": 8,
+    "origin": "bottom-left",
+    "led": "note_on ch0, velocity = palette index",
+    "velocity_practical_range": [
+      1,
+      60
+    ],
+    "pressure": "polytouch (note = pad) in poly mode, 0-127"
+  },
+  "buttons": {
+    "rgb": {
+      "lower_display_row": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "upper_display_row": [
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109
+      ],
+      "scene_launch_column": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "named": {
+        "60": "Mute",
+        "61": "Solo",
+        "29": "Stop Clip",
+        "85": "Play",
+        "86": "Record",
+        "89": "Automate"
+      }
+    },
+    "white_only": [
+      3,
+      9,
+      28,
+      30,
+      31,
+      35,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      62,
+      63,
+      87,
+      88,
+      90,
+      110,
+      111,
+      112,
+      113,
+      116,
+      117,
+      118,
+      119
+    ],
+    "names": {
+      "3": "Tap Tempo",
+      "9": "Metronome",
+      "30": "Setup",
+      "59": "User",
+      "102": "Upper display button 1",
+      "103": "Upper display button 2",
+      "104": "Upper display button 3",
+      "105": "Upper display button 4",
+      "106": "Upper display button 5",
+      "107": "Upper display button 6",
+      "108": "Upper display button 7",
+      "109": "Upper display button 8",
+      "118": "Delete",
+      "52": "Add Device",
+      "110": "Device",
+      "112": "Mix",
+      "119": "Undo",
+      "53": "Add Track",
+      "111": "Browse",
+      "113": "Clip",
+      "60": "Mute",
+      "61": "Solo",
+      "29": "Stop Clip",
+      "28": "Master",
+      "46": "Up",
+      "47": "Down",
+      "44": "Left",
+      "45": "Right",
+      "20": "Lower display button 1",
+      "21": "Lower display button 2",
+      "22": "Lower display button 3",
+      "23": "Lower display button 4",
+      "24": "Lower display button 5",
+      "25": "Lower display button 6",
+      "26": "Lower display button 7",
+      "27": "Lower display button 8",
+      "35": "Convert",
+      "117": "Double Loop",
+      "116": "Quantize",
+      "88": "Duplicate",
+      "87": "New",
+      "90": "Fixed Length",
+      "89": "Automate",
+      "86": "Record",
+      "85": "Play",
+      "43": "1/32T",
+      "42": "1/32",
+      "41": "1/16T",
+      "40": "1/16",
+      "39": "1/8T",
+      "38": "1/8",
+      "37": "1/4T",
+      "36": "1/4",
+      "56": "Repeat",
+      "57": "Accent",
+      "58": "Scale",
+      "31": "Layout",
+      "50": "Note",
+      "51": "Session",
+      "55": "Octave Up",
+      "62": "Previous Page",
+      "63": "Next Page",
+      "54": "Octave Down",
+      "49": "Shift",
+      "48": "Select"
+    },
+    "press": "CC value > 0; release 0; LED = same CC with value = palette index",
+    "layout_left_column_top_to_bottom": [
+      3,
+      118,
+      119,
+      60,
+      35,
+      117,
+      116,
+      88,
+      87,
+      90,
+      89,
+      86,
+      85
+    ],
+    "layout_right_of_pads_column_top_to_bottom": [
+      52,
+      53,
+      28,
+      43,
+      42,
+      41,
+      40,
+      39,
+      38,
+      37,
+      36
+    ],
+    "layout_far_right_cluster": {
+      "grid_2x3_row_major": [
+        56,
+        57,
+        58,
+        31,
+        50,
+        51
+      ],
+      "diamond_up_left_right_down": [
+        55,
+        62,
+        63,
+        54
+      ],
+      "bottom_row_left_right": [
+        49,
+        48
+      ],
+      "note": "CC 55 saved as Octave Up; user said 'Quantize Up' - to confirm"
+    }
+  },
+  "encoders": [
+    {
+      "pos": 1,
+      "name": "Tempo",
+      "cc": 14,
+      "touch_note": 10,
+      "kind": "stepped"
+    },
+    {
+      "pos": 2,
+      "name": "Swing",
+      "cc": 15,
+      "touch_note": 9,
+      "kind": "free"
+    },
+    {
+      "pos": 3,
+      "name": "Encoder 1",
+      "cc": 71,
+      "touch_note": 0,
+      "kind": "free"
+    },
+    {
+      "pos": 4,
+      "name": "Encoder 2",
+      "cc": 72,
+      "touch_note": 1,
+      "kind": "free"
+    },
+    {
+      "pos": 5,
+      "name": "Encoder 3",
+      "cc": 73,
+      "touch_note": 2,
+      "kind": "free"
+    },
+    {
+      "pos": 6,
+      "name": "Encoder 4",
+      "cc": 74,
+      "touch_note": 3,
+      "kind": "free"
+    },
+    {
+      "pos": 7,
+      "name": "Encoder 5",
+      "cc": 75,
+      "touch_note": 4,
+      "kind": "free"
+    },
+    {
+      "pos": 8,
+      "name": "Encoder 6",
+      "cc": 76,
+      "touch_note": 5,
+      "kind": "free"
+    },
+    {
+      "pos": 9,
+      "name": "Encoder 7",
+      "cc": 77,
+      "touch_note": 6,
+      "kind": "free"
+    },
+    {
+      "pos": 10,
+      "name": "Encoder 8",
+      "cc": 78,
+      "touch_note": 7,
+      "kind": "free"
+    },
+    {
+      "pos": 11,
+      "name": "Master",
+      "cc": 79,
+      "touch_note": 8,
+      "kind": "free"
+    }
+  ],
+  "encoder_rotation": "relative: 1 = clockwise (2 fast), 127 = counter-clockwise (126 fast); step = v if v < 64 else v - 128",
+  "touch_strip": {
+    "touch_note": 12,
+    "position": "pitch bend -8192..8191, returns to 0 on release"
+  },
+  "display": {
+    "width": 960,
+    "height": 160,
+    "format": "RGB565 LE, XOR mask E7 F3 E7 FF, endpoint 0x01",
+    "brightness_sysex": "08 <lo> <hi> (0-255)"
+  },
+  "led_brightness_sysex": "06 <0-127>"
+}

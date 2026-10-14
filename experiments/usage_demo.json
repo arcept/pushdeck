@@ -1,0 +1,12 @@
+{
+  "five_hour": {
+    "used_percentage": 12,
+    "resets_at": 1791559200
+  },
+  "seven_day": {
+    "used_percentage": 99,
+    "resets_at": 1791662400
+  },
+  "updated_at": 1791544939,
+  "note": "snapshot from the app's usage tool, used only until the status line writes the real file"
+}

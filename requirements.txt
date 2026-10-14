@@ -1,0 +1,10 @@
+mido
+python-rtmidi
+pillow
+pyusb
+numpy
+imageio
+imageio-ffmpeg
+aiohttp
+pyobjc-framework-Cocoa
+pyobjc-framework-Quartz
