@@ -1,6 +1,24 @@
-# Push Deck
+<h1 align="center">Push Deck</h1>
 
-Use an **Ableton Push 2 on its own** (no Ableton Live) as a customisable controller and ambient display for your Mac.
+<p align="center">
+  Use an <b>Ableton Push 2 on its own</b> (no Ableton Live) as a customisable controller and ambient display for your Mac.
+</p>
+
+<p align="center">
+  <img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-aeb0ff?style=flat-square">
+  <img alt="macOS" src="https://img.shields.io/badge/macOS-13%2B-aeb0ff?style=flat-square">
+  <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple%20Silicon-ready-aeb0ff?style=flat-square">
+  <img alt="Status: early" src="https://img.shields.io/badge/status-early-ffbe32?style=flat-square">
+</p>
+
+<p align="center">
+  <img alt="The Push Deck window: a profile list, a replica of the Push 2 with its display, and the controls inspector" src="docs/images/app.png" width="100%">
+</p>
+
+<p align="center">
+  <img alt="The Push 2 display changing between two profiles: a clock, a Claude Code session with its mascot, and usage meters" src="docs/images/display.gif" width="80%"><br>
+  <sub>The real Push 2 display, recorded: the Claude Code profile (a live session with its mascot and usage meters), then ChatGPT / Codex.</sub>
+</p>
 
 - **Per-app profiles.** Pads, buttons and encoders run shortcuts, open apps and web addresses, type text, run Shortcuts or shell commands. The profile follows the app you are using, or you pin one.
 - **A live display.** The 960×160 screen shows your button labels and a grid of widgets (active profile, clock, Claude and Codex usage, the browser's active tab) next to a **media player**. Arrange the widgets in Settings → Display layout, or with **Arrange display** on the picture of the screen.
@@ -11,6 +29,19 @@ Use an **Ableton Push 2 on its own** (no Ableton Live) as a customisable control
 Everything runs on your Mac. Nothing is synced to a server, and there are no accounts to create.
 
 > Push Deck is an independent project, **not affiliated with, endorsed by, or sponsored by Ableton AG**. "Ableton" and "Push" are trademarks of Ableton AG. See [NOTICE.md](NOTICE.md).
+
+## A look around
+
+<p align="center">
+  <img alt="First-run setup, welcome step" src="docs/images/setup-welcome.png" width="48%">
+  <img alt="First-run setup, permissions step" src="docs/images/setup-permissions.png" width="48%">
+  <br><sub>First-run setup: it checks your Push, asks for the few macOS permissions it needs, explains each one, and offers a quick tour.</sub>
+</p>
+
+<p align="center">
+  <img alt="The menu bar panel, three tabs" src="docs/images/menu-bar.png" width="90%">
+  <br><sub>The menu bar panel: pin a profile, switch the player, set brightness, turn the Push on or off.</sub>
+</p>
 
 ## Status and contributing
 
