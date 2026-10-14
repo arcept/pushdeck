@@ -12,6 +12,8 @@ const PAD = ["#4f8cff", "#ff9a3c", "#a06bff", "#2fc8b8", "#ff5fa8", "#3cdc78", "
 const MIN_LINE_MS = 380, HOLD_MS = 550, FADE_MS = 450;
 const qs = typeof location !== "undefined" ? new URLSearchParams(location.search) : new URLSearchParams();
 const skip = qs.has("nosplash"), hold = qs.has("splashhold");
+const booted = () => { document.documentElement.dataset.booted = "1"; window.dispatchEvent(new Event("push-booted")); }; // the page behind fades in; the setup (if any) starts
+if (skip && typeof document !== "undefined") document.documentElement.dataset.booted = "1";
 
 export default function Splash({ connected, hello, usb, profiles }: { connected: boolean; hello: boolean; usb: boolean; profiles: number }) {
   const [gone, setGone] = useState(skip);
@@ -26,7 +28,7 @@ export default function Splash({ connected, hello, usb, profiles }: { connected:
   ], [usb, profiles]);
   const target = !connected ? 0 : !hello ? 1 : lines.length - 1;
   const leave = useRef(() => {});
-  leave.current = () => { if (!leaving) { setLeaving(true); window.setTimeout(() => setGone(true), FADE_MS); } };
+  leave.current = () => { if (!leaving) { setLeaving(true); booted(); window.setTimeout(() => setGone(true), FADE_MS); } };
 
   useEffect(() => { // walk the status line forward, one step at a time
     if (shown >= target) return;

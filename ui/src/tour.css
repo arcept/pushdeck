@@ -1,0 +1,12 @@
+/* The guided tour: a dim layer with a lit window (the spotlight) that glides from one area to the next, and a caption card. */
+.tour { position:fixed; inset:0; z-index:940; pointer-events:none; }
+.spot { position:fixed; border-radius:16px; box-shadow:0 0 0 9999px rgba(5,5,9,.74), 0 0 0 2px rgba(174,176,255,.75), 0 0 36px rgba(92,100,255,.45); transition:left .6s var(--ease, ease), top .6s var(--ease, ease), width .6s var(--ease, ease), height .6s var(--ease, ease); animation:spotin .6s ease both; }
+@keyframes spotin { from { box-shadow:0 0 0 9999px rgba(5,5,9,0), 0 0 0 2px rgba(174,176,255,0); } }
+.tourcap { position:fixed; pointer-events:auto; padding:16px 18px 14px; border-radius:16px; background:#0e0e14; color:#eeeef3; box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 24px 60px rgba(0,0,0,.6); font-family:"Quicksand","Helvetica Neue",system-ui,sans-serif; animation:capin .5s var(--ease, ease) .12s both; transition:left .6s var(--ease, ease), top .6s var(--ease, ease); }
+@keyframes capin { from { opacity:0; transform:translateY(8px); } }
+.tourhead { display:flex; align-items:center; gap:10px; } .tourhead b { font-size:16px; }
+.tico { display:grid; place-items:center; width:32px; height:32px; border-radius:10px; background:rgba(174,176,255,.14); color:#aeb0ff; }
+.tourcap p { margin:10px 0 14px; font-size:13.5px; line-height:1.5; color:#b3b3c0; }
+.tourfoot { display:flex; align-items:center; gap:8px; } .tourfoot .grow { flex:1; }
+.tdots { display:flex; gap:5px; } .tdots i { width:6px; height:6px; border-radius:50%; background:#2a2a34; transition:background .3s, width .3s; } .tdots i.now { width:18px; border-radius:3px; background:#aeb0ff; } .tdots i.done { background:#4a4a66; }
+@media (prefers-reduced-motion:reduce) { .spot, .tourcap { transition:none; animation:none; } }

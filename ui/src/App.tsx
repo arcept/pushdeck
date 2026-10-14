@@ -7,6 +7,7 @@ import { LayoutProvider } from "./layoutCtx";
 import Intro from "./Intro";
 import Splash from "./Splash";
 import Onboarding from "./Onboarding";
+import Tour from "./Tour";
 import ImportDialog from "./ImportDialog";
 import ExportDialog from "./ExportDialog";
 import Backdrop, { pulseAt, type FxMode, type Look, type Tone } from "./Backdrop";
@@ -150,6 +151,7 @@ function Shell() {
       </div>
       <Intro />
       <Onboarding />
+      <Tour />
       <Splash connected={d.connected} hello={!!d.settings} usb={d.status.usb} profiles={d.profiles.length} />
       <ImportDialog />
       <ExportDialog />

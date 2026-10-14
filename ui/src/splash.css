@@ -45,3 +45,9 @@
   .tiles i { animation:none; }
   .padbar i { transition:none; }
 }
+
+/* the splash leaves smoothly, and the page behind fades in as it goes */
+.splash.leaving .splashcard { transform:scale(1.035); filter:blur(3px); transition:transform .55s var(--ease, ease), filter .55s; }
+html:not([data-booted]) .app { opacity:0; }
+.app { transition:opacity .9s var(--ease, ease) .15s; }
+@media (prefers-reduced-motion:reduce) { .app { transition:none; } .splash.leaving .splashcard { transform:none; filter:none; } }

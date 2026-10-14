@@ -914,7 +914,9 @@ class Engine:
             self.apply_hardware()
             self.broadcast({"type": "settings", "settings": self.settings})
         elif t == "permissions":  # the first-run setup asks while it is open
-            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility()})
+            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation()})
+        elif t == "audio_check":  # the setup's System audio row: run the audio helper for a while so it can report whether macOS lets it listen
+            self.media.want_viz_until = time.time() + 25
         elif t == "open_privacy":  # open one System Settings > Privacy page (only the names in permissions.PANES)
             permissions.open_pane(msg.get("pane"))
         elif t == "reset_settings":  # everything back to defaults except the colour calibration and the on/off state
