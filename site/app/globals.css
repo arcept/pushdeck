@@ -47,8 +47,8 @@ section { padding: 0 var(--gutter); }
 
 /* ---------- hero ---------- */
 /* --wf: the app window's width at the end of the hero move; --dh: the device's width at the start (smaller, so it grows into the window) */
-.hero { --wf: min(1240px, 92vw, calc((100vh - 120px) * 1.6)); --dh: min(560px, 92vw); position: relative; padding-top: 150px; padding-bottom: 40px; }
-.hero.is-scroll { --dh: calc(var(--wf) * 0.34); height: 100vh; padding-bottom: 0; perspective: 1600px; perspective-origin: 50% 40%; }
+.hero { --dh: min(860px, 92vw); position: relative; padding-top: 196px; padding-bottom: 40px; }   /* 196 + the 64px nav = ~260px of air above the copy */
+.hero.is-scroll { --dh: min(860px, 62vw); height: 100vh; padding-bottom: 0; perspective: 1600px; perspective-origin: 50% 40%; }
 .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--container); margin: 0 auto; }
 .kicker { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 99px; background: rgba(255,255,255,.05); border: 1px solid var(--line); color: var(--mut); font-size: 13px; font-weight: 600; }
 .kicker .dots { display: grid; grid-template-columns: repeat(2, 7px); gap: 2px; }
@@ -64,11 +64,11 @@ section { padding: 0 var(--gutter); }
 .layer { position: absolute; z-index: 3; }
 .card { filter: drop-shadow(0 30px 40px rgba(0,0,0,.55)); }   /* static; the images carry their own rounded edges */
 .card img { width: 100%; }
-.l-profile { width: 220px; right: calc(100% + 4px); top: 2%; }
-.l-menu { width: 210px; left: calc(100% + 4px); top: -10%; }
+.l-profile { width: 220px; right: calc(100% - 90px); top: 6%; }
+.l-menu { width: 210px; left: calc(100% - 90px); top: -2%; }
 
 /* the app window: where the device ends up. Its start position is set by GSAP from .slot */
-.tilt { position: absolute; left: calc(50% - var(--wf) / 2); top: calc(76px + (100vh - 76px - var(--wf) * 0.625) / 2); width: var(--wf); transform-style: preserve-3d; z-index: 2; }
+.tilt { position: absolute; transform-style: preserve-3d; z-index: 2; }   /* size and place are set by GSAP (see Landing.tsx) */
 .win { position: relative; width: 100%; aspect-ratio: 1600 / 1000; border-radius: 14px; }
 .win-ui { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 14px; box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08); }
 .win-device { position: absolute; }
@@ -81,8 +81,16 @@ section { padding: 0 var(--gutter); }
 .device-display, .device-pads { position: absolute; display: block; }
 .device-display { object-fit: fill; }
 .device-pads { cursor: pointer; touch-action: pan-y; }
+/* the app's own text, over its top-left corner once the window has landed */
+.app-over { position: absolute; z-index: 4; padding-left: 56px; pointer-events: none; }
+.app-grad { position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(90deg, rgba(11,11,15,.97) 0%, rgba(11,11,15,.9) 30%, rgba(11,11,15,.55) 46%, rgba(11,11,15,0) 62%); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 78%); mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 78%); }
+.app-text { position: relative; max-width: 540px; }
+.app-text h2 { max-width: 14ch; }
+.hero-dim { position: absolute; inset: 0; z-index: 8; background: #000; opacity: 0; pointer-events: none; }
+/* everything after the hero slides up over it like a card */
+.after.is-over { position: relative; z-index: 10; background: var(--bg); border-radius: 32px 32px 0 0; border-top: 1px solid var(--line); box-shadow: 0 -40px 100px rgba(0,0,0,.6); padding-top: 1px; }
 .rise .device { filter: drop-shadow(0 40px 50px rgba(0,0,0,.6)); }
-.still-app .frame img { transform: none; }
+.still-app .frame { margin-top: 36px; } .still-app .frame img { transform: none; }
 
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: calc(var(--container) + 2 * var(--gutter)); margin: 80px auto 100px; }
 .stats div { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 4px; }
@@ -144,7 +152,7 @@ footer a:hover { color: var(--tx); }
 
 @media (max-width: 899px) {
   .nav nav { display: none; }
-  .hero { padding-top: 110px; }
+  .hero { padding-top: 130px; }
   .slot { margin-top: 48px; }
   .l-profile { width: 30%; right: auto; left: -3%; top: auto; bottom: -14%; }
   .l-menu { width: 27%; left: auto; right: -3%; top: auto; bottom: -18%; }

@@ -266,7 +266,7 @@ class Engine:
             return
         if kind in ("touch", "untouch") and cid.startswith("knob-"):   # the noise guard needs to see touches even while the question card takes the events
             self.knob_touch[cid] = (kind == "touch", time.time())
-        if (self.asks.on or self.asks.fullscreen()) and self.asks.handle(ev):   # the question card has the whole device while it is open
+        if self.asks.fullscreen() and self.asks.handle(ev):   # the full-screen question alert takes the display buttons while it is up
             return
         if self.limits.active() and ev["kind"] == "press":   # any button dismisses a usage-limit alert
             self.limits.dismiss()
@@ -434,7 +434,7 @@ class Engine:
             settings.save(self.settings)
             self._leds_for = None
             return
-        if (ctl.get("action") or {}).get("type") == "ask":   # the question card: take over the display
+        if (ctl.get("action") or {}).get("type") == "ask":   # the Claude widget's question button: open the Claude app
             self.asks.open()
             return
         if (ctl.get("action") or {}).get("type") == "browser":   # the browser widget: reload, favourite, open a saved tab
@@ -577,15 +577,6 @@ class Engine:
         return out
 
     def apply_leds(self, prof):
-        if self.asks.on:
-            key = ("ask", self.asks.mode, self.asks.qi, self.asks.hi, tuple(sorted((k, tuple(v["sel"])) for k, v in self.asks.ans.items())))
-            if key == self._leds_for or not self.push.connected:
-                return
-            self._leds_for = key
-            self.push.clear_leds()
-            for cid, rgb in self.asks.leds().items():
-                self.push.set_led(cid, rgb)
-            return
         blink = int(time.time() * 2) % 2 if self.armed() else -1
         key = (prof["id"] if prof else None, self.pinned, tuple(sorted(self.pressed)), self.test_running,
                self.repeat_color, blink, int(time.time() * 2) % 2 if self.asks.waiting() else -1, media_ui.led_signature(self), self.front, self.timer.state, self.timer.kind, int(time.time() * 2) % 2 if self.timer.state == "done" else -1)
@@ -712,18 +703,13 @@ class Engine:
             self.show("message", library.message(text, ok, sub))
             self.apply_leds(self.active())  # the lights keep up while a message is on the screen
             return
-        self.asks.sync()
         self.asks.alert_tick()
         self.limits.tick()
-        if not self.asks.on and self.limits.active():
+        if self.limits.active():
             self.show("limit", self.limits.scene())
             return
         if self.asks.fullscreen():
             self.show("ask_alert", self.asks.alert_scene())
-            return
-        if self.asks.on:
-            self.show("ask", self.asks.scene())
-            self.apply_leds(self.active())
             return
         prof = self.active()
         toast = self.current_toast()

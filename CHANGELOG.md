@@ -4,6 +4,8 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Removed the unfinished "answer Claude's questions on the Push" code (the question card, its dictation box and the Claude Code hook). The Push still alerts you when Claude asks a question (full-screen alert, pad ripple, chime) and its button opens the Claude app; the question is answered in the Claude app.
+
 - Permissions now survive updates: the app is signed with a rule tied to its name instead of the exact build, so macOS no longer forgets Accessibility, Automation and the other grants every time Push Deck is updated.
 - Repository extras: issue templates, a security policy (private reporting is on), a contributing guide, a pull request notice and a social preview image.
 

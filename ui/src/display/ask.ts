@@ -1,18 +1,12 @@
-// The full-screen question card, mirroring daemon/push_daemon/display/render_ask.py: change both together.
-// Top strip: the 8 upper buttons' labels. Then the question number and the question. Under it the options as tiles (up to four), each over its
-// share of the 8 lower buttons. Modes: pick, read (the full text of one option), dictate (the Other answer is being spoken), sent.
+// The Claude question alert and the usage-limit alert, mirroring daemon/push_daemon/display/render_ask.py: change both together.
+// Questions are answered in the Claude app, never on the Push.
 import type { Helpers } from "./claude";
 
 type Ctx = CanvasRenderingContext2D;
 type RGB = [number, number, number];
-const INK = "#eeeef6", INK2 = "#aab0cc", INK3 = "#787e9c", GOOD = "#6ee682";
+const INK = "#eeeef6", INK2 = "#aab0cc", INK3 = "#787e9c";
 const rgb = (c: number[]) => `rgb(${c.map((v) => Math.round(v)).join(",")})`;
 const mixc = (a: number[], b: number[], t: number) => { const k = Math.max(0, Math.min(1, t)); return a.map((v, i) => v + (b[i] - v) * k); };
-const TILE: RGB = [22, 24, 34];
-const hexRgb = (h: string): RGB => { const n = parseInt((h || "#d97757").replace("#", "").padEnd(6, "0").slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
-
-type Btn = { label?: string; on?: boolean; color?: RGB; quiet?: boolean };
-type Tile = { x0: number; x1: number; label: string; desc: string; sel: boolean; hi: boolean; other: boolean; text: string };
 
 function wrap(ctx: Ctx, h: Helpers, text: string, size: number, maxw: number, role: "label" | "mono", bold = false): string[] {
   const lines: string[] = []; let cur = "";
@@ -36,70 +30,6 @@ export function linesN(ctx: Ctx, h: Helpers, text: string, size: number, maxw: n
   return [...lines.slice(0, n - 1), last.trimEnd() + "..."];
 }
 
-export function drawAsk(ctx: Ctx, h: Helpers, w: Record<string, unknown>, accent: string) {
-  const acc = hexRgb(accent), str = (k: string) => String(w[k] ?? ""), mode = str("mode") || "pick", ac = rgb(acc);
-  const buttons = (w.buttons as Btn[]) || [];
-  buttons.forEach((b, i) => {
-    if (!b || !b.label || b.on === false) return;
-    const c = (b.color ?? acc) as RGB;
-    h.text(ctx, i * 120 + 60, 13, b.label, 11, INK, "mono", true, "center");
-    h.rrect(ctx, i * 120 + 8, 21.5, i * 120 + 112, 23, 0.75, rgb(c));
-  });
-  if (mode === "dictate") {
-    const t = performance.now() / 1000, pulse = 0.5 + 0.5 * Math.sin(t * 5);
-    ctx.fillStyle = rgb(mixc([60, 20, 20], [255, 90, 90], 0.4 + 0.6 * pulse)); ctx.beginPath(); ctx.arc(60, 84, 14, 0, Math.PI * 2); ctx.fill();
-    h.text(ctx, 100, 76, str("text") || "Listening", 28, INK, "label", true, "left");
-    h.text(ctx, 100, 104, str("sub"), 12, INK3, "mono", false, "left");
-    if (w.heard) linesN(ctx, h, str("heard"), 13, 900, 2, "label").forEach((ln, i) => h.text(ctx, 100, 128 + i * 16, ln, 13, ac, "label", false, "left"));
-    return;
-  }
-  if (mode === "sent") { h.text(ctx, 480, 84, str("text") || "Sent to Claude", 30, GOOD, "label", true, "center"); h.text(ctx, 480, 116, str("sub"), 12, INK3, "mono", false, "center"); return; }
-  if (mode === "read") {
-    const r = (w.read as { label: string; body: string }) || { label: "", body: "" };
-    h.text(ctx, 14, 38, "EXPANDED  ·  turn the encoder to scroll", 11, ac, "mono", true, "left");
-    type Row = [string, number, string, boolean, "label" | "mono", number];
-    const rows: Row[] = [...wrap(ctx, h, str("question"), 12.5, 920, "label").map((l): Row => [l, 12.5, INK3, false, "label", 15]), ["", 6, INK, false, "label", 8] as Row,
-      ...wrap(ctx, h, r.label, 15, 920, "label").map((l): Row => [l, 15, INK, true, "label", 19]), ...wrap(ctx, h, r.body, 12, 920, "mono").map((l): Row => [l, 12, INK2, false, "mono", 15])];
-    const top = Math.max(0, Math.min(Math.floor(Number(w.scroll) || 0), Math.max(0, rows.length - 1)));
-    let y = 58, shown = 0;
-    for (let i = top; i < rows.length; i++) { const [ln, size, color, bold, role, pitch] = rows[i]; if (y + pitch / 2 > 158) break; if (ln) h.text(ctx, 14, y, ln, size, color, role, bold, "left"); y += pitch; shown = i; }
-    if (top > 0) h.text(ctx, 948, 50, "^", 11, INK2, "mono", true, "center");
-    if (shown < rows.length - 1) h.text(ctx, 948, 150, "v", 11, INK2, "mono", true, "center");
-    return;
-  }
-  h.text(ctx, 14, 38, `Q ${w.qi}/${w.qn}` + (w.header ? `  ·  ${str("header").toUpperCase()}` : ""), 11, ac, "mono", true, "left");
-  const dots = str("dots"); let dx = 946;
-  for (let i = dots.length - 1; i >= 0; i--) {
-    const cur = i + 1 === Number(w.qi), on = dots[i] === "a";
-    ctx.beginPath(); ctx.arc(dx, 38, 4, 0, Math.PI * 2);
-    if (on) { ctx.fillStyle = GOOD; ctx.fill(); } else { ctx.strokeStyle = INK3; ctx.lineWidth = 2; ctx.stroke(); }
-    if (cur) { ctx.beginPath(); ctx.arc(dx, 38, 7, 0, Math.PI * 2); ctx.strokeStyle = ac; ctx.lineWidth = 2; ctx.stroke(); }
-    dx -= 18;
-  }
-  h.text(ctx, dx - 4, 38, (w.multi ? "PICK SEVERAL" : "PICK ONE") + (Number(w.pages) > 1 ? `  ·  PAGE ${Number(w.page) + 1}/${w.pages}` : ""), 11, INK3, "mono", true, "right");
-  const ql = wrap(ctx, h, str("question"), 15, 880, "label"), long = ql.length > 2, qsize = long ? 12.5 : 15, pitch = long ? 15 : 19, top = long ? 98 : 88;
-  linesN(ctx, h, str("question"), qsize, 880, long ? 3 : 2, "label", true).forEach((ln, i) => h.text(ctx, 14, 56 + i * pitch, ln, qsize, INK, "label", true, "left"));
-  const tiles = (w.tiles as Tile[]) || [], bot = 157;
-  tiles.forEach((t) => {
-    const x0 = t.x0 + 4, x1 = t.x1 - 4;
-    h.rrect(ctx, x0, top, x1, bot, 8, rgb(t.sel ? mixc(TILE, acc, 0.24) : TILE), t.sel ? ac : t.hi ? "#c8cde6" : undefined, t.sel || t.hi ? 2 : 1);
-    const nx = x0 - 4 + 60;
-    h.rrect(ctx, nx - 14, bot - 1, nx + 14, bot + 2, 1.5, t.sel ? ac : t.hi ? "#ffffff" : INK3);
-    const mx = x0 + 15, my = top + 15;
-    ctx.lineWidth = 1.5;
-    if (w.multi) {
-      h.rrect(ctx, mx - 6, my - 6, mx + 6, my + 6, 3, t.sel ? ac : undefined, t.sel ? ac : INK3, 1.4);
-      if (t.sel) { ctx.strokeStyle = "#101018"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(mx - 3, my); ctx.lineTo(mx - 1, my + 2.5); ctx.lineTo(mx + 3.5, my - 3); ctx.stroke(); }
-    } else {
-      ctx.strokeStyle = t.sel ? ac : INK3; ctx.beginPath(); ctx.arc(mx, my, 5.2, 0, Math.PI * 2); ctx.stroke();
-      if (t.sel) { ctx.fillStyle = ac; ctx.beginPath(); ctx.arc(mx, my, 3, 0, Math.PI * 2); ctx.fill(); }
-    }
-    const tx = x0 + 30, mw = x1 - x0 - 38, lab = linesN(ctx, h, t.label, 13, mw, x1 - x0 < 600 ? 2 : 1, "label", true);
-    lab.forEach((ln, j) => h.text(ctx, tx, top + 15 + j * 15, ln, 13, t.other ? ac : INK, "label", true, "left"));
-    const dy = top + 15 + lab.length * 15 + 3, room = Math.floor((bot - 5 - dy) / 12);
-    linesN(ctx, h, t.text || t.desc, 10.5, x1 - x0 - 18, Math.max(1, room), "mono").forEach((ln, j) => h.text(ctx, x0 + 10, dy + j * 12 + 2, ln, 10.5, t.sel ? INK2 : INK3, "mono", false, "left"));
-  });
-}
 
 /** Where the Claude widget was while a question waits: 'Claude is asking', its first question, a pointer to the Answer button. */
 const QMARK = ["01110", "10001", "00001", "00110", "00100", "00000", "00100"];

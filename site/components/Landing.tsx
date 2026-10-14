@@ -22,6 +22,9 @@ const layers = [
 
 const heroPalette = [0, 4, 2, 1, 3, 6, 5, 7];
 
+const NAV = 64;     // fixed nav height
+const MOVE = 2000;  // scroll distance (px) of the hero's move, before the next section slides over it
+
 // The hero's big move needs room and motion: wide screens without reduced motion. Everything else gets a still version.
 const SCROLL_MQ = "(prefers-reduced-motion: no-preference) and (min-width: 900px)";
 
@@ -52,14 +55,14 @@ export default function Landing({ version }: { version: string }) {
   const root = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
   const [scroll, setScroll] = useState(false);       // the device-into-the-app hero is on
-  const [fadePads, setFadePads] = useState(false);   // ?pads=fade: inside the app, the live pads give way to the real screenshot
+  const [fadePads, setFadePads] = useState(true);    // inside the app, the live pads give way to the real screenshot (?pads=live keeps them on)
   const [padsOff, setPadsOff] = useState(false);
 
   useEffect(() => {
     const mq = matchMedia(SCROLL_MQ);
     const on = () => setScroll(mq.matches);
     on(); mq.addEventListener("change", on);
-    setFadePads(new URLSearchParams(location.search).get("pads") === "fade");
+    setFadePads(new URLSearchParams(location.search).get("pads") !== "live");
     return () => mq.removeEventListener("change", on);
   }, []);
 
@@ -85,37 +88,51 @@ export default function Landing({ version }: { version: string }) {
         gsap.to(el, { y: i % 2 ? 10 : -10, duration: 2.8 + i * 0.6, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.8 });
       });
 
-      // The hero's big move: the device grows, lies flat and lands on the replica inside the app window, and the window fills in around it.
-      const win = q(".win")[0], dev = q(".win-device")[0], slot = q(".slot")[0], hero = q(".hero")[0];
+      // The hero's big move. The window is laid out at the size where its replica matches the big hero device (so nothing is ever
+      // scaled up and blurred), placed so the replica sits exactly on .slot. Scrolling then shrinks it to fit the screen, centred,
+      // the rest of the app fades in around the device, the app's text rises in, and the next section slides up over it all.
+      const tiltEl = q(".tilt")[0], win = q(".win")[0], slot = q(".slot")[0], hero = q(".hero")[0], over = q(".app-over")[0];
       let tl: gsap.core.Timeline | undefined;
-      if (scroll && win && dev && slot) {
-        let from = { x: 0, y: 0, scale: 1 };
-        // Layout boxes only (offsetLeft/Top), so the load animation and the pointer tilt can't skew the numbers.
-        const tilt = win.parentElement as HTMLElement;
+      if (scroll && tiltEl && win && slot && over) {
+        let to = { x: 0, y: 0, scale: 1 };
         const measure = () => {
-          const W = tilt.offsetWidth, H = W * 0.625;
-          const dw = IN_APP.width * W, dcx = tilt.offsetLeft + (IN_APP.left + IN_APP.width / 2) * W, dcy = tilt.offsetTop + (IN_APP.top + IN_APP.height / 2) * H;
-          const scx = slot.offsetLeft + slot.offsetWidth / 2, scy = slot.offsetTop + slot.offsetHeight / 2;
-          from = { scale: slot.offsetWidth / dw, x: scx - dcx, y: scy - dcy };
+          const vw = document.documentElement.clientWidth, vh = innerHeight;
+          const dh = slot.offsetWidth, W = dh / IN_APP.width, H = W * 0.625;
+          const dx = slot.offsetLeft + dh / 2, dy = slot.offsetTop + slot.offsetHeight / 2;   // device centre (hero coordinates)
+          const left = dx - (IN_APP.left + IN_APP.width / 2) * W, top = dy - (IN_APP.top + IN_APP.height / 2) * H;
+          Object.assign(tiltEl.style, { width: `${W}px`, left: `${left}px`, top: `${top}px` });
+          // the end: the window fits the screen width (max 1600) and is centred below the nav. Scaling happens about the device centre.
+          const wf = Math.min(1600, vw - 48), f = wf / W, tx = vw / 2, ty = NAV + (vh - NAV) / 2;
+          const cx = left + W / 2, cy = top + H / 2;
+          to = { scale: f, x: tx - (dx + f * (cx - dx)), y: ty - (dy + f * (cy - dy)) };
+          // the text overlay sits on the window's final box; its text stays clear of the nav even when the window runs past the top
+          const oh = wf * 0.625, ot = ty - oh / 2;
+          Object.assign(over.style, { width: `${wf}px`, height: `${oh}px`, left: `${tx - wf / 2}px`, top: `${ot}px`, paddingTop: `${Math.max(ot + 64, NAV + 48) - ot}px` });
         };
         measure();
         ScrollTrigger.addEventListener("refreshInit", measure);
         cleanups.push(() => ScrollTrigger.removeEventListener("refreshInit", measure));
 
+        // Timeline units are scroll distance / 1000: MOVE px of animation, then one screen height for the next section to slide over.
+        const slide = innerHeight / 1000;
         tl = gsap.timeline({
+          defaults: { ease: "none" },
           scrollTrigger: {
-            trigger: hero, start: "top top", end: "+=1900", pin: true, scrub: 0.7, invalidateOnRefresh: true, anticipatePin: 1,
-            onUpdate: (st) => setPadsOff(st.progress > 0.8),
+            trigger: hero, start: "top top", end: () => `+=${MOVE + innerHeight}`, pin: true, pinSpacing: false, scrub: 0.7, invalidateOnRefresh: true, anticipatePin: 1,
+            onUpdate: () => setPadsOff((tl?.time() ?? 0) > 1.05),
           },
         });
-        tl.fromTo(win, { x: () => from.x, y: () => from.y, scale: () => from.scale, rotationX: 22 }, { x: 0, y: 0, scale: 1, rotationX: 0, duration: 1, ease: "power2.inOut" }, 0)
-          .to(q(".hero-copy"), { opacity: 0, y: -90, duration: 0.35, ease: "power1.in" }, 0)
+        tl.fromTo(win, { x: 0, y: 0, scale: 1, rotationX: 22 }, { x: () => to.x, y: () => to.y, scale: () => to.scale, rotationX: 0, duration: 1.1, ease: "power2.inOut" }, 0)
+          .to(q(".hero-copy"), { opacity: 0, y: -100, duration: 0.35, ease: "power1.in" }, 0)
           .to(q(".win-shadow"), { opacity: 0, duration: 0.4 }, 0.4)
-          .fromTo(q(".win-ui"), { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 0.4);
+          .fromTo(q(".win-ui"), { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power1.inOut" }, 0.45)
+          .fromTo(q(".app-grad"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.1)
+          .fromTo(q(".app-text > *"), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" }, 1.15)
+          .to({}, { duration: 0.01 }, MOVE / 1000 - 0.01)                       // hold on the app until the move distance is used up
+          .fromTo(q(".hero-dim"), { opacity: 0 }, { opacity: 0.7, duration: slide }, MOVE / 1000);
         q(".layer").forEach((el, i) => {
-          tl!.to(el, { x: layers[i].dir * 320, y: -80, opacity: 0, duration: 0.45, ease: "power1.in" }, 0);
+          tl!.to(el, { x: layers[i].dir * 360, y: -100, opacity: 0, duration: 0.5, ease: "power1.in" }, 0);
         });
-        tl.to({}, { duration: 0.6 }); // a beat to look at the app before the page moves on
       }
 
       if (wide) {
@@ -171,6 +188,13 @@ export default function Landing({ version }: { version: string }) {
   }, [scroll]);
 
   const origin = `${(IN_APP.left + IN_APP.width / 2) * 100}% ${(IN_APP.top + IN_APP.height / 2) * 100}%`;
+  const appText = (
+    <>
+      <p className="tag">The app</p>
+      <h2>A replica of your Push, in a window.</h2>
+      <p className="lead">Click a pad to edit it. Mirror the display. Arrange widgets. Changes land on the real device straight away.</p>
+    </>
+  );
   const heroDevice = <Device palette={heroPalette} intro={1.2} paused={fadePads && padsOff} label="An Ableton Push 2 running Push Deck: lit pads and the live display" />;
 
   return (
@@ -218,12 +242,21 @@ export default function Landing({ version }: { version: string }) {
               </div>
             </div>
           )}
+          {scroll && (
+            <div className="app-over">
+              <div className="app-grad" aria-hidden="true" />
+              <div className="app-text">{appText}</div>
+            </div>
+          )}
+          {scroll && <div className="hero-dim" aria-hidden="true" />}
         </section>
 
+        {scroll && <div style={{ height: MOVE }} aria-hidden="true" />}
+
+        <div className={scroll ? "after is-over" : "after"}>
         {!scroll && (
           <section className="band still-app">
-            <p className="tag" data-reveal>The app</p>
-            <h2 data-reveal>A replica of your Push, in a window.</h2>
+            <div data-reveal>{appText}</div>
             <div className="frame" data-reveal><img src={img("ui/app-ui.webp")} alt="The Push Deck window: the Claude Code profile, a replica of the Push 2 and the controls inspector" width={3200} height={2000} loading="lazy" /></div>
           </section>
         )}
@@ -301,6 +334,7 @@ export default function Landing({ version }: { version: string }) {
           <p className="note" data-reveal>{installNote}</p>
           <ul className="req" data-reveal>{requirements.map((r) => <li key={r}>{r}</li>)}</ul>
         </section>
+        </div>
       </main>
 
       <footer>

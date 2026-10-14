@@ -45,12 +45,6 @@ async def ws_handler(request):
     return ws
 
 
-async def ask_hook(request):
-    """The Claude Code hook (tools/push_ask_hook.py) hands a question here and waits for the answers typed on the Push."""
-    eng: Engine = request.app["engine"]
-    return web.json_response(await eng.asks.hook_request(await request.json()))
-
-
 async def app_info(request):
     a = apps.info(request.match_info["bundle"])
     return web.json_response({"name": a["name"], "installed": a["installed"]})
@@ -129,7 +123,6 @@ async def main():
     app = web.Application()
     app["engine"] = eng
     app.router.add_get("/ws", ws_handler)
-    app.router.add_post("/api/ask", ask_hook)
     app.router.add_get("/api/app/{bundle}", app_info)
     app.router.add_get("/api/app-icon/{bundle}", app_icon)
     app.router.add_get("/api/media/art/{key}", media_art)

@@ -2,7 +2,7 @@
 // Tokens come from tokens.json, generated from the daemon's tokens.py: one source of truth.
 import tokens from "./tokens.json";
 import { buddy, drawClaude, type Helpers } from "./claude";
-import { drawAsk, drawAskBanner, drawLimit, linesN } from "./ask";
+import { drawAskBanner, drawLimit, linesN } from "./ask";
 
 export type Icons = Record<string, { p?: number[][]; c?: number[]; closed?: boolean; fill?: boolean }[]>;
 export type Zone = { label?: string; icon?: string | null; keep_case?: boolean; bar?: boolean; bar_color?: string; icon_color?: string; lit?: boolean; dim?: boolean };
@@ -425,7 +425,6 @@ function widget(ctx: Ctx, icons: Icons, w: Widget, accent: string, t: number) {
     }
     case "limit": drawLimit(ctx, claudeHelpers(ctx, icons), w as Record<string, unknown>); break;
     case "ask_banner": drawAskBanner(ctx, claudeHelpers(ctx, icons), w as Record<string, unknown>, x0, y0, x1, y1); break;
-    case "ask": drawAsk(ctx, claudeHelpers(ctx, icons), w as Record<string, unknown>, accent); break;
     case "claude_session": drawClaude(ctx, claudeHelpers(ctx, icons), w as Record<string, unknown>, x0, y0, x1, y1); break;
     case "usage": { // plan limits of one tool; its name once, in its own colour. which="both": the 5-hour and weekly limits one above the other
       const pc = str("provider_color") || "#b4b4c0", name = str("provider").toUpperCase(), rows = (w.rows as { label: string; pct: number | null; color: string; sub: string }[]) ?? [];
