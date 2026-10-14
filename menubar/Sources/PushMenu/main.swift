@@ -95,6 +95,18 @@ if let i = CommandLine.arguments.firstIndex(of: "--login-item"), i + 1 < Command
     exit(0)
 }
 
+if let i = CommandLine.arguments.firstIndex(of: "--perm") {   // used by the daemon: PushMenu --perm [--ask] <bundle id>…  prints what macOS says about THIS app (the one in System Settings)
+    let rest = Array(CommandLine.arguments[(i + 1)...])
+    let ask = rest.contains("--ask")
+    var out: [String: Int] = ["accessibility": AXIsProcessTrusted() ? 1 : 0]
+    for b in rest where b != "--ask" {
+        let d = NSAppleEventDescriptor(bundleIdentifier: b)
+        out[b] = Int(AEDeterminePermissionToAutomateTarget(d.aeDesc!, typeWildCard, typeWildCard, ask))
+    }
+    if let data = try? JSONSerialization.data(withJSONObject: out), let t = String(data: data, encoding: .utf8) { print(t) }
+    exit(0)
+}
+
 let app = NSApplication.shared
 let delegate = App()
 app.delegate = delegate

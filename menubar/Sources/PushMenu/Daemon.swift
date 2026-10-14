@@ -46,6 +46,7 @@ final class DaemonHost {
         env["PUSH_HOME"] = Self.dataDir.path
         env["DYLD_FALLBACK_LIBRARY_PATH"] = res.appendingPathComponent("lib").path + ":/opt/homebrew/lib:/usr/local/lib"
         env["PYTHONDONTWRITEBYTECODE"] = "1"
+        env["PUSH_APP_EXE"] = Bundle.main.executablePath ?? ""   // the daemon asks this app about macOS permissions (see permissions.py)
         env["PUSH_PARENT_PID"] = String(ProcessInfo.processInfo.processIdentifier)
         p.environment = env
         if let h = try? FileHandle(forWritingTo: logs) { h.seekToEndOfFile(); p.standardOutput = h; p.standardError = h }

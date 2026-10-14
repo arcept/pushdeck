@@ -32,6 +32,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <key>CFBundleVersion</key><string>$NUM</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>LSUIElement</key><true/>
+<key>NSAppleEventsUsageDescription</key><string>Push Deck presses keys and reads the playing track by talking to System Events, Chrome and Spotify.</string>
 <key>NSHumanReadableCopyright</key><string>Push Deck. Not affiliated with Ableton.</string>
 </dict></plist>
 PLIST
