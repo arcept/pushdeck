@@ -39,6 +39,9 @@ jobs:
       - name: Make the .dmg
         run: tools/make_dmg.sh
 
+      - name: Smoke test the .dmg (nothing from this machine may be needed)
+        run: tools/smoke_test.sh build/PushDeck-*.dmg
+
       - uses: actions/upload-artifact@v4
         with:
           name: push-deck-dmg
