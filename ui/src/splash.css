@@ -8,9 +8,12 @@
 @keyframes splashin { from { opacity:0; transform:translateY(10px) scale(.985); } }
 
 .splashleft { display:flex; flex-direction:column; padding:44px 44px 36px; min-width:0; }
-.splashleft h1 { margin:0; font-weight:700; line-height:.95; }
-.splashleft h1 .small { display:block; font-size:34px; letter-spacing:-.005em; color:var(--accent); }
-.splashleft h1 .big { display:block; font-size:78px; letter-spacing:-.02em; color:#fff; margin-left:-3px; }
+.splashname { margin:0; font-size:inherit; }
+/* the shared brand lockup (Brand.tsx), scaled up for the splash */
+:root .splash .splashname .brand { font-size:60px; gap:22px; padding:0; letter-spacing:-.02em; color:#fff; }
+:root .splash .splashname .brand .mark { width:64px; height:64px; gap:6px; }
+:root .splash .splashname .brand .mark i { border-radius:6px; }
+:root .splash .splashname .brand .name { display:inline; }
 
 .splashinfo { margin-top:auto; font-size:13.5px; line-height:1.5; color:var(--accent); }
 .splashinfo p { margin:0 0 14px; }
@@ -20,8 +23,7 @@
 .splashinfo .status { margin:0; font-weight:600; }
 
 .splashbottom { display:flex; align-items:center; gap:16px; margin-top:34px; }
-.splashlogo { width:56px; height:56px; border-radius:13px; flex:none; }
-.padbar { display:grid; grid-template-columns:repeat(8, 1fr); gap:5px; flex:1; max-width:220px; }
+.padbar { display:grid; grid-template-columns:repeat(8, 1fr); gap:5px; width:230px; }
 .padbar i { aspect-ratio:1; border-radius:4px; background:#1a1a22; transition:background .3s ease, box-shadow .3s ease; }
 .padbar i.on { background:var(--c); box-shadow:0 0 10px color-mix(in srgb, var(--c) 75%, transparent); }
 .ver { margin-left:auto; font:500 12px/1 "IBM Plex Mono", ui-monospace, monospace; color:#8a8a97; }

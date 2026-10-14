@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import Brand from "./Brand";
 import "./splash.css";
 
 // The launch splash (Photoshop style): a black text panel on the left, an illustration on the right.
@@ -51,7 +52,7 @@ export default function Splash({ connected, hello, usb, profiles }: { connected:
     <div className={"splash" + (leaving ? " leaving" : "")} role="dialog" aria-label="Push Deck is starting" onClick={() => leave.current()}>
       <div className="splashcard">
         <div className="splashleft">
-          <h1 aria-label="Push Deck"><span className="small">Push</span><span className="big">Deck</span></h1>
+          <h1 className="splashname"><Brand /></h1>
 
           <div className="splashinfo">
             <p className="tag">Your Push 2, your desk, your rules.</p>
@@ -61,7 +62,6 @@ export default function Splash({ connected, hello, usb, profiles }: { connected:
           </div>
 
           <div className="splashbottom">
-            <img className="splashlogo" src="/favicon.svg" alt="" width={56} height={56} />
             <div className="padbar" aria-hidden="true">
               {PAD.map((c, i) => <i key={i} className={i < lit ? "on" : ""} style={{ ["--c" as string]: c }} />)}
             </div>

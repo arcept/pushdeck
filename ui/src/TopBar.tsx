@@ -1,4 +1,5 @@
 import { Icon } from "./icons";
+import Brand from "./Brand";
 import { useApp } from "./ctx";
 import { Popover, Seg, Tip } from "./ui";
 import DeviceStatus from "./DeviceStatus";
@@ -30,7 +31,7 @@ export default function TopBar() {
   return (
     <header className="topbar">
       <div className="tb-left">
-        <div className="brand"><span className="mark" aria-hidden="true">{Array.from({ length: 9 }, (_, i) => <i key={i} style={{ ["--i" as string]: (i % 3) + Math.floor(i / 3) }} />)}</span><span className="name">Push Deck</span></div>
+        <Brand />
       </div>
 
       <button className="searchbtn hide-sm" onClick={openPalette} aria-label="Search profiles, controls, tests and settings">
