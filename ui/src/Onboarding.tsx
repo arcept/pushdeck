@@ -24,6 +24,8 @@ export default function Onboarding() {
   const [forced, setForced] = useState(preview);
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState<"fwd" | "back">("fwd");
+  const [leaving, setLeaving] = useState<{ step: number; dir: "fwd" | "back"; out: true } | null>(null);
+  useEffect(() => { if (!leaving) return; const t = window.setTimeout(() => setLeaving(null), 520); return () => clearTimeout(t); }, [leaving]);
   const [booted, setBooted] = useState(() => !!document.documentElement.dataset.booted); // wait for the splash to start leaving, so the entrance is seen
   const open = booted && (forced || (!!s && !s.onboarded));
   useEffect(() => { const f = () => setBooted(true); window.addEventListener("push-booted", f); return () => window.removeEventListener("push-booted", f); }, []);
@@ -36,7 +38,12 @@ export default function Onboarding() {
   }, [open, step]); // eslint-disable-line
   if (!open) return null;
 
-  const go = (n: number) => { setDir(n > step ? "fwd" : "back"); setStep(Math.max(0, Math.min(n, LAST))); };
+  const go = (to: number) => { // the old page slides, fades and blurs out while the new one comes in from the side you are heading to
+    const n = Math.max(0, Math.min(to, LAST));
+    if (n === step) return;
+    const nd = n > step ? "fwd" : "back";
+    setLeaving({ step, dir: nd, out: true }); setDir(nd); setStep(n);
+  };
   const ax = d.permissions?.accessibility; // true | false | null (null = cannot be checked, so it never blocks)
   const permOk = ax !== false;
   const done = (tour: boolean) => {
@@ -53,7 +60,12 @@ export default function Onboarding() {
   const autoVals = auto ? Object.values(auto) : [];
   const autoState = !auto ? "" : autoVals.some((v) => v === "denied" || v === "unknown") ? "off" : auto["com.apple.systemevents"] === "granted" ? "on" : "";
   const audio = d.media?.audio;
-  const audioOn = audio?.status === "ok";
+  const chk = audio?.check ?? "idle";
+  const audioOn = chk === "heard";
+  const audioNote = chk === "listening" ? "Playing a test sound and listening for it…"
+    : chk === "silent" ? "Push Deck could not hear the test sound. Turn it on under System Audio Recording, then check again."
+    : audio?.status === "error" || audio?.status === "unavailable" ? (audio.message || "The audio helper could not start.")
+    : "Press Check to play a short test sound. It ticks when Push Deck hears it.";
   const pushOk = d.status.usb && d.status.midi;
 
   const appState = (b: string, name: string) => {
@@ -70,10 +82,10 @@ export default function Onboarding() {
       <div className="onbcard">
         <header>
           <Brand />
-          <ol className="stepper" aria-label="Setup steps">
+          <ol className="stepper" aria-label={`Step ${step + 1} of ${STEPS.length + 1}: ${STEPS[step]}`}>
             {[...STEPS, "Tour"].map((n, i) => (
               <li key={n} className={i === step ? "now" : i < step ? "done" : ""} aria-current={i === step ? "step" : undefined}>
-                <button disabled={i >= step} onClick={() => go(i)} aria-label={i < step ? `Go back to ${n}` : n}><span className="num">{i < step ? <IconTick size={12} /> : i + 1}</span><em>{n}</em></button>
+                <button disabled={i >= step} onClick={() => go(i)} aria-label={i < step ? `Go back to ${n}` : n} title={n} />
               </li>
             ))}
           </ol>
@@ -81,8 +93,9 @@ export default function Onboarding() {
         </header>
 
         <section className="onbstage">
-          <div key={step} className={"pane " + dir}>
-            {step === 0 && <>
+          {[...(leaving ? [leaving] : []), { step, dir, out: false }].map(({ step: n, dir: pd, out }) => (
+          <div key={n} className={"pane " + pd + (out ? " out" : " in")} aria-hidden={out || undefined}>
+            {n === 0 && <>
               <div className="rise hero" style={dly(0)}><PushDrawing usb={pushOk} /></div>
               <h2 className="rise" style={dly(70)}>Welcome to Push Deck</h2>
               <p className="lead rise" style={dly(120)}>Use an Ableton Push 2 on its own, with no Ableton Live, as a controller and live display for your Mac.</p>
@@ -93,11 +106,11 @@ export default function Onboarding() {
               </div>
               <div className="conn rise" style={dly(250)}>
                 <span className={"pill " + (pushOk ? "ok" : "warn")}><span className="dot" />{pushOk ? "Push 2 connected" : d.status.usb || d.status.midi ? "Push 2 partly found" : "No Push 2 found yet"}</span>
-                {!pushOk && <p className="hint"><IconUsb size={15} />Plug it in with its USB cable and switch it on, and close Ableton Live if it is open. No Push yet? You can carry on without one.</p>}
+                <p className={"hint" + (pushOk ? " off" : "")} aria-hidden={pushOk}><IconUsb size={15} />Plug it in with its USB cable and switch it on, and close Ableton Live if it is open. No Push yet? You can carry on without one.</p>
               </div>
             </>}
 
-            {step === PERM && <>
+            {n === PERM && <>
               <h2 className="rise" style={dly(0)}>Permissions</h2>
               <p className="lead rise" style={dly(50)}>macOS asks for these so Push Deck can press keys for you and read what is playing. This step cannot be skipped.</p>
               <div className="perms">
@@ -117,14 +130,14 @@ export default function Onboarding() {
                   <span className={"pico " + (audioOn ? "on" : "")}><IconWave size={22} /></span>
                   <div className="pbody"><b>System audio <em className="opt">optional</em>{audioOn && <em className="ok">working</em>}</b>
                     <p>Only for the music visualizer. Analysed on your Mac, never recorded or sent anywhere.</p>
-                    {!audioOn && <p className="tiny">{audio?.status === "waiting" ? "Listening. Play some sound and this ticks." : audio?.status === "starting" ? "Starting the listener…" : audio?.status === "error" || audio?.status === "unavailable" ? (audio.message || "The audio helper could not start.") : "macOS cannot say if this is allowed. Press Check, then play some sound."}</p>}</div>
-                  {!audioOn && <div className="btns"><button className="btn sm" onClick={() => d.send({ type: "audio_check" })}>Check</button><button className="btn sm ghost" onClick={() => pane("audio")}>Open Settings</button></div>}
+                    {!audioOn && <p className="tiny">{audioNote}</p>}</div>
+                  {!audioOn && <div className="btns"><button className="btn sm" disabled={chk === "listening"} onClick={() => d.send({ type: "audio_check" })}>{chk === "listening" ? "Checking…" : chk === "silent" ? "Check again" : "Check"}</button><button className="btn sm ghost" onClick={() => pane("audio")}>Open Settings</button></div>}
                 </div>
               </div>
               {!permOk && <p className="warnline rise" style={dly(250)}>Allow Accessibility to continue. It can take a moment to show up here.</p>}
             </>}
 
-            {step === CLAUDE && <>
+            {n === CLAUDE && <>
               <div className="rise" style={dly(0)}><Badge tone="#ff9a3c"><IconGauge size={54} /></Badge></div>
               <h2 className="rise" style={dly(60)}>Claude usage on the display</h2>
               <p className="lead rise" style={dly(110)}>Show how much of your Claude 5-hour and weekly limits you have used, on the Push.</p>
@@ -136,7 +149,7 @@ export default function Onboarding() {
               </div>
             </>}
 
-            {step === LAST && <>
+            {n === LAST && <>
               <h2 className="rise" style={dly(0)}>Starter profiles</h2>
               <p className="lead rise" style={dly(50)}>These come with Push Deck. Each one switches on by itself when you use its app.</p>
               <div className="profs rise" style={dly(110)}>{d.profiles.map((p) => <div key={p.id} className="prof"><ProfileIcon profile={p} size={48} /><span>{p.name}</span></div>)}</div>
@@ -146,7 +159,7 @@ export default function Onboarding() {
                 <div><span className="ti"><IconLibrary size={20} /></span><b>Find more</b><span>A profile library is coming.</span></div>
               </div>
             </>}
-          </div>
+          </div>))}
         </section>
 
         <footer>

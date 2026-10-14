@@ -28,6 +28,8 @@ class AudioTap:
         self.wave = [0.0] * WAVE
         self.level = 0.0
         self.last_frame = 0.0
+        self.check = "idle"      # the setup's sound test: idle | listening | heard | silent
+        self.loudest = 0.0       # the loudest frame since the test started
         self._proc = None
         self._task = None
         self._peak = 1e-4
@@ -126,6 +128,7 @@ class AudioTap:
         self.last_frame = time.time()
         rms = float(np.sqrt(np.mean(x * x)))
         self.level = rms
+        self.loudest = max(self.loudest, rms)
         spec = np.abs(np.fft.rfft(x * self._win)) / N
         e = self._edges
         out = np.empty(BANDS, dtype=np.float32)

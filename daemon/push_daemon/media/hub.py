@@ -90,6 +90,27 @@ class MediaHub:
             if self.audio.status == "off" or time.time() - self.audio.last_frame > 20:
                 self.audio.start()
 
+    async def sound_test(self):
+        """The setup's Check button: start listening, play a short chime, and report whether the chime came through."""
+        a = self.audio
+        if a.check == "listening":
+            return
+        a.check, a.loudest = "listening", 0.0
+        self.need_audio()
+        self._publish(force=True)
+        for _ in range(24):  # give the helper up to 6 s to start (the first time, macOS may ask). It sends nothing while the Mac is silent
+            if a.status in ("ok", "unavailable", "error"):
+                break
+            await asyncio.sleep(0.25)
+        for _ in range(3):
+            p = await asyncio.create_subprocess_exec("afplay", "/System/Library/Sounds/Glass.aiff")
+            await p.wait()
+            if a.loudest > 2e-3:
+                break
+        await asyncio.sleep(0.4)
+        a.check = "heard" if a.loudest > 2e-3 else "silent"
+        self._publish(force=True)
+
     # ---------- reading ----------
     def position(self) -> float:
         t = self.track
@@ -120,7 +141,7 @@ class MediaHub:
                                                                       "repeat", "liked", "caps", "icon", "brand", "service")} if t else None,
                 "position": round(self.position(), 1), "tint": t.get("tint") if t else None, "tint2": self.partner(t["tint"]) if t and t.get("tint") else None,
                 "spotify": self.spotify.status(), "chrome": self.chrome,
-                "audio": {"status": self.audio.status, "message": self.audio.message, "live": self.audio.live},
+                "audio": {"status": self.audio.status, "message": self.audio.message, "live": self.audio.live, "check": self.audio.check},
                 "queue": self.queue}
 
     def _publish(self, force=False):

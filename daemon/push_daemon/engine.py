@@ -918,8 +918,8 @@ class Engine:
         elif t == "ask_automation":  # the setup's Allow button: macOS shows its own prompt; answer in a thread so nothing else waits
             await asyncio.get_running_loop().run_in_executor(None, permissions.ask_automation, msg.get("bundle"))
             self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation()})
-        elif t == "audio_check":  # the setup's System audio row: run the audio helper for a while so it can report whether macOS lets it listen
-            self.media.want_viz_until = time.time() + 25
+        elif t == "audio_check":  # the setup's System audio row: play a chime and see if the audio helper hears it
+            asyncio.ensure_future(self.media.sound_test())
         elif t == "open_privacy":  # open one System Settings > Privacy page (only the names in permissions.PANES)
             permissions.open_pane(msg.get("pane"))
         elif t == "reset_settings":  # everything back to defaults except the colour calibration and the on/off state

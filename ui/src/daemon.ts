@@ -19,7 +19,7 @@ export type MediaState = {
   player: string; track: MediaTrack | null; position: number; tint: string | null; tint2?: string | null;
   spotify: { client_id: string; connected: boolean; user: string; error: string };
   chrome: { state: "unknown" | "ok" | "needs_js" | "off"; message: string };
-  audio: { status: "off" | "starting" | "waiting" | "ok" | "unavailable" | "error"; message: string; live: boolean };
+  audio: { status: "off" | "starting" | "waiting" | "ok" | "unavailable" | "error"; message: string; live: boolean; check?: "idle" | "listening" | "heard" | "silent" };
   queue: { title: string; artist: string; uri: string }[];
 };
 export type MediaConfig = { mode: "half" | "off"; idle: "empty" | "last"; chrome: boolean; spotify_desktop: boolean; system: boolean; auto_show: boolean };

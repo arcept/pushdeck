@@ -1,4 +1,4 @@
-/* First-run setup. A fixed-size card that never resizes between steps: logo, a horizontal stepper and the version across the top,
+/* First-run setup. A fixed-size card that never resizes between steps: logo, step dots and the version across the top,
    centred content below, actions in the footer. Same black / accent look as the splash. */
 .onb { --accent:#aeb0ff; position:fixed; inset:0; z-index:950; display:grid; place-items:center; padding:24px; background:radial-gradient(ellipse 70% 55% at 50% 0%, rgba(92,100,255,.30), transparent 70%), rgba(6,6,10,.93); animation:onbfade .7s ease both; }
 @keyframes onbfade { from { opacity:0; } }
@@ -9,26 +9,26 @@
 .onbcard header .brand { padding:0; justify-self:start; }
 .vinfo { justify-self:end; font:500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; color:#6b6b77; letter-spacing:.02em; }
 
-/* the stepper: numbers joined by a line that fills in as you go */
-.stepper { display:flex; align-items:center; list-style:none; margin:0; padding:0; }
-.stepper li { display:flex; align-items:center; }
-.stepper li + li::before { content:""; width:26px; height:2px; margin:0 9px; border-radius:1px; background:#1f1f28; transition:background .5s var(--ease, ease); }
-.stepper li.done + li::before, .stepper li.done + li.now::before { background:linear-gradient(90deg, #3cdc78, #aeb0ff); }
-.stepper button { all:unset; display:flex; align-items:center; gap:8px; cursor:default; border-radius:999px; }
-.stepper li.done button { cursor:pointer; } .stepper li.done button:hover em { color:#fff; }
+/* the steps: quiet dots. The current one stretches into a pill; done ones stay lit and take you back on click */
+.stepper { display:flex; align-items:center; gap:8px; list-style:none; margin:0; padding:0; }
+.stepper li { display:flex; }
+.stepper button { all:unset; display:block; width:7px; height:7px; border-radius:999px; background:#26262f; cursor:default; transition:width .45s var(--ease, ease), background .4s var(--ease, ease), box-shadow .4s; }
+.stepper li.done button { background:#5d5f8c; cursor:pointer; } .stepper li.done button:hover { background:var(--accent); }
+.stepper li.now button { width:24px; background:var(--accent); box-shadow:0 0 10px rgba(174,176,255,.45); }
 .stepper button:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-.stepper .num { display:grid; place-items:center; width:24px; height:24px; border-radius:50%; flex:none; background:#16161d; box-shadow:inset 0 0 0 1px rgba(255,255,255,.09); font:600 11px/1 "IBM Plex Mono", ui-monospace, monospace; color:#6b6b77; transition:background .4s var(--ease, ease), color .4s, box-shadow .4s; }
-.stepper em { font-style:normal; font-size:13px; font-weight:600; color:#6b6b77; white-space:nowrap; transition:color .3s; }
-.stepper li.now .num { background:var(--accent); color:#0b0b0f; box-shadow:0 0 0 4px rgba(174,176,255,.16); }
-.stepper li.now em { color:#fff; }
-.stepper li.done .num { background:#17301f; color:#3cdc78; box-shadow:inset 0 0 0 1px rgba(60,220,120,.35); }
-.stepper li.done em { color:#a5a5b3; }
 
-.onbstage { flex:1; display:flex; min-height:0; overflow:auto; padding:10px 56px; }
-.pane { width:100%; max-width:680px; margin:auto; display:flex; flex-direction:column; align-items:center; text-align:center; animation:panein .5s var(--ease, ease) both; }
-.pane.back { animation-name:paneback; }
-@keyframes panein { from { opacity:0; transform:translateX(26px); } }
-@keyframes paneback { from { opacity:0; transform:translateX(-26px); } }
+.onbstage { flex:1; display:grid; min-height:0; overflow:auto; overflow-x:hidden; padding:10px 56px; }
+/* pages share one grid cell, so the old one can leave while the new one arrives: slide towards where you are going, fade and blur */
+.pane { grid-area:1 / 1; width:100%; max-width:680px; margin:auto; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.pane.in.fwd { animation:pane-in-fwd .52s var(--ease, ease) .06s both; }
+.pane.in.back { animation:pane-in-back .52s var(--ease, ease) .06s both; }
+.pane.out { pointer-events:none; }
+.pane.out.fwd { animation:pane-out-fwd .4s cubic-bezier(.45,0,.8,.4) both; }
+.pane.out.back { animation:pane-out-back .4s cubic-bezier(.45,0,.8,.4) both; }
+@keyframes pane-in-fwd { from { opacity:0; transform:translateX(64px); filter:blur(10px); } }
+@keyframes pane-in-back { from { opacity:0; transform:translateX(-64px); filter:blur(10px); } }
+@keyframes pane-out-fwd { to { opacity:0; transform:translateX(-64px); filter:blur(10px); } }
+@keyframes pane-out-back { to { opacity:0; transform:translateX(64px); filter:blur(10px); } }
 .rise { animation:riseup .6s var(--ease, ease) both; animation-delay:var(--d, 0ms); }
 @keyframes riseup { from { opacity:0; transform:translateY(12px); } }
 
@@ -37,6 +37,7 @@
 .pane .lead { margin:0 0 22px; max-width:50ch; font-size:15.5px; line-height:1.55; color:#b3b3c0; }
 .pane .hint { display:flex; align-items:flex-start; gap:8px; margin:10px 0 0; max-width:56ch; font-size:13px; line-height:1.5; color:#8a8a97; text-align:left; }
 .pane .hint svg { flex:none; margin-top:2px; }
+.pane .hint { transition:opacity .35s var(--ease, ease); } .pane .hint.off { opacity:0; visibility:hidden; } /* keeps its space, so nothing moves when the Push is found */
 
 .hero .pushdraw { width:236px; height:auto; }
 .pushdraw { display:block; filter:drop-shadow(0 18px 30px rgba(0,0,0,.5)); }
@@ -92,5 +93,5 @@
 .onbcard footer { display:flex; align-items:center; gap:10px; padding:16px 36px 20px; border-top:1px solid rgba(255,255,255,.05); }
 .onbcard footer .grow { flex:1; }
 
-@media (max-width:860px) { .stepper em { display:none; } .stepper li.now em { display:inline; } .trio, .facts { grid-template-columns:1fr; gap:18px; } .trio > div + div { border-left:0; } .perm { grid-template-columns:44px 1fr; } .perm > .btn, .perm > .btns { grid-column:2; justify-self:start; } }
-@media (prefers-reduced-motion:reduce) { .onb, .onbcard, .pane, .rise, .pushdraw *, .badgein, .pico::after, .pill .dot { animation:none !important; } .stepper .num, .stepper li + li::before { transition:none; } }
+@media (max-width:860px) { .trio, .facts { grid-template-columns:1fr; gap:18px; } .trio > div + div { border-left:0; } .perm { grid-template-columns:44px 1fr; } .perm > .btn, .perm > .btns { grid-column:2; justify-self:start; } }
+@media (prefers-reduced-motion:reduce) { .onb, .onbcard, .pane, .rise, .pushdraw *, .badgein, .pico::after, .pill .dot { animation:none !important; } .pane.out { display:none; } .stepper button { transition:none; } }
