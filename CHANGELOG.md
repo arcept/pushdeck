@@ -4,6 +4,9 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- README reworked: shorter, with a jump bar, screenshots and a recording of the display.
+- Ready for the first release: `get.sh` (one-line installer that checks the download's checksum) and a Homebrew cask template in `packaging/homebrew/`.
+
 - Removed the Figma and Photoshop starter profiles (and the Photoshop sample file) until proper profiles are ready.
 - `tools/smoke_test.sh` checks that a .dmg stands on its own (no links to the build machine, own Python, helpers built, daemon starts in a bare environment); the release workflow runs it before publishing.
 
