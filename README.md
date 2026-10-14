@@ -18,8 +18,11 @@ Push Deck is young and built by one person. **Issues are open**: bug reports, id
 
 ## What you need
 
-- A Mac (macOS only) and an **Ableton Push 2** connected over USB. The original Push and Push 3 are not supported.
-- To build from source: Python 3.9 or newer, Node 18 or newer, [Homebrew](https://brew.sh), and the Xcode command line tools (`xcode-select --install`). Two small native helpers are compiled the first time they are needed.
+**To use the released app:** an Apple Silicon Mac with macOS 13 or newer, and an **Ableton Push 2** connected over USB (the original Push and Push 3 are not supported). That is all. The app carries its own Python, libraries and helpers, so you do not install Python, Homebrew, Xcode or anything else. Two features need a newer macOS: the music visualizer needs macOS 14.2, and the system "now playing" reader needs macOS 15.4 or newer to work as built.
+
+Some features use apps you already have, and are simply off without them: Google Chrome (tab and YouTube Music info), Spotify, and the Claude desktop app (live usage).
+
+**To build from source:** Python 3.9 or newer, Node 18 or newer, [Homebrew](https://brew.sh) (for `libusb`) and the Xcode command line tools (`xcode-select --install`, for the Swift compiler). `./install.sh` fetches its own pinned Python for the app, so the Python on your machine only matters for the dev setup.
 
 ## Install
 
