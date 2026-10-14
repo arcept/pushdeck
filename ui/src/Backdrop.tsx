@@ -94,7 +94,8 @@ export default function Backdrop({ look, mode, accent, tone }: { look: Look; mod
       const { mode: m, look: lk, accent: ac, tone: tn } = opts.current;
       if (!isActive()) return;   // nothing is drawn while the window is hidden or in the background
       const moving = m !== "off" && !reduce;
-      if (ms - last < (moving ? 33 : 250)) return; // ~30 fps while moving, a few redraws a second when still
+      const lit = pulses.some((p) => now() - p.t < 3.2);   // light is blooming from a press: it needs the smooth 30 fps
+      if (ms - last < (!moving ? 250 : lit ? 33 : 66)) return;   // the slow haze alone is fine at 15 fps; a still backdrop redraws a few times a second
       last = ms;
       const w = innerWidth, h = innerHeight;
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; gl.viewport(0, 0, w, h); }

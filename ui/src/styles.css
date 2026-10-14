@@ -445,8 +445,8 @@ body { background:#08080a; }
 .brand .mark { width:30px; height:30px; gap:3px; }
 .brand .mark i { background:var(--tx); opacity:.16; border-radius:3px; animation:padwave 5.6s var(--ease) infinite; animation-delay:calc(var(--i) * .18s); }
 .brand .mark i:nth-child(5) { opacity:.9; }
-@keyframes padwave { 0%, 100% { opacity:.16; box-shadow:none; } 12% { opacity:.95; box-shadow:0 0 8px rgba(255,255,255,.22); } 30% { opacity:.16; box-shadow:none; } }
-.brand .mark i:nth-child(5) { animation-name:padcore; } @keyframes padcore { 0%, 100% { opacity:.9; } 12% { opacity:1; box-shadow:0 0 10px rgba(255,255,255,.28); } 40% { opacity:.75; } }
+@keyframes padwave { 0%, 100% { opacity:.16; } 12% { opacity:.95; } 30% { opacity:.16; } }   /* opacity only: it runs on the compositor; animating box-shadow or filter repaints the page every frame */
+.brand .mark i:nth-child(5) { animation-name:padcore; } @keyframes padcore { 0%, 100% { opacity:.9; } 12% { opacity:1; } 40% { opacity:.75; } }
 :root[data-look="showpiece"] .brand .mark { width:34px; height:34px; }
 
 /* the stage never scrolls: the device scales to the room (it only scrolls on very short windows) */
@@ -482,8 +482,8 @@ body { background:#08080a; }
 .replica #project-mark rect:nth-child(1) { animation-delay:0s; } .replica #project-mark rect:nth-child(2), .replica #project-mark rect:nth-child(4) { animation-delay:.18s; }
 .replica #project-mark rect:nth-child(3), .replica #project-mark rect:nth-child(5), .replica #project-mark rect:nth-child(7) { animation-delay:.36s; }
 .replica #project-mark rect:nth-child(6), .replica #project-mark rect:nth-child(8) { animation-delay:.54s; } .replica #project-mark rect:nth-child(9) { animation-delay:.72s; }
-@keyframes padwave-dev { 0%, 100% { opacity:.3; filter:none; } 12% { opacity:1; filter:drop-shadow(0 0 2.5px rgba(255,255,255,.55)); } 30% { opacity:.3; filter:none; } }
-@keyframes padcore-dev { 0%, 100% { opacity:.9; filter:none; } 12% { opacity:1; filter:drop-shadow(0 0 3px rgba(255,255,255,.6)); } 40% { opacity:.75; } }
+@keyframes padwave-dev { 0%, 100% { opacity:.3; } 12% { opacity:1; } 30% { opacity:.3; } }
+@keyframes padcore-dev { 0%, 100% { opacity:.9; } 12% { opacity:1; } 40% { opacity:.75; } }
 
 /* credits under the device */
 .credits { display:flex; justify-content:center; align-items:center; gap:10px; margin-top:14px; font:500 11px/1 var(--data); color:var(--tx3); letter-spacing:.02em; }

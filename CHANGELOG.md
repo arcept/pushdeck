@@ -4,6 +4,8 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Faster and lighter: the logo and device-mark animations no longer repaint the page every frame (GPU use with the window open fell from about 35% to 9%), the idle backdrop redraws at 15 fps, the menu bar app skips the daemon messages it does not use and no longer animates its logo while the panel is closed (CPU 15% to 3%).
+
 - Release build: the app carries its own pinned Python and its helpers (audio listener, now-playing library), so a Mac needs nothing installed beyond macOS. `tools/make_dmg.sh` makes the .dmg and `.github/workflows/release.yml` builds and publishes it when a version tag is pushed.
 - Fixed: the daemon could crash while the Push was connecting or missing.
 

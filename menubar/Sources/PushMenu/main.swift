@@ -24,7 +24,7 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate {
         item.button?.target = self
         item.button?.action = #selector(toggle)
 
-        let host = NSHostingView(rootView: RootView(store: store, close: { [weak self] in self?.panel.orderOut(nil) }))
+        let host = NSHostingView(rootView: RootView(store: store, close: { [weak self] in self?.hidePanel() }))
         host.frame = NSRect(x: 0, y: 0, width: 348, height: 520)
         host.wantsLayer = true
         host.layer?.backgroundColor = NSColor.clear.cgColor
@@ -76,7 +76,7 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     @objc func toggle() {
-        if panel.isVisible { panel.orderOut(nil); return }
+        if panel.isVisible { hidePanel(); return }
         guard let button = item.button, let win = button.window else { return }
         let r = win.convertToScreen(button.convert(button.bounds, to: nil))
         var x = r.midX - panel.frame.width / 2
@@ -85,9 +85,11 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate {
         store.loginItem = LoginItem.isOn
         NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
+        store.panelOpen = true
     }
 
-    func windowDidResignKey(_ notification: Notification) { panel.orderOut(nil) }
+    func windowDidResignKey(_ notification: Notification) { hidePanel() }
+    func hidePanel() { panel.orderOut(nil); store.panelOpen = false }   // the panel's pad logo animates only while the panel is open
 }
 
 if let i = CommandLine.arguments.firstIndex(of: "--login-item"), i + 1 < CommandLine.arguments.count {   // setup aid: PushMenu --login-item on|off

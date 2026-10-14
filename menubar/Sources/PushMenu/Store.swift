@@ -20,6 +20,7 @@ extension Color {
 
 /// Everything the menu shows, kept in step with the daemon over ws://127.0.0.1:8472/ws.
 final class Store: ObservableObject {
+    @Published var panelOpen = false
     @Published var connected = false
     @Published var usb = false
     @Published var standby = false
@@ -46,6 +47,15 @@ final class Store: ObservableObject {
         listen()
     }
 
+    private static let handled: Set<Substring> = ["hello", "standby", "status", "active", "settings", "profiles"]
+    /// The daemon sends many kinds of messages (the live scene alone arrives up to 30 times a second); this app uses six. The kind is the first key,
+    /// so it is read from the start of the text and the rest is only parsed when it is one of ours (or when the kind cannot be told).
+    private static func wants(_ s: String) -> Bool {
+        let head = s.prefix(48)
+        guard let r = head.range(of: "\"type\": \""), let end = head[r.upperBound...].firstIndex(of: "\"") else { return true }
+        return handled.contains(head[r.upperBound..<end])
+    }
+
     private func listen() {
         task?.receive { [weak self] result in
             guard let self else { return }
@@ -54,7 +64,7 @@ final class Store: ObservableObject {
                 DispatchQueue.main.async { self.connected = false; self.onIcon() }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) { self.connect() }
             case .success(let msg):
-                if case .string(let s) = msg, let d = s.data(using: .utf8), let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
+                if case .string(let s) = msg, Self.wants(s), let d = s.data(using: .utf8), let j = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
                     DispatchQueue.main.async { self.handle(j) }
                 }
                 self.listen()

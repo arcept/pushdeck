@@ -37,8 +37,9 @@ enum Tab: Int, CaseIterable {
 /// The app's mark: a 3 x 3 grid of pads, the diagonal lit, with the soft wave that runs through it in the app.
 struct PadMark: View {
     var size: CGFloat = 30
+    var animate = true   // false while the panel is closed: a hidden animation would still cost CPU
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 20)) { ctx in
+        TimelineView(.animation(minimumInterval: 1 / 20, paused: !animate)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
             let gap = size * 0.1
             VStack(spacing: gap) {
@@ -247,7 +248,7 @@ struct RootView: View {
 
     var header: some View {
         HStack(spacing: 12) {
-            PadMark(size: 30)
+            PadMark(size: 30, animate: store.panelOpen)
             VStack(alignment: .leading, spacing: 4) {
                 Text("Push Deck").font(Theme.qs(17, .bold)).tracking(-0.2).foregroundColor(Theme.ink)
                 HStack(spacing: 6) {
