@@ -11,9 +11,20 @@ const ART_CREDIT = ""; // e.g. "Artwork by Jane Doe": shown under the name once 
 const PAD = ["#4f8cff", "#ff9a3c", "#a06bff", "#2fc8b8", "#ff5fa8", "#3cdc78", "#ffc93c", "#ff5a5a"];
 const MIN_LINE_MS = 380, HOLD_MS = 550, FADE_MS = 450;
 const qs = typeof location !== "undefined" ? new URLSearchParams(location.search) : new URLSearchParams();
-const skip = qs.has("nosplash"), hold = qs.has("splashhold");
-const booted = () => { document.documentElement.dataset.booted = "1"; window.dispatchEvent(new Event("push-booted")); }; // the page behind fades in; the setup (if any) starts
-if (skip && typeof document !== "undefined") document.documentElement.dataset.booted = "1";
+const hold = qs.has("splashhold");
+// In the Mac app the splash is its own small window (?splashwin) and the main window (?shell) waits behind it for the app to say go.
+// In a browser neither is set, and the splash sits on top of the page as before.
+const splashwin = qs.has("splashwin"), shell = qs.has("shell");
+const released = () => { try { return !!sessionStorage.getItem("push-shell-released"); } catch { return false; } };
+const skip = qs.has("nosplash") || shell;
+const booted = () => { // the page behind fades in; the setup (if any) starts
+  if (splashwin) { (window as unknown as { webkit?: { messageHandlers?: { splashDone?: { postMessage: (v: number) => void } } } }).webkit?.messageHandlers?.splashDone?.postMessage(1); return; }
+  document.documentElement.dataset.booted = "1"; window.dispatchEvent(new Event("push-booted"));
+};
+if (typeof document !== "undefined") {
+  if (qs.has("nosplash") || (shell && released())) document.documentElement.dataset.booted = "1";
+  if (splashwin) document.documentElement.classList.add("splashwin");
+}
 
 export default function Splash({ connected, hello, usb, profiles }: { connected: boolean; hello: boolean; usb: boolean; profiles: number }) {
   const [gone, setGone] = useState(skip);

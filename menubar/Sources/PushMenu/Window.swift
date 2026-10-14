@@ -3,19 +3,73 @@ import WebKit
 
 /// The Push Deck window: the daemon's UI in a native web view, so it behaves like an app (own Dock icon, no browser tabs).
 /// Links to other sites open in the default browser; exported profiles go through a Save panel.
-final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate {
+final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, WKScriptMessageHandler {
     static let shared = UIWindow()
     static let base = URL(string: "http://127.0.0.1:\(ProcessInfo.processInfo.environment["PUSH_PORT"] ?? "8472")/")!
     private var window: NSWindow?
     private var web: WKWebView?
     private var retry = 0
+    private var splash: NSWindow?
+    private var launched = false
+    private var released = false
 
+    /// The first time the window is opened in a run, the splash comes first, on its own: a small see-through window with just the card and its
+    /// shadow. When the splash page says it is done, the real window opens at its own size and the app behind it fades in.
     func show() {
         if window == nil { build() }
         NSApp.setActivationPolicy(.regular)       // Dock icon and Cmd-Tab entry while the window is open
         installMenu()
+        if !launched {
+            launched = true
+            let dev = CommandLine.arguments.contains("--ui-snapshot") || CommandLine.arguments.contains("--no-splash")
+            if !dev { showSplash(); NSApp.activate(ignoringOtherApps: true); return }
+            release()
+        }
         window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func showSplash() {
+        let cfg = WKWebViewConfiguration()
+        cfg.userContentController.add(self, name: "splashDone")
+        let w = WKWebView(frame: .zero, configuration: cfg)
+        w.navigationDelegate = self
+        w.setValue(false, forKey: "drawsBackground")
+        w.underPageBackgroundColor = .clear
+        let win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1240, height: 820), styleMask: [.borderless], backing: .buffered, defer: false)   // the card is 960 x 540; the rest is room for its shadow
+        win.contentView = w
+        win.isOpaque = false; win.backgroundColor = .clear; win.hasShadow = false
+        win.level = .floating; win.isReleasedWhenClosed = false
+        win.center()
+        win.alphaValue = 0
+        win.makeKeyAndOrderFront(nil)
+        NSAnimationContext.runAnimationGroup { $0.duration = 0.25; win.animator().alphaValue = 1 }
+        splash = win
+        w.load(URLRequest(url: URL(string: "?splashwin=1", relativeTo: Self.base)!))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 25) { [weak self] in self?.splashFinished() }   // never leave the user without a window
+    }
+
+    func userContentController(_ c: WKUserContentController, didReceive m: WKScriptMessage) { if m.name == "splashDone" { splashFinished() } }
+
+    private func splashFinished() {
+        guard !released else { return }
+        release()
+        guard let win = window else { return }
+        win.alphaValue = 0
+        win.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        NSAnimationContext.runAnimationGroup { $0.duration = 0.5; win.animator().alphaValue = 1 }
+        let sp = splash; splash = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { sp?.orderOut(nil) }
+    }
+
+    /// Let the page behind the splash start (it fades in, and the first-run setup opens).
+    private func release() {
+        released = true
+        runRelease()
+    }
+    private func runRelease() {
+        web?.evaluateJavaScript("try{sessionStorage.setItem('push-shell-released','1')}catch(e){};document.documentElement.dataset.booted='1';window.dispatchEvent(new Event('push-booted'))", completionHandler: nil)
     }
 
     private func build() {
@@ -37,7 +91,7 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
             win.setFrame(NSRect(x: vis.minX, y: vis.minY, width: min(win.frame.width, vis.width), height: min(win.frame.height, vis.height)), display: false)
         }
         window = win; web = w
-        w.load(URLRequest(url: Self.base))
+        w.load(URLRequest(url: URL(string: "?shell=1", relativeTo: Self.base)!))
     }
 
     func windowWillClose(_ n: Notification) { NSApp.setActivationPolicy(.accessory) }   // back to menu bar only
@@ -46,10 +100,13 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
     func webView(_ w: WKWebView, didFailProvisionalNavigation n: WKNavigation!, withError e: Error) {
         guard retry < 20 else { return }
         retry += 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { w.load(URLRequest(url: Self.base)) }
+        let u = (e as NSError).userInfo[NSURLErrorFailingURLErrorKey] as? URL ?? Self.base
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { w.load(URLRequest(url: u)) }
     }
     func webView(_ w: WKWebView, didFinish n: WKNavigation!) {
         retry = 0
+        guard w === web else { return }
+        if released { runRelease() }   // the page finished loading after the splash was done
         if let k = CommandLine.arguments.firstIndex(of: "--ui-pre-eval"), k + 1 < CommandLine.arguments.count { w.evaluateJavaScript(CommandLine.arguments[k + 1], completionHandler: nil) }   // developer aid: run JS as soon as the page has loaded
         // Developer aid: `PushMenu --ui-snapshot out.png` saves the web view's picture after it has settled, then quits.
         if let i = CommandLine.arguments.firstIndex(of: "--ui-snapshot"), i + 1 < CommandLine.arguments.count {

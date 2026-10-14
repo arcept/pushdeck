@@ -51,3 +51,8 @@
 html:not([data-booted]) .app { opacity:0; }
 .app { transition:opacity .9s var(--ease, ease) .15s; }
 @media (prefers-reduced-motion:reduce) { .app { transition:none; } .splash.leaving .splashcard { transform:none; filter:none; } }
+
+/* the Mac app shows the splash in a small window of its own: just the card and its shadow on a see-through window */
+html.splashwin, html.splashwin body { background:transparent !important; }
+html.splashwin #root > *:not(.splash) { display:none !important; }
+html.splashwin .splash { background:none; }

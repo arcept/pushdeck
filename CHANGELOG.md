@@ -4,6 +4,8 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- The splash is now its own small window with a soft shadow; the main window opens at its own size once the splash is done (in a browser it still sits on the page). The setup's Permissions page fits without scrolling.
+
 - Fixed: the app no longer freezes while macOS asks to read the Downloads folder (it is read in the background).
 
 - One app only: `./install.sh` builds `build/Push Deck.app` and installs it into `/Applications` (asks before replacing). `./dev.sh` is the test version.

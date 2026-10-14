@@ -66,7 +66,7 @@ export default function Onboarding() {
   const audioNote = chk === "listening" ? "Playing a test sound and listening for it…"
     : chk === "silent" ? "Push Deck could not hear the test sound. Turn it on under System Audio Recording, then check again."
     : audio?.status === "error" || audio?.status === "unavailable" ? (audio.message || "The audio helper could not start.")
-    : "Press Check to play a short test sound. It ticks when Push Deck hears it.";
+    : "";
   const pushOk = d.status.usb && d.status.midi;
 
   const appState = (b: string, name: string) => {
@@ -113,35 +113,32 @@ export default function Onboarding() {
 
             {n === PERM && <>
               <h2 className="rise" style={dly(0)}>Permissions</h2>
-              <p className="lead rise" style={dly(50)}>macOS asks for these so Push Deck can press keys for you and read what is playing. This step cannot be skipped.</p>
+              <p className="lead wide rise" style={dly(50)}>Push Deck needs these to press keys and read what is playing. macOS asks once for each.</p>
               <div className="perms">
                 <div className="perm rise" style={dly(100)}>
                   <span className={"pico " + (ax === true ? "on" : ax === false ? "off" : "")}><IconKeys size={22} /></span>
-                  <div className="pbody"><b>Accessibility {ax === true && <em className="ok">allowed</em>}{ax === false && <em className="no">needed</em>}</b><p>Lets pads and buttons send keyboard shortcuts and type text.</p></div>
+                  <div className="pbody"><b>Accessibility {ax === true && <em className="ok">allowed</em>}{ax === false && <em className="no">needed</em>}</b><p>{ax === false ? "Already switched on but still showing here? In Settings select Push Deck, press − to remove it, then + to add it again." : "Lets pads and buttons send keyboard shortcuts and type text."}</p></div>
                   {ax !== true && <button className="btn sm" onClick={() => pane("accessibility")}>Open Settings</button>}
                 </div>
                 <div className="perm rise" style={dly(150)}>
                   <span className={"pico " + autoState}><IconLink size={22} /></span>
                   <div className="pbody"><b>Automation {autoState === "on" && <em className="ok">allowed</em>}{autoState === "off" && <em className="no">needed</em>}</b>
-                    <p>Lets Push Deck talk to these apps. macOS asks once for each.</p>
                     <div className="apps">{APPS.map(([b, name, what]) => <div key={b} className="aprow"><span className="an"><b>{name}</b><small>{what}</small></span>{appState(b, name)}</div>)}</div>
                   </div>
                 </div>
                 <div className="perm rise" style={dly(180)}>
                   <span className={"pico " + (dl === true ? "on" : dl === false ? "off" : "")}><IconImport size={22} /></span>
                   <div className="pbody"><b>Downloads folder {dl === true && <em className="ok">allowed</em>}{dl === false && <em className="no">blocked</em>}</b>
-                    <p>Lets the display show downloads in progress. macOS asks once. Push Deck only looks for unfinished download files.</p></div>
+                    <p>Shows downloads in progress on the display. It only looks for unfinished download files.</p></div>
                   {dl !== true && <div className="btns"><button className="btn sm primary" onClick={() => d.send({ type: "ask_downloads" })}>Allow</button>{dl === false && <button className="btn sm ghost" onClick={() => pane("files")}>Open Settings</button>}</div>}
                 </div>
                 <div className="perm rise" style={dly(230)}>
                   <span className={"pico " + (audioOn ? "on" : "")}><IconWave size={22} /></span>
                   <div className="pbody"><b>System audio <em className="opt">optional</em>{audioOn && <em className="ok">working</em>}</b>
-                    <p>Only for the music visualizer. Analysed on your Mac, never recorded or sent anywhere.</p>
-                    {!audioOn && <p className="tiny">{audioNote}</p>}</div>
+                    <p>{audioOn || chk === "idle" ? "Only for the music visualizer. Analysed on your Mac, never recorded or sent." : audioNote}</p></div>
                   {!audioOn && <div className="btns"><button className="btn sm" disabled={chk === "listening"} onClick={() => d.send({ type: "audio_check" })}>{chk === "listening" ? "Checking…" : chk === "silent" ? "Check again" : "Check"}</button><button className="btn sm ghost" onClick={() => pane("audio")}>Open Settings</button></div>}
                 </div>
               </div>
-              {!permOk && <p className="warnline rise" style={dly(280)}>Allow Accessibility to continue. It can take a moment to show up here.</p>}
             </>}
 
             {n === CLAUDE && <>
