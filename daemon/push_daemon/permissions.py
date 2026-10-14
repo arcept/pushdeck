@@ -6,7 +6,7 @@ import os
 import subprocess
 import time
 
-PANES = {"accessibility": "Privacy_Accessibility", "automation": "Privacy_Automation", "audio": "Privacy_AudioCapture"}
+PANES = {"accessibility": "Privacy_Accessibility", "automation": "Privacy_Automation", "audio": "Privacy_AudioCapture", "files": "Privacy_FilesAndFolders"}
 
 
 def _app(args):
@@ -89,3 +89,24 @@ def open_pane(name):
     pane = PANES.get(name)
     if pane:
         subprocess.Popen(["open", f"x-apple.systempreferences:com.apple.preference.security?{pane}"])
+
+
+_dl = {"ok": None}   # None until the Downloads row's Allow was pressed (reading the folder is what makes macOS ask, so it is never read just to check)
+
+
+def downloads():
+    """True / False after the Allow button was pressed, None before."""
+    return _dl["ok"]
+
+
+def ask_downloads():
+    """List ~/Downloads from the app, which makes macOS show its "allow Push Deck to access files in Downloads" prompt (blocks until answered)."""
+    r = _app(["--folder", os.path.expanduser("~/Downloads")])
+    if r is None:
+        try:
+            os.listdir(os.path.expanduser("~/Downloads"))
+            _dl["ok"] = True
+        except OSError:
+            _dl["ok"] = False
+    else:
+        _dl["ok"] = bool(r.get("folder"))

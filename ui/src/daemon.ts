@@ -24,7 +24,7 @@ export type MediaState = {
 };
 export type MediaConfig = { mode: "half" | "off"; idle: "empty" | "last"; chrome: boolean; spotify_desktop: boolean; system: boolean; auto_show: boolean };
 export type Status = { usb: boolean; midi: boolean };
-export type Permissions = { accessibility: boolean | null; automation: Record<string, string> | null };
+export type Permissions = { accessibility: boolean | null; automation: Record<string, string> | null; downloads?: boolean | null };
 export type Input = { control: string; kind: string; value: number };
 export type TestMeta = { title: string; group: string; interactive: boolean; description: string };
 export type TestState = { state: "idle" | "running" | "done"; name?: string; ok?: boolean; summary?: string };
@@ -85,7 +85,7 @@ export function useDaemon() {
         }
         else if (m.type === "layout_preview") setLayoutPreview({ id: m.id, scene: m.scene });
         else if (m.type === "scene_preview") setPreviewScene({ id: m.id, scene: m.scene });
-        else if (m.type === "permissions") setPermissions({ accessibility: m.accessibility, automation: m.automation ?? null });
+        else if (m.type === "permissions") setPermissions({ accessibility: m.accessibility, automation: m.automation ?? null, downloads: m.downloads ?? null });
         else if (m.type === "error") setError(m.message);
       };
     };

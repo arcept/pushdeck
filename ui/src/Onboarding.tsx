@@ -59,6 +59,7 @@ export default function Onboarding() {
   const auto = d.permissions?.automation ?? null;
   const autoVals = auto ? Object.values(auto) : [];
   const autoState = !auto ? "" : autoVals.some((v) => v === "denied" || v === "unknown") ? "off" : auto["com.apple.systemevents"] === "granted" ? "on" : "";
+  const dl = d.permissions?.downloads ?? null;
   const audio = d.media?.audio;
   const chk = audio?.check ?? "idle";
   const audioOn = chk === "heard";
@@ -126,7 +127,13 @@ export default function Onboarding() {
                     <div className="apps">{APPS.map(([b, name, what]) => <div key={b} className="aprow"><span className="an"><b>{name}</b><small>{what}</small></span>{appState(b, name)}</div>)}</div>
                   </div>
                 </div>
-                <div className="perm rise" style={dly(200)}>
+                <div className="perm rise" style={dly(180)}>
+                  <span className={"pico " + (dl === true ? "on" : dl === false ? "off" : "")}><IconImport size={22} /></span>
+                  <div className="pbody"><b>Downloads folder {dl === true && <em className="ok">allowed</em>}{dl === false && <em className="no">blocked</em>}</b>
+                    <p>Lets the display show downloads in progress. macOS asks once. Push Deck only looks for unfinished download files.</p></div>
+                  {dl !== true && <div className="btns"><button className="btn sm primary" onClick={() => d.send({ type: "ask_downloads" })}>Allow</button>{dl === false && <button className="btn sm ghost" onClick={() => pane("files")}>Open Settings</button>}</div>}
+                </div>
+                <div className="perm rise" style={dly(230)}>
                   <span className={"pico " + (audioOn ? "on" : "")}><IconWave size={22} /></span>
                   <div className="pbody"><b>System audio <em className="opt">optional</em>{audioOn && <em className="ok">working</em>}</b>
                     <p>Only for the music visualizer. Analysed on your Mac, never recorded or sent anywhere.</p>
@@ -134,7 +141,7 @@ export default function Onboarding() {
                   {!audioOn && <div className="btns"><button className="btn sm" disabled={chk === "listening"} onClick={() => d.send({ type: "audio_check" })}>{chk === "listening" ? "Checking…" : chk === "silent" ? "Check again" : "Check"}</button><button className="btn sm ghost" onClick={() => pane("audio")}>Open Settings</button></div>}
                 </div>
               </div>
-              {!permOk && <p className="warnline rise" style={dly(250)}>Allow Accessibility to continue. It can take a moment to show up here.</p>}
+              {!permOk && <p className="warnline rise" style={dly(280)}>Allow Accessibility to continue. It can take a moment to show up here.</p>}
             </>}
 
             {n === CLAUDE && <>

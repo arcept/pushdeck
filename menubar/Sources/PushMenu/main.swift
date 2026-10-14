@@ -99,6 +99,10 @@ if let i = CommandLine.arguments.firstIndex(of: "--perm") {   // used by the dae
     let rest = Array(CommandLine.arguments[(i + 1)...])
     let ask = rest.contains("--ask")
     var out: [String: Int] = ["accessibility": AXIsProcessTrusted() ? 1 : 0]
+    if let f = rest.firstIndex(of: "--folder"), f + 1 < rest.count {   // reading a protected folder is what makes macOS ask
+        out["folder"] = (try? FileManager.default.contentsOfDirectory(atPath: rest[f + 1])) != nil ? 1 : 0
+        print(String(data: (try? JSONSerialization.data(withJSONObject: out)) ?? Data(), encoding: .utf8) ?? "{}"); exit(0)
+    }
     for b in rest where b != "--ask" {
         let d = NSAppleEventDescriptor(bundleIdentifier: b)
         out[b] = Int(AEDeterminePermissionToAutomateTarget(d.aeDesc!, typeWildCard, typeWildCard, ask))

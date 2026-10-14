@@ -66,6 +66,7 @@ class Engine:
         self.want_tab_until = 0.0
         self.want_dl_until = 0.0
         self.dl = downloads.Tracker()
+        self._dl_busy = False
         self.favicons = favicons.Favicons()
         self.fav_page = 0            # which page of favourites the browser widgets show
         self.fav_pop = None          # a favourite was just added / removed: {"kind", "t"}; the browser widget shows a tiny animation for a moment
@@ -620,6 +621,12 @@ class Engine:
         self.push.set_led(R.REPEAT, self.repeat_color)  # always lit: the user cannot see unlit buttons
         self.push.set_led(CALIBRATE_KEY, (70, 70, 70))  # reserved global: Shift + Setup = calibration test
 
+    async def _poll_downloads(self):
+        try:
+            await asyncio.get_running_loop().run_in_executor(None, self.dl.poll)
+        finally:
+            self._dl_busy = False
+
     async def _poll_tab(self):
         self._tab_busy = True
         try:
@@ -764,7 +771,9 @@ class Engine:
                     self.broadcast({"type": "active", **self.active_info()})
             if now < self.want_dl_until and now - last_dl > 1.0:
                 last_dl = now
-                self.dl.poll()
+                if not self._dl_busy:   # off the main loop: the first read of ~/Downloads can wait on a macOS prompt
+                    self._dl_busy = True
+                    asyncio.ensure_future(self._poll_downloads())
             if now < self.want_tab_until and now - last_tab > 1.2 and not self._tab_busy:
                 last_tab = now
                 asyncio.ensure_future(self._poll_tab())
@@ -914,10 +923,13 @@ class Engine:
             self.apply_hardware()
             self.broadcast({"type": "settings", "settings": self.settings})
         elif t == "permissions":  # the first-run setup asks while it is open
-            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation()})
+            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation(), "downloads": permissions.downloads()})
         elif t == "ask_automation":  # the setup's Allow button: macOS shows its own prompt; answer in a thread so nothing else waits
             await asyncio.get_running_loop().run_in_executor(None, permissions.ask_automation, msg.get("bundle"))
-            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation()})
+            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation(), "downloads": permissions.downloads()})
+        elif t == "ask_downloads":  # the setup's Downloads row: reading the folder makes macOS show its own prompt the first time
+            await asyncio.get_running_loop().run_in_executor(None, permissions.ask_downloads)
+            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation(), "downloads": permissions.downloads()})
         elif t == "audio_check":  # the setup's System audio row: play a chime and see if the audio helper hears it
             asyncio.ensure_future(self.media.sound_test())
         elif t == "open_privacy":  # open one System Settings > Privacy page (only the names in permissions.PANES)
