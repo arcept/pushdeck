@@ -13,7 +13,7 @@ export type Profile = {
 };
 export type ProfileIconSpec = { type: "glyph"; name: string } | { type: "app"; bundle: string } | { type: "image"; data: string };
 export type Calibration = { red: number[]; green: number[]; blue: number[]; saturation: number };
-export type Settings = { claude_usage_live?: boolean; knob_turns_full_range?: number; knob_ticks_per_turn?: number; knob_measured?: boolean; require_touch?: boolean; global_knobs?: Record<string, string>; global_pads?: Record<string, Ctl>; display_brightness: number; calibration?: Calibration; lifecycle: string; idle_minutes: number; brightness: number };
+export type Settings = { onboarded?: boolean; claude_usage_live?: boolean; knob_turns_full_range?: number; knob_ticks_per_turn?: number; knob_measured?: boolean; require_touch?: boolean; global_knobs?: Record<string, string>; global_pads?: Record<string, Ctl>; display_brightness: number; calibration?: Calibration; lifecycle: string; idle_minutes: number; brightness: number };
 export type MediaTrack = { source: string; title: string; artist: string; album: string; art: string; duration: number; playing: boolean; shuffle: boolean | null; repeat: boolean | null; liked: boolean | null; caps: string[] };
 export type MediaState = {
   player: string; track: MediaTrack | null; position: number; tint: string | null; tint2?: string | null;
@@ -24,6 +24,7 @@ export type MediaState = {
 };
 export type MediaConfig = { mode: "half" | "off"; idle: "empty" | "last"; chrome: boolean; spotify_desktop: boolean; system: boolean; auto_show: boolean };
 export type Status = { usb: boolean; midi: boolean };
+export type Permissions = { accessibility: boolean | null };
 export type Input = { control: string; kind: string; value: number };
 export type TestMeta = { title: string; group: string; interactive: boolean; description: string };
 export type TestState = { state: "idle" | "running" | "done"; name?: string; ok?: boolean; summary?: string };
@@ -37,6 +38,7 @@ export function useDaemon() {
   const [active, setActive] = useState<{ active: string | null; pinned: string | null; front: string; armed?: boolean }>({ active: null, pinned: null, front: "" });
   const [test, setTest] = useState<TestState>({ state: "idle" });
   const [lastInput, setLastInput] = useState<Input | null>(null);
+  const [permissions, setPermissions] = useState<Permissions | null>(null);
   const [error, setError] = useState("");
   const [standby, setStandby] = useState(false);
   const [volume, setVolume] = useState(50);
@@ -83,6 +85,7 @@ export function useDaemon() {
         }
         else if (m.type === "layout_preview") setLayoutPreview({ id: m.id, scene: m.scene });
         else if (m.type === "scene_preview") setPreviewScene({ id: m.id, scene: m.scene });
+        else if (m.type === "permissions") setPermissions({ accessibility: m.accessibility });
         else if (m.type === "error") setError(m.message);
       };
     };
@@ -92,5 +95,5 @@ export function useDaemon() {
 
   const send = useCallback((msg: object) => ws.current?.readyState === 1 && ws.current.send(JSON.stringify(msg)), []);
   const forceOff = typeof location !== "undefined" && new URLSearchParams(location.search).has("nopush"); // ?nopush previews the "Push not connected" state
-  return { connected, controls, profiles, settings, status: forceOff ? { usb: false, midi: false } : status, active, test, lastInput, error, standby, tests, volume, icons, scene, sceneRef, media, previewScene, layoutPreview, frameListener, clearError: () => setError(""), send };
+  return { connected, controls, profiles, settings, status: forceOff ? { usb: false, midi: false } : status, permissions, active, test, lastInput, error, standby, tests, volume, icons, scene, sceneRef, media, previewScene, layoutPreview, frameListener, clearError: () => setError(""), send };
 }

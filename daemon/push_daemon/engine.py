@@ -6,7 +6,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from . import actions, asks, downloads, favicons, limits, clock_timer, color, frontmost, usage, media_ui, migrate, profiles, scenes, settings, tabs, volume
+from . import actions, asks, downloads, favicons, limits, clock_timer, color, frontmost, usage, media_ui, migrate, permissions, profiles, scenes, settings, tabs, volume
 from .display import layout, library, render
 from .media import MediaHub
 from . import registry as R
@@ -913,8 +913,12 @@ class Engine:
                 usage._live["at"] = 0.0
             self.apply_hardware()
             self.broadcast({"type": "settings", "settings": self.settings})
+        elif t == "permissions":  # the first-run setup asks while it is open
+            self.broadcast({"type": "permissions", "accessibility": permissions.accessibility()})
+        elif t == "open_privacy":  # open one System Settings > Privacy page (only the names in permissions.PANES)
+            permissions.open_pane(msg.get("pane"))
         elif t == "reset_settings":  # everything back to defaults except the colour calibration and the on/off state
-            keep = {k: self.settings[k] for k in ("calibration", "standby") if k in self.settings}
+            keep = {k: self.settings[k] for k in ("calibration", "standby", "onboarded") if k in self.settings}
             self.settings = {**json.loads(json.dumps(settings.DEFAULTS)), **keep}
             settings.save(self.settings)
             self.apply_hardware()

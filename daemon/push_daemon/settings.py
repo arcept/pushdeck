@@ -22,6 +22,7 @@ DEFAULTS = {
     "limit_alert": {"on": True, "levels": [80, 90, 95], "sound": True},   # a usage window crossing these percentages: red panel, red pad ripple, low chime (see limits.py)
     "clock_12h": False,          # clock widgets show 12-hour time (the button on the 2 x 1 clock flips it)
     "claude_context_window": 1_000_000,  # tokens in Claude Code's context window (the context bar's 100 %)
+    "onboarded": False,          # the first-run setup has been completed or skipped (Settings can run it again)
     "claude_usage_live": False,  # read Claude's plan usage live from its usage endpoint (uses the Claude login token in the Keychain); see usage.py
     "display_widgets": [],       # the shared widget arrangement (one list); empty = display/tokens.py layout_default
     "global_pads": {},           # pad-<row>-7 -> the same control setup as in a profile; works in every profile

@@ -6,6 +6,8 @@ All notable changes to Push Deck. Newest first.
 
 - One app only: `./install.sh` builds `build/Push Deck.app` and installs it into `/Applications` (asks before replacing). `./dev.sh` is the test version.
 - Launch splash screen: black text panel with a two-tier name, credits and status line, the pads as the progress bar, and artwork on the right half (`ui/src/assets/splash-art.webp`; replace that file to change it).
+- First-run setup (onboarding): welcome, Push 2 check, permissions (cannot be skipped), Claude usage consent, starter profiles and a quick tour. Run it again from Settings → General.
+- Splash and top bar share one brand lockup (the animated pad mark and the name; two lines on the splash).
 - Version is now a clean number from the `VERSION` file (no commit hash, no "-dirty"); the window title is just "Push Deck"; dev mode shows "dev" on the splash.
 - Removed the separate "Push Deck (Build)" app and its badged icon.
 - README rewritten; working notes moved to `docs/`.
