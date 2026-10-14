@@ -49,10 +49,23 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         DispatchQueue.main.asyncAfter(deadline: .now() + 25) { [weak self] in self?.splashFinished() }   // never leave the user without a window
     }
 
+    /// Developer aid: PUSH_DEBUG_SNAP=<dir> saves what the splash page draws, a few times, with a line about its state.
+    private func debugSplash() {
+        guard let dir = ProcessInfo.processInfo.environment["PUSH_DEBUG_SNAP"], let w = splashWeb, let win = splash else { return }
+        for (i, d) in [0.3, 1.2, 2.2, 3.4].enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + d) {
+                w.evaluateJavaScript("JSON.stringify({url:location.href,cls:document.documentElement.className,card:document.querySelector('.splashcard')?.getBoundingClientRect().width,op:getComputedStyle(document.querySelector('.splashcard')||document.body).opacity,leaving:document.querySelector('.splash')?.className,st:document.querySelector('.status')?.textContent})") { r, e in
+                    fputs("DBG \(i) visible=\(win.isVisible) \(String(describing: r)) \(String(describing: e))\n", stderr) }
+                w.takeSnapshot(with: nil) { img, _ in if let t = img?.tiffRepresentation, let rep = NSBitmapImageRep(data: t), let png = rep.representation(using: .png, properties: [:]) { try? png.write(to: URL(fileURLWithPath: "\(dir)/splash\(i).png")) } }
+            }
+        }
+    }
+
     private func showSplashWindow() {
         guard !released, let win = splash, !win.isVisible else { return }
         win.makeKeyAndOrderFront(nil)
         win.orderFrontRegardless()
+        debugSplash()
     }
 
     func userContentController(_ c: WKUserContentController, didReceive m: WKScriptMessage) { if m.name == "splashDone" { splashFinished() } }
@@ -66,7 +79,7 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         NSApp.activate(ignoringOtherApps: true)
         NSAnimationContext.runAnimationGroup { $0.duration = 0.5; win.animator().alphaValue = 1 }
         let sp = splash; splash = nil
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { sp?.orderOut(nil) }
+        if let sp = sp { NSAnimationContext.runAnimationGroup({ $0.duration = 0.5; sp.animator().alphaValue = 0 }, completionHandler: { sp.orderOut(nil) }) }
     }
 
     /// Let the page behind the splash start (it fades in, and the first-run setup opens).
