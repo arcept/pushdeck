@@ -159,6 +159,8 @@ class Push:
         else:
             idx = self._entry(tuple(color), 0)
         with self.lock:
+            if self.out is None:   # the connection can drop (or fail to open) between the check above and here
+                return
             if c["kind"] == "pad":
                 self.out.send(mido.Message("note_on", channel=0, note=c["note"], velocity=idx))
             else:
@@ -173,6 +175,8 @@ class Push:
             if force and self.out:
                 self.led_state[cid] = None
                 with self.lock:
+                    if self.out is None:
+                        return
                     if c["kind"] == "pad":
                         self.out.send(mido.Message("note_on", channel=0, note=c["note"], velocity=0))
                     else:

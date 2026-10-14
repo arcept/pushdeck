@@ -4,6 +4,9 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Release build: the app carries its own pinned Python and its helpers (audio listener, now-playing library), so a Mac needs nothing installed beyond macOS. `tools/make_dmg.sh` makes the .dmg and `.github/workflows/release.yml` builds and publishes it when a version tag is pushed.
+- Fixed: the daemon could crash while the Push was connecting or missing.
+
 - The menu bar panel now uses the same look as the app and the setup: near-black card, soft glow, one lavender accent, Quicksand type, the animated pad mark and the pale primary button.
 - Fixed: the splash window was never put on screen. It now shows, and stays at least 3 seconds.
 

@@ -1,6 +1,6 @@
 import Foundation
 
-/// Runs the Push daemon from inside the app bundle (Resources/venv + Resources/root) so the .app is the whole product.
+/// Runs the Push daemon from inside the app bundle (Resources/python + Resources/root) so the .app is the whole product.
 /// If the daemon is already answering on the port (started from a terminal or a LaunchAgent), it is left alone.
 final class DaemonHost {
     static let shared = DaemonHost()
@@ -9,7 +9,8 @@ final class DaemonHost {
     private let port = Int(ProcessInfo.processInfo.environment["PUSH_PORT"] ?? "") ?? 8472
 
     private var res: URL? { Bundle.main.resourceURL }
-    var bundled: Bool { res.map { FileManager.default.fileExists(atPath: $0.appendingPathComponent("venv/bin/python3").path) } ?? false }
+    private var python: URL? { res?.appendingPathComponent("python/bin/python3") }   // the app's own Python (see tools/fetch_python.sh)
+    var bundled: Bool { python.map { FileManager.default.fileExists(atPath: $0.path) } ?? false }
     static var dataDir: URL { FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/Push Deck") }
 
     private func portOpen() -> Bool {
@@ -38,7 +39,7 @@ final class DaemonHost {
         let logs = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs/Push Deck.log")
         if !FileManager.default.fileExists(atPath: logs.path) { FileManager.default.createFile(atPath: logs.path, contents: nil) }
         let p = Process()
-        p.executableURL = res.appendingPathComponent("venv/bin/python3")
+        p.executableURL = python
         p.arguments = ["-m", "push_daemon"]
         p.currentDirectoryURL = res.appendingPathComponent("root")
         var env = ProcessInfo.processInfo.environment

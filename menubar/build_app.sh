@@ -38,19 +38,47 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 </dict></plist>
 PLIST
 
-# --- the whole product inside the app: daemon code, UI, python environment, libusb ---
+# --- the whole product inside the app: daemon code, UI, its own Python and packages, libusb, the audio helper ---
 R="$APP/Contents/Resources"
 # the UI goes to build/ui (ui/dist stays the dev-mode output, see dev.sh)
 ( cd "$ROOT/ui" && npx tsc --noEmit && npx vite build --outDir "$OUT/ui/dist" --emptyOutDir >/dev/null )
 mkdir -p "$R/root/daemon" "$R/root/design" "$R/lib"
-rsync -a --exclude '__pycache__' --exclude 'audiotap' "$ROOT/daemon/" "$R/root/daemon/"
+rsync -a --exclude '__pycache__' --exclude 'audiotap' --exclude 'libmr.dylib' "$ROOT/daemon/" "$R/root/daemon/"
 rsync -a "$OUT/ui/dist" "$R/root/ui/"
 rsync -a "$ROOT/design/fonts" "$R/root/design/"
 rsync -a "$ROOT/profiles" "$R/root/"
 cp "$ROOT/push2_registry.json" "$ROOT/button_names.json" "$R/root/"
-rsync -a --exclude '__pycache__' --exclude 'pip*' --exclude '_distutils_hack' --exclude 'setuptools*' --exclude 'pkg_resources' --exclude 'imageio*' --exclude 'share' "$ROOT/.venv/" "$R/venv/"
+
+# Python: a pinned standalone copy that lives inside the app (see tools/fetch_python.sh), with the daemon's packages installed into it.
+# Kept lean: no pip, setuptools, tests, tk or the video libraries (imageio) the daemon never uses at run time.
+PY="$("$ROOT/tools/fetch_python.sh")"
+rsync -a "$PY/" "$R/python/"
+grep -viE '^(imageio|imageio-ffmpeg)$' "$ROOT/requirements.txt" > "$OUT/requirements.bundle.txt"
+"$R/python/bin/python3" -m pip install --quiet --no-warn-script-location --disable-pip-version-check -r "$OUT/requirements.bundle.txt"
+PYLIB="$(echo "$R"/python/lib/python3.*)"
+rm -rf "$PYLIB/site-packages/"{pip,pip-*,setuptools,setuptools-*,pkg_resources,_distutils_hack,wheel,wheel-*} "$PYLIB"/{test,idlelib,tkinter,turtledemo,ensurepip} "$PYLIB"/lib-dynload/_tkinter* "$R/python/share"
+rm -rf "$R"/python/lib/{tcl*,tk*,itcl*,thread*,libtcl*,libtk*,pkgconfig} "$PYLIB/site-packages/PyObjCTest" "$PYLIB/lib2to3" "$PYLIB/unittest/test" 2>/dev/null || true
+rm -f "$R"/python/bin/{pip*,idle*,pydoc*,2to3*,python3-config,python3.*-config}
+rm -rf "$PYLIB/site-packages/numpy"/{tests,_core/tests,f2py,distutils} 2>/dev/null || true
 cp "$(brew --prefix libusb)/lib/libusb-1.0.0.dylib" "$R/lib/"
+install_name_tool -id "@loader_path/libusb-1.0.0.dylib" "$R/lib/libusb-1.0.0.dylib" 2>/dev/null || true
 codesign --force --sign - "$R/lib/libusb-1.0.0.dylib" 2>/dev/null || true
+
+# the audio helper is built here, so a Mac without Xcode never has to compile it
+AT="$R/root/daemon/audiotap/PushAudioTap.app"
+mkdir -p "$AT/Contents/MacOS"
+cp "$ROOT/daemon/audiotap/Info.plist" "$AT/Contents/Info.plist"
+cp "$ROOT/daemon/audiotap/audiotap.swift" "$R/root/daemon/audiotap/audiotap.swift"
+swiftc -O "$ROOT/daemon/audiotap/audiotap.swift" -o "$AT/Contents/MacOS/audiotap"
+codesign --force --sign - "$AT"
+
+# the now-playing helper (a tiny C library) is built here too, so a Mac without the developer tools never has to run clang
+NP="$R/root/daemon/nowplaying"
+mkdir -p "$NP"
+cp "$ROOT/daemon/nowplaying/mr.c" "$NP/mr.c"
+clang -dynamiclib -fblocks -framework CoreFoundation -o "$NP/libmr.dylib" "$NP/mr.c"
+codesign --force --sign - "$NP/libmr.dylib"
+
 find "$R" -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
 codesign --force --deep --sign - "$APP"
 echo "built $APP  ($VER)"

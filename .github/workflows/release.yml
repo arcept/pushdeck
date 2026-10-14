@@ -1,0 +1,62 @@
+# Builds the Push Deck .dmg and publishes it as a GitHub Release.
+# Start it by pushing a tag that matches the VERSION file:   git tag v0.1.0 && git push origin v0.1.0
+# (or run it by hand from the Actions tab to just build the .dmg as a downloadable artifact, without publishing).
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches VERSION
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          [ "${GITHUB_REF_NAME#v}" = "$(tr -d '[:space:]' < VERSION)" ] || { echo "Tag $GITHUB_REF_NAME does not match VERSION ($(cat VERSION))"; exit 1; }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install build tools
+        run: |
+          brew install libusb
+          npm ci --prefix ui
+
+      - name: Build the app
+        run: menubar/build_app.sh
+
+      - name: Make the .dmg
+        run: tools/make_dmg.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: push-deck-dmg
+          path: |
+            build/PushDeck-*.dmg
+            build/PushDeck-*.dmg.sha256
+
+      - name: Publish the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          # the notes are this version's section of CHANGELOG.md (falls back to a short line)
+          awk -v v="$VER" '/^## /{p=($0 ~ "^## \\[?"v"\\]?")} p' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Push Deck $VER" > notes.md
+          cat >> notes.md <<'NOTE'
+
+          **Install:** open the .dmg and drag Push Deck to Applications. The app is not signed with an Apple Developer ID, so the first time, right-click it and choose Open. Needs an Apple Silicon Mac with macOS 13 or newer (the music visualizer needs macOS 14.2).
+          NOTE
+          gh release create "$GITHUB_REF_NAME" build/PushDeck-*.dmg build/PushDeck-*.dmg.sha256 --title "Push Deck $VER" --notes-file notes.md
