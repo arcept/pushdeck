@@ -5,6 +5,7 @@ import { useDaemon, type Ctl, type Profile } from "./daemon";
 import RightColumn from "./RightColumn";
 import { LayoutProvider } from "./layoutCtx";
 import Intro from "./Intro";
+import Splash from "./Splash";
 import ImportDialog from "./ImportDialog";
 import ExportDialog from "./ExportDialog";
 import Backdrop, { pulseAt, type FxMode, type Look, type Tone } from "./Backdrop";
@@ -147,6 +148,7 @@ function Shell() {
         <LayoutProvider><div className="main"><ProfileRail /><Stage /><RightColumn /></div></LayoutProvider>
       </div>
       <Intro />
+      <Splash connected={d.connected} hello={!!d.settings} usb={d.status.usb} profiles={d.profiles.length} />
       <ImportDialog />
       <ExportDialog />
       <SettingsSheet dialog={settings} page={page} setPage={setPage} />
