@@ -14,7 +14,7 @@ LEVELS = list(range(70, 101, 5))               # 70, 75 ... 100 %: the only choi
 HOLD = 60.0                                    # seconds an alert stays up unless a button is pressed
 RIPPLE = 6.0                                   # seconds the pads ripple at the start
 SAME_WINDOW = 1800                             # reset times closer than this (seconds) are the same usage window
-WINDOWS = {"five_hour": ("5-Hour", "clock", (255, 176, 64)), "seven_day": ("Weekly", "calendar", (176, 126, 255))}   # label, icon, colour when it starts to matter
+WINDOWS = {"five_hour": ("5-Hour", "clock", (255, 176, 64)), "seven_day": ("Weekly", "calendar", (255, 98, 54))}   # label, icon, colour when it starts to matter
 RED = (255, 77, 77)
 
 
