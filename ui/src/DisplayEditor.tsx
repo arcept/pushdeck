@@ -161,9 +161,10 @@ function LookPicker({ theme, set, on, setOn }: { theme: string; set: (v: string)
   </div>);
 }
 
-function LimitPicker({ on, set }: { on: boolean; set: (v: boolean) => void }) {
+function LimitPicker({ on, set, preview }: { on: boolean; set: (v: boolean) => void; preview: (win: "five_hour" | "seven_day", pct: number) => void }) {
   return (<div className="wlooks">
-    <div className="wrow" title="At 70, 80, 90 and 95 percent of the 5-hour or weekly limit the display turns red, the pads ripple red and a low chime plays. Any button dismisses it."><span>Notify when usage limits get close</span><Switch checked={on} onChange={set} label={<span className="sr">Notify when usage limits get close</span>} /></div>
+    <div className="wrow" title="At 70 percent of the 5-hour or the weekly limit, and again at every 5 percent up to 100, the display shows a full-screen alert (a clock for the 5-hour session, a calendar for the week), the pads ripple and a low chime plays once. It stays up for a minute or until you press a button, and each level is announced only once."><span>Alert when usage limits get close</span><Switch checked={on} onChange={set} label={<span className="sr">Alert when usage limits get close</span>} /></div>
+    <div className="wrow"><span>See what the alerts look like</span><div className="wpills"><button onClick={() => preview("five_hour", 85)}>Preview 5-hour</button><button onClick={() => preview("seven_day", 90)}>Preview weekly</button></div></div>
   </div>);
 }
 
@@ -211,7 +212,7 @@ export function WidgetsPanel({ ed }: { ed: Editor }) {
         <div className="wgroups">
           {Object.entries(groups).filter(([, ps]) => availableFor(ps[0].make(), bundles)).map(([g, ps]) => (   // only the global widgets and the ones for this profile's apps
             <div key={g} className="wgroup"><h5><Icon name={(ICON[g] ?? "grid") as never} size={14} />{g}<span>{ps.length}</span></h5>
-              {g === "Claude usage" && <LimitPicker on={limitOn} set={setLimit} />}
+              {g === "Claude usage" && <LimitPicker on={limitOn} set={setLimit} preview={(window, pct) => d.send({ type: "limit_preview", window, pct })} />}
               {g === "Claude session" && <LookPicker theme={theme} set={setTheme} on={askOn} setOn={setAsk} />}
               <div className="wvars">{[...ps].sort((a, b) => { const x = a.make(), y = b.make(); return y.w * y.h - x.w * x.h; }).map((p) => <WidgetTile key={p.id} p={p} icons={d.icons} name={name} accent={accent} icon={icon} look={look} onAdd={() => click(p)} />)}</div>
             </div>))}

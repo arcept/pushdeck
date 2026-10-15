@@ -60,14 +60,38 @@ export function drawAskBanner(ctx: Ctx, h: Helpers, w: Record<string, unknown>, 
 }
 
 /** A usage window crossed a threshold: the whole display in the error colour. */
+/** The two limits' icons, drawn from lines: a clock for the 5-hour session, a calendar for the week. Mirrors limit_icon in render_ask.py. */
+function limitIcon(ctx: Ctx, name: unknown, cx: number, cy: number, ink: string) {
+  ctx.save(); ctx.strokeStyle = ink; ctx.fillStyle = ink; ctx.lineWidth = 4; ctx.lineJoin = "round";
+  if (name === "calendar") {
+    ctx.beginPath(); ctx.roundRect(cx - 21, cy - 16, 42, 36, 4); ctx.stroke();
+    ctx.beginPath(); ctx.roundRect(cx - 23, cy - 18, 46, 13, [6, 6, 0, 0]); ctx.fill();
+    for (const x of [cx - 11, cx + 11]) { ctx.beginPath(); ctx.moveTo(x, cy - 25); ctx.lineTo(x, cy - 12); ctx.stroke(); }
+    for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++) ctx.fillRect(cx - 12 + c * 12 - 2.5, cy + 3 + r * 11 - 2.5, 5, 5);
+  } else {
+    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, cy - 14); ctx.lineTo(cx, cy); ctx.lineTo(cx + 11, cy + 7); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/** A usage window climbed past a level: the whole display. The colour (set by the daemon) runs from the limit's own towards red as usage rises,
+ * the badge and the big label say which limit it is. Mirrors w_limit in render_ask.py. */
 export function drawLimit(ctx: Ctx, h: Helpers, w: Record<string, unknown>) {
-  const red = "#ff4d4d", pct = Math.max(0, Math.min(100, Math.round(Number(w.pct) || 0))), blink = Number(w.level_blink) || 0;
-  h.rrect(ctx, 4, 6, 956, 154, 14, "#3c080c", rgb(mixc([60, 8, 12], [255, 77, 77], 0.55 + 0.45 * blink)), 3);
-  h.text(ctx, 36, 40, `${w.name ?? "CLAUDE"}  ·  ${w.window ?? ""} LIMIT`, 20, red, "label", true, "left");
-  h.text(ctx, 36, 74, pct < 95 ? "Almost out: slow down or switch tasks" : "About to hit the limit", 14, INK2, "label", false, "left");
-  h.text(ctx, 924, 62, `${pct}%`, 64, "#ffffff", "label", true, "right");
-  h.rrect(ctx, 36, 112, 924, 130, 9, "#1e0608");
-  h.rrect(ctx, 36, 112, 36 + (924 - 36) * pct / 100, 130, 9, red);
-  if (w.resets) h.text(ctx, 36, 144, `RESETS IN ${String(w.resets).toUpperCase()}`, 11, INK3, "mono", true, "left");
-  h.text(ctx, 924, 144, "PRESS ANY BUTTON TO DISMISS", 10, INK3, "mono", false, "right");
+  const col = ((w.color as number[]) ?? [255, 77, 77]).map(Number), pct = Math.max(0, Math.min(100, Math.round(Number(w.pct) || 0)));
+  const dark = mixc([8, 8, 12], col, 0.13), age = Number(w.age) || 0;
+  const pulse = age < 4 ? 0.5 + 0.5 * Math.sin(age * 6) : 0.3;
+  h.rrect(ctx, 4, 6, 956, 154, 14, rgb(dark), rgb(mixc(dark, col, 0.5 + 0.5 * pulse)), 3);
+  h.rrect(ctx, 28, 26, 112, 110, 18, rgb(col));
+  limitIcon(ctx, w.icon, 70, 68, rgb(mixc([12, 8, 8], col, 0.1)));
+  h.text(ctx, 134, 38, `${w.name ?? "CLAUDE"}  ·  USAGE ALERT`, 12, INK3, "mono", true, "left");
+  h.text(ctx, 134, 70, `${w.window ?? ""} LIMIT`, 36, rgb(col), "label", true, "left");
+  h.text(ctx, 134, 100, String(w.msg ?? ""), 15, INK2, "label", false, "left");
+  h.text(ctx, 932, 66, `${pct}%`, 76, "#ffffff", "label", true, "right");
+  const x0 = 28, x1 = 932, y0 = 118, y1 = 132;
+  h.rrect(ctx, x0, y0, x1, y1, 7, rgb(mixc(dark, col, 0.22)));
+  h.rrect(ctx, x0, y0, x0 + (x1 - x0) * pct / 100, y1, 7, rgb(col));
+  for (const mark of [70, 80, 90]) { const x = x0 + (x1 - x0) * mark / 100; ctx.fillStyle = rgb(dark); ctx.fillRect(x - 1, y0, 2, y1 - y0); }
+  if (w.resets) h.text(ctx, 28, 145, `RESETS IN ${String(w.resets).toUpperCase()}`, 11, INK3, "mono", true, "left");
+  h.text(ctx, 932, 145, `PRESS ANY BUTTON  ·  CLOSES IN ${Number(w.closes) || 0}s`, 10, INK3, "mono", false, "right");
 }

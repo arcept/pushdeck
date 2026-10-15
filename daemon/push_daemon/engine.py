@@ -916,6 +916,8 @@ class Engine:
         elif t == "ask_downloads":  # the setup's Downloads row: reading the folder makes macOS show its own prompt the first time
             await asyncio.get_running_loop().run_in_executor(None, permissions.ask_downloads)
             self.broadcast({"type": "permissions", "accessibility": permissions.accessibility(), "automation": permissions.automation(), "downloads": permissions.downloads()})
+        elif t == "limit_preview":  # the settings' Preview buttons: an example usage alert on the Push
+            self.limits.preview(msg.get("window", "five_hour"), max(0, min(100, int(msg.get("pct", 85)))))
         elif t == "audio_check":  # the setup's System audio row: play a chime and see if the audio helper hears it
             asyncio.ensure_future(self.media.sound_test())
         elif t == "open_privacy":  # open one System Settings > Privacy page (only the names in permissions.PANES)

@@ -56,17 +56,44 @@ class AskMixin:
             self.text(tx, y1 - 14, f"from Claude  ·  {int(w.get('n') or 1)} to answer", 11, INK3, "mono", True, "lm")
         self.ask_pill(w, x1, y1, pulse)
 
+    def limit_icon(self, name, cx, cy, ink):
+        """The two limits' icons, drawn from lines: a clock for the 5-hour session, a calendar for the week. Mirrors limitIcon in ui/src/display/ask.ts."""
+        from .render import S as k   # (imported here: render.py imports this module)
+        d = self.d
+        if name == "calendar":
+            self.rrect(cx - 23, cy - 18, cx + 23, cy + 22, 6, outline=ink, width=4)
+            self.rrect(cx - 23, cy - 18, cx + 23, cy - 5, 6, fill=ink)
+            for x in (cx - 11, cx + 11):
+                d.line([(x * k, (cy - 25) * k), (x * k, (cy - 12) * k)], fill=ink, width=int(4 * k))
+            for r in range(2):
+                for c in range(3):
+                    x, y = cx - 12 + c * 12, cy + 3 + r * 11
+                    d.rectangle([((x - 2.5) * k, (y - 2.5) * k), ((x + 2.5) * k, (y + 2.5) * k)], fill=ink)
+        else:
+            d.ellipse([((cx - 24) * k, (cy - 24) * k), ((cx + 24) * k, (cy + 24) * k)], outline=ink, width=int(4 * k))
+            d.line([(cx * k, (cy - 14) * k), (cx * k, cy * k), ((cx + 11) * k, (cy + 7) * k)], fill=ink, width=int(4 * k), joint="curve")
+
     def w_limit(self, w):
-        """A usage window has crossed a threshold: the whole display, in the error colour."""
-        red, dark = (255, 77, 77), (60, 8, 12)
-        blink = int(w.get("level_blink") or 0)
-        self.rrect(4, 6, 956, 154, 14, fill=dark, outline=mixc(dark, red, 0.55 + 0.45 * blink), width=3)
-        self.text(36, 40, f"{w.get('name', 'CLAUDE')}  ·  {w.get('window', '')} LIMIT", 20, red, "label", True, "lm")
-        self.text(36, 74, "Almost out: slow down or switch tasks" if int(w.get("pct", 0)) < 95 else "About to hit the limit", 14, INK2, "label", False, "lm")
-        self.text(924, 62, f"{int(w.get('pct', 0))}%", 64, (255, 255, 255), "label", True, "rm")
+        """A usage window climbed past a level: the whole display. The colour (set by the daemon) runs from the limit's own towards red as usage rises,
+        the badge and the big label say which limit it is. Mirrors drawLimit in ui/src/display/ask.ts."""
+        col = tuple(int(v) for v in (w.get("color") or (255, 77, 77)))
         pct = max(0, min(100, int(w.get("pct", 0))))
-        self.rrect(36, 112, 924, 130, 9, fill=(30, 6, 8))
-        self.rrect(36, 112, 36 + (924 - 36) * pct / 100, 130, 9, fill=red)
+        dark = mixc((8, 8, 12), col, 0.13)
+        age = float(w.get("age") or 0)
+        pulse = 0.5 + 0.5 * math.sin(age * 6) if age < 4 else 0.3        # the frame pulses for the first seconds, then settles
+        self.rrect(4, 6, 956, 154, 14, fill=dark, outline=mixc(dark, col, 0.5 + 0.5 * pulse), width=3)
+        self.rrect(28, 26, 112, 110, 18, fill=col)
+        self.limit_icon(w.get("icon"), 70, 68, mixc((12, 8, 8), col, 0.1))
+        self.text(134, 38, f"{w.get('name', 'CLAUDE')}  ·  USAGE ALERT", 12, INK3, "mono", True, "lm")
+        self.text(134, 70, f"{w.get('window', '')} LIMIT", 36, col, "label", True, "lm")
+        self.text(134, 100, w.get("msg", ""), 15, INK2, "label", False, "lm")
+        self.text(932, 66, f"{pct}%", 76, (255, 255, 255), "label", True, "rm")
+        x0, x1, y0, y1 = 28, 932, 118, 132
+        self.rrect(x0, y0, x1, y1, 7, fill=mixc(dark, col, 0.22))
+        self.rrect(x0, y0, x0 + (x1 - x0) * pct / 100, y1, 7, fill=col)
+        for mark in (70, 80, 90):                                         # the levels, as notches in the bar
+            x = x0 + (x1 - x0) * mark / 100
+            self.rrect(x - 1, y0, x + 1, y1, 0, fill=dark)
         if w.get("resets"):
-            self.text(36, 144, f"RESETS IN {w['resets'].upper()}", 11, INK3, "mono", True, "lm")
-        self.text(924, 144, "PRESS ANY BUTTON TO DISMISS", 10, INK3, "mono", False, "rm")
+            self.text(28, 145, f"RESETS IN {w['resets'].upper()}", 11, INK3, "mono", True, "lm")
+        self.text(932, 145, f"PRESS ANY BUTTON  ·  CLOSES IN {int(w.get('closes') or 0)}s", 10, INK3, "mono", False, "rm")
