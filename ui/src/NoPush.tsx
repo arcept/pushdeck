@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "./ctx";
 import { Icon } from "./icons";
+import { Orb } from "./Orb";
 
 // Shown above the Push picture when the daemon is running but the device isn't there. Editing still works.
 export default function NoPush() {
@@ -10,7 +11,7 @@ export default function NoPush() {
   return (
     <div className="nopush" role="status">
       <div className="nophead">
-        <span className="noicon"><Icon name="power" size={18} /></span>
+        <span className="noicon"><Orb state="connecting" size={30} /></span>
         <div className="notext"><b>Your Push isn't connected</b><span>You can keep editing profiles here. Changes reach the Push when it's back.</span></div>
         <button className="btn sm" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? "Hide" : "Troubleshoot"}</button>
       </div>

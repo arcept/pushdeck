@@ -3,6 +3,7 @@
 import tokens from "./tokens.json";
 import { buddy, drawClaude, type Helpers } from "./claude";
 import { drawAskBanner, drawLimit, linesN } from "./ask";
+import { drawOrb } from "./orb";
 
 export type Icons = Record<string, { p?: number[][]; c?: number[]; closed?: boolean; fill?: boolean }[]>;
 export type Zone = { label?: string; icon?: string | null; keep_case?: boolean; bar?: boolean; bar_color?: string; icon_color?: string; lit?: boolean; dim?: boolean };
@@ -421,6 +422,13 @@ function widget(ctx: Ctx, icons: Icons, w: Widget, accent: string, t: number) {
         }
         buddy(ctx, claudeHelpers(ctx, icons), str("mascot") || "pip", night ? "sleep" : "plain", Math.max(xa, Math.min(xa + (xb - xa) * frac - 12, xb - 24)), y0 + 87, 2);
       }
+      break;
+    }
+    case "orb": { // a whole-display message with an orb (the Push turned off). Mirrors w_orb in orb.py
+      const c = ((w.color as number[]) ?? [255, 176, 64]).map(Number);
+      drawOrb(ctx, 110, 80, 58, str("state") || "breathing", c, performance.now() / 1000);
+      text(ctx, 200, w.sub ? 66 : 80, str("text"), 34, "#eeeef6", "label", true, "left");
+      if (w.sub) text(ctx, 200, 104, str("sub"), 13, "#787e9c", "mono", false, "left");
       break;
     }
     case "limit": drawLimit(ctx, claudeHelpers(ctx, icons), w as Record<string, unknown>); break;

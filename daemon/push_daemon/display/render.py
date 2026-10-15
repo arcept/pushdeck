@@ -17,6 +17,7 @@ from .. import scenes as base
 from .tokens import TOKENS
 from .render_claude import ClaudeMixin
 from .render_ask import AskMixin
+from .orb import OrbMixin
 
 T = TOKENS
 W, H = T["canvas"]["w"], T["canvas"]["h"]
@@ -50,7 +51,7 @@ def _is_dark(im):
     return _DARK[k]
 
 
-class Painter(ClaudeMixin, AskMixin):
+class Painter(ClaudeMixin, AskMixin, OrbMixin):
     def __init__(self, spec, t):
         self.spec, self.t = spec, t
         self.accent = rgb(spec.get("accent", "#d97757"))
@@ -861,6 +862,8 @@ def _fps(spec, t):
             r = max(r, 30 if w.get("pop") else 15)
         elif k == "ask" and w.get("mode") == "dictate" or k in ("ask_banner", "limit"):
             r = max(r, 15)
+        elif k == "orb":
+            r = max(r, 20)
     return r
 
 

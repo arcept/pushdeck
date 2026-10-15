@@ -20,8 +20,8 @@ def message(text, ok=None, sub=""):
 
 def standby():
     return {"accent": "#d97757", "zones": {}, "active": [], "no_zones": True, "toast": None,
-            "widgets": [{"type": "title", "col": 0, "span": 8, "text": "Turned off from the browser UI", "color": "ink3",
-                         "sub": "Use 'Turn Push on' in the UI or the menu bar app", "size": "title"}]}
+            "widgets": [{"type": "orb", "state": "breathing", "color": [120, 126, 156], "text": "Turned off from the browser UI",
+                         "sub": "Use 'Turn Push on' in the UI or the menu bar app"}]}
 
 
 def test_rainbow():

@@ -728,3 +728,7 @@ button.phead.pswitch[aria-expanded="true"] .pcaret svg { transform:rotate(180deg
 .wlook button.on { background:var(--tx); color:var(--bg, #0b0b10); border-color:var(--tx); }
 .wlook button:focus-visible { outline:2px solid var(--accent, #d97757); outline-offset:2px; }
 .wlooks p { margin:0; font-size:11px; color:var(--tx3); }
+
+/* dot orbs */
+.orb { display:block; flex:none; }
+.pill .orb { margin:-4px -2px -4px -6px; }

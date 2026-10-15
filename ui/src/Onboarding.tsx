@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Orb } from "./Orb";
 import Brand from "./Brand";
 import { useApp } from "./ctx";
 import { Badge, IconGauge, IconImport, IconKeys, IconLibrary, IconLink, IconPads, IconPlus, IconRefresh, IconScreen, IconShield, IconTick, IconUsb, IconWave, PushDrawing } from "./OnbArt";
@@ -106,7 +107,7 @@ export default function Onboarding() {
                 <div><span className="ti"><IconShield size={22} /></span><b>All on your Mac</b><span>No account, no cloud, no tracking.</span></div>
               </div>
               <div className="conn rise" style={dly(250)}>
-                <span className={"pill " + (pushOk ? "ok" : "warn")}><span className="dot" />{pushOk ? "Push 2 connected" : d.status.usb || d.status.midi ? "Push 2 partly found" : "No Push 2 found yet"}</span>
+                <span className={"pill " + (pushOk ? "ok" : "warn")}><Orb state={pushOk ? "breathing" : "searching"} size={22} color={pushOk ? [60, 220, 120] : [255, 190, 50]} />{pushOk ? "Push 2 connected" : d.status.usb || d.status.midi ? "Push 2 partly found" : "No Push 2 found yet"}</span>
                 <p className={"hint" + (pushOk ? " off" : "")} aria-hidden={pushOk}><IconUsb size={15} />Plug it in with its USB cable and switch it on, and close Ableton Live if it is open. No Push yet? You can carry on without one.</p>
               </div>
             </>}
