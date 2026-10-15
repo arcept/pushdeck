@@ -52,7 +52,7 @@ export function drawAskBanner(ctx: Ctx, h: Helpers, w: Record<string, unknown>, 
   if (wide) h.text(ctx, tx, y1 - 14, `from Claude  ·  ${Math.round(Number(w.n) || 1)} to answer`, 11, INK3, "mono", true, "left");
   if (w.away) { // two pills over the last two lower buttons: Dismiss, Open Claude
     const by0 = y1 - 38, by1 = y1 - 4;
-    h.rrect(ctx, x1 - 232, by0, x1 - 128, by1, 17, undefined, INK3, 2);
+    h.rrect(ctx, x1 - 232, by0, x1 - 128, by1, 17, "#2e2e38");
     h.text(ctx, x1 - 180, (by0 + by1) / 2, "Dismiss", 15, INK2, "label", true, "center");
     h.rrect(ctx, x1 - 112, by0, x1 - 8, by1, 17, rgb(mixc(ORANGE, [255, 175, 120], pulse * 0.5)));
     h.text(ctx, x1 - 60, (by0 + by1) / 2, "Open Claude", 14, "#240e04", "label", true, "center");
@@ -60,38 +60,36 @@ export function drawAskBanner(ctx: Ctx, h: Helpers, w: Record<string, unknown>, 
 }
 
 /** A usage window crossed a threshold: the whole display in the error colour. */
-/** The two limits' icons, drawn from lines: a clock for the 5-hour session, a calendar for the week. Mirrors limit_icon in render_ask.py. */
-function limitIcon(ctx: Ctx, name: unknown, cx: number, cy: number, ink: string) {
-  ctx.save(); ctx.strokeStyle = ink; ctx.fillStyle = ink; ctx.lineWidth = 4; ctx.lineJoin = "round";
+/** The two limits' icons, solid shapes inside the badge: a clock face for the 5-hour session, a calendar for the week. Mirrors limit_icon in render_ask.py. */
+function limitIcon(ctx: Ctx, h: Helpers, name: unknown, cx: number, cy: number, ink: string, col: number[]) {
+  ctx.save(); ctx.strokeStyle = rgb(col); ctx.fillStyle = ink; ctx.lineJoin = "round";
   if (name === "calendar") {
-    ctx.beginPath(); ctx.roundRect(cx - 21, cy - 16, 42, 36, 4); ctx.stroke();
-    ctx.beginPath(); ctx.roundRect(cx - 23, cy - 18, 46, 13, [6, 6, 0, 0]); ctx.fill();
-    for (const x of [cx - 11, cx + 11]) { ctx.beginPath(); ctx.moveTo(x, cy - 25); ctx.lineTo(x, cy - 12); ctx.stroke(); }
-    for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++) ctx.fillRect(cx - 12 + c * 12 - 2.5, cy + 3 + r * 11 - 2.5, 5, 5);
+    h.rrect(ctx, cx - 24, cy - 20, cx + 24, cy + 24, 7, ink);
+    ctx.save(); ctx.beginPath(); ctx.roundRect(cx - 24, cy - 20, 48, 12, [7, 7, 0, 0]); ctx.fillStyle = rgb(mixc([12, 8, 8], col, 0.5)); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = ink; ctx.lineWidth = 5;
+    for (const x of [cx - 11, cx + 11]) { ctx.beginPath(); ctx.moveTo(x, cy - 27); ctx.lineTo(x, cy - 14); ctx.stroke(); }
+    for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++) h.rrect(ctx, cx - 13 + c * 13 - 3, cy + 2 + r * 12 - 3, cx - 13 + c * 13 + 3, cy + 2 + r * 12 + 3, 1.5, rgb(col));
   } else {
-    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx, cy - 14); ctx.lineTo(cx, cy); ctx.lineTo(cx + 11, cy + 7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, 26, 0, Math.PI * 2); ctx.fill();
+    ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(cx, cy - 15); ctx.lineTo(cx, cy); ctx.lineTo(cx + 12, cy + 8); ctx.stroke();
   }
   ctx.restore();
 }
 
-/** A usage window climbed past a level: the whole display. The colour (set by the daemon) runs from the limit's own towards red as usage rises,
- * the badge and the big label say which limit it is. Mirrors w_limit in render_ask.py. */
+/** A usage window climbed past a level: the whole display, on the plain black. The colour (set by the daemon) runs from the limit's own towards red
+ * as usage rises; the badge and the big label say which limit it is. No outlines, no tinted background. Mirrors w_limit in render_ask.py. */
 export function drawLimit(ctx: Ctx, h: Helpers, w: Record<string, unknown>) {
   const col = ((w.color as number[]) ?? [255, 77, 77]).map(Number), pct = Math.max(0, Math.min(100, Math.round(Number(w.pct) || 0)));
-  const dark = mixc([8, 8, 12], col, 0.13), age = Number(w.age) || 0;
-  const pulse = age < 4 ? 0.5 + 0.5 * Math.sin(age * 6) : 0.3;
-  h.rrect(ctx, 4, 6, 956, 154, 14, rgb(dark), rgb(mixc(dark, col, 0.5 + 0.5 * pulse)), 3);
   h.rrect(ctx, 28, 26, 112, 110, 18, rgb(col));
-  limitIcon(ctx, w.icon, 70, 68, rgb(mixc([12, 8, 8], col, 0.1)));
-  h.text(ctx, 134, 38, `${w.name ?? "CLAUDE"}  ·  USAGE ALERT`, 12, INK3, "mono", true, "left");
-  h.text(ctx, 134, 70, `${w.window ?? ""} LIMIT`, 36, rgb(col), "label", true, "left");
+  limitIcon(ctx, h, w.icon, 70, 68, rgb(mixc([12, 8, 8], col, 0.12)), col);
+  h.text(ctx, 134, 38, `${w.name ?? "Claude"}  ·  Usage Alert`, 12, INK3, "mono", true, "left");
+  h.text(ctx, 134, 70, `${w.window ?? ""} Limit`, 36, rgb(col), "label", true, "left");
   h.text(ctx, 134, 100, String(w.msg ?? ""), 15, INK2, "label", false, "left");
   h.text(ctx, 932, 66, `${pct}%`, 76, "#ffffff", "label", true, "right");
   const x0 = 28, x1 = 932, y0 = 118, y1 = 132;
-  h.rrect(ctx, x0, y0, x1, y1, 7, rgb(mixc(dark, col, 0.22)));
+  h.rrect(ctx, x0, y0, x1, y1, 7, "#222228");
   h.rrect(ctx, x0, y0, x0 + (x1 - x0) * pct / 100, y1, 7, rgb(col));
-  for (const mark of [70, 80, 90]) { const x = x0 + (x1 - x0) * mark / 100; ctx.fillStyle = rgb(dark); ctx.fillRect(x - 1, y0, 2, y1 - y0); }
-  if (w.resets) h.text(ctx, 28, 145, `RESETS IN ${String(w.resets).toUpperCase()}`, 11, INK3, "mono", true, "left");
-  h.text(ctx, 932, 145, `PRESS ANY BUTTON  ·  CLOSES IN ${Number(w.closes) || 0}s`, 10, INK3, "mono", false, "right");
+  for (const mark of [70, 80, 90]) { const x = x0 + (x1 - x0) * mark / 100; ctx.fillStyle = "#000"; ctx.fillRect(x - 1, y0, 2, y1 - y0); }
+  if (w.resets) h.text(ctx, 28, 145, `Resets in ${String(w.resets)}`, 11, INK3, "mono", true, "left");
+  h.text(ctx, 932, 145, `Press Any Button  ·  Closes in ${Number(w.closes) || 0}s`, 10, INK3, "mono", false, "right");
 }
