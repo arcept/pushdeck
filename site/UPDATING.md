@@ -16,7 +16,7 @@ Rules that always apply (from `CLAUDE.md`): no personal info in the repo (names,
 | Menu bar panel | `public/img/menubar/panel-1..3.webp`: crops of `public/img/menu-bar.png` (a copy of `docs/images/menu-bar.png`) | the menu bar scene |
 | Words | `content.ts`: features, tour steps, profiles (`steps`), privacy rows, install, requirements, the FAQ (`faq`) notes | everywhere |
 | Version | `../VERSION` | footer, download button |
-| Phone hero | `public/video/device-loop.mp4` (a 10s seamless loop of the tilted device) and `public/img/device-view.webp` (its still, shown first and for reduced motion). Both are drawn on black and blended onto the page (`mix-blend-mode: lighten`), so no ancestor of them may have a transform or opacity. Record from the desktop hero at 2300x1300 with `.win` at `rotateX(40deg)`, hero perspective 3400px, a black page background and the nav and copy hidden; crop to the device, loop with a 1s cross-fade (ffmpeg `xfade`) | phones and reduced motion |
+| Phone hero | `public/img/device-view.webp`: a still of the hero device in its tilted view on a transparent background, 1800px wide. Capture it from the desktop hero at 2300x1250 with the nav, copy and page background hidden (`omitBackground`), `.win` set to `rotateX(40deg)` and the hero perspective at 3400px, then crop to the device. Redo it if the replica art, pad colours or the display content change | phones and reduced motion |
 | Phone page: the live strip and swipe cards | `components/PhoneStory.tsx` (reuses the tour crops, the profile videos and `hero.mp4`); set `REAL_CLIP` in `content.ts` to a real clip of the Push 2 (put it in `public/video/`) to replace the display recording in the strip | phones and reduced motion |
 
 The page never reads the app's code. Nothing updates itself: a change in the app only reaches the page when someone redoes the matching row above.
@@ -34,6 +34,8 @@ The page never reads the app's code. Nothing updates itself: a change in the app
 4. The tour's profiles step crossfades three header crops (`prof-*.webp`, the `zl-p-*` overlays and their timeline tweens in `Landing.tsx`). Add a fourth, or swap one. Recapture the header with `scripts/capture` (Auto mode needs that app in front, see section 3).
 5. Re-read the copy: the hero text, "Switch app. The Push follows." and the features list mention profiles in general terms; update them only if the new profile changes what is true.
 6. Check the Figma/Photoshop rule above before showing either.
+
+**Phone page.** The features tiles are desktop-only (phones get them as the tour cards). The "It moves with you" strip is phone-only.
 
 **Phone cards.** The swipe cards show the same crops as the desktop tour (`tour/*.webp`), the chip and the profile videos, so recapturing those updates both. If a tour step is added or removed, `Scene` in `PhoneStory.tsx` needs a matching case (and the keyframes in `globals.css`). Check the phone page at 390px after any change.
 

@@ -116,22 +116,6 @@ export function ProfileCards({ steps }: { steps: typeof Steps }) {
   );
 }
 
-/** The phone hero: the tilted Push as a still, with a short looping clip of it playing on top. Both are drawn on black and blended onto the page, so the black disappears. */
-export function HeroLoop() {
-  const box = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = box.current, v = el?.querySelector("video"); if (!el || !v) return;
-    const io = new IntersectionObserver(([e]) => { e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }, { threshold: 0.1 });
-    io.observe(el); return () => io.disconnect();
-  }, []);
-  return (
-    <div ref={box} className="slot-img" role="img" aria-label="An Ableton Push 2 running Push Deck: lit pads and the live display">
-      <img src="/img/device-view.webp" alt="" width={1200} height={830} />
-      <video src="/video/device-loop.mp4" muted loop playsInline preload="auto" aria-hidden="true" />
-    </div>
-  );
-}
-
 /** A short loop right under the phone hero: the display changing with the app in front (or your own clip, if REAL_CLIP is set). */
 export function SeeItMove() {
   const box = useRef<HTMLDivElement>(null);

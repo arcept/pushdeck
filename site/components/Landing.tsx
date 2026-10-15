@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Device, { IN_APP } from "@/components/Device";
 import DisplayZoom from "@/components/DisplayZoom";
-import { HeroLoop, ProfileCards, SeeItMove, TourCards } from "@/components/PhoneStory";
+import { ProfileCards, SeeItMove, TourCards } from "@/components/PhoneStory";
 import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Share, Shield, Wave, Widgets } from "@/components/Icons";
 import {
   ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, faq, features, privacyRows,
@@ -412,7 +412,7 @@ export default function Landing({ version }: { version: string }) {
         <>
           <button type="button" className="menu-scrim" aria-label="Close the menu" onClick={() => setMenu(false)} />
           <nav className="menu-sheet" id="menu-sheet" aria-label="Sections">
-            {[["Profiles", "#profiles"], ["Menu bar", "#menubar"], ["Features", "#features"], ["Privacy", "#privacy"], ["Install", "#install"], ["FAQ", "#faq"]].map(([l, h]) => <a key={h} href={h} onClick={() => setMenu(false)}>{l}</a>)}
+            {[["Profiles", "#profiles"], ["Menu bar", "#menubar"], ...(isDesktop ? [["Features", "#features"]] : []), ["Privacy", "#privacy"], ["Install", "#install"], ["FAQ", "#faq"]].map(([l, h]) => <a key={h} href={h} onClick={() => setMenu(false)}>{l}</a>)}
           </nav>
         </>
       )}
@@ -431,7 +431,7 @@ export default function Landing({ version }: { version: string }) {
 
           {/* Where the device sits in the hero. On the still version it holds the device itself; on the scroll version it is an empty box the window is measured against. */}
           <div className="slot">
-            {!scroll && <HeroLoop />}
+            {!scroll && <img className="slot-img" src={img("device-view.webp")} alt="An Ableton Push 2 running Push Deck: lit pads and the live display" width={1800} height={1284} />}
           </div>
 
           {scroll && <div className="scroll-cue" aria-hidden="true"><span>Scroll</span><i /></div>}
@@ -569,6 +569,7 @@ export default function Landing({ version }: { version: string }) {
           </div>
         </section>
 
+        {(scroll || isDesktop) && (   /* phones already met every feature in the tour cards */
         <section className="band recap" id="features">
           <p className="tag" data-reveal>Features</p>
           <h2 data-reveal>{copy.featuresTitle}</h2>
@@ -582,6 +583,7 @@ export default function Landing({ version }: { version: string }) {
             ))}
           </div>
         </section>
+        )}
 
         <section className="band" id="privacy">
           <div className="priv">
