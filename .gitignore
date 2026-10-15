@@ -22,3 +22,4 @@ CLAUDE.md
 .claude/
 HANDOVER*.md
 .impeccable/
+.build/

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Orb } from "./Orb";
 import { Icon, type IconName } from "./icons";
 import { useApp, type SettingsPage } from "./ctx";
 import CalibrationPanel from "./Calibration";
@@ -51,7 +52,7 @@ export default function SettingsSheet({ dialog, page, setPage }: { dialog: Retur
             <section className="setgroup" style={{ marginTop: 18 }}><h3>Sensitivity</h3>
               <Field label="Full turns from 0 to 100"><select value={String(s.knob_turns_full_range ?? 2.5)} onChange={(e) => set("knob_turns_full_range", +e.target.value)}>{[1.5, 2, 2.5, 3, 4].map((t) => <option key={t} value={t}>{t} turns</option>)}</select></Field>
               <div className="trow"><div><div className="t">{s.knob_ticks_per_turn ?? 128} ticks per turn {s.knob_measured ? "" : "(estimate)"}</div><div className="d">Each tick moves a value by {(100 / ((s.knob_turns_full_range ?? 2.5) * (s.knob_ticks_per_turn ?? 128))).toFixed(2)}%. Measure your encoder for an exact figure.</div></div>
-                <button className="btn" disabled={d.test.state === "running"} onClick={() => d.send({ type: "run_test", name: "knob_sensitivity" })}><Icon name="knob" size={15} />{d.test.state === "running" && d.test.name === "knob_sensitivity" ? "Measuring…" : "Measure"}</button></div></section></>}
+                <button className="btn" disabled={d.test.state === "running"} onClick={() => d.send({ type: "run_test", name: "knob_sensitivity" })}>{d.test.state === "running" && d.test.name === "knob_sensitivity" ? <Orb state="searching" size={18} /> : <Icon name="knob" size={15} />}{d.test.state === "running" && d.test.name === "knob_sensitivity" ? "Measuring…" : "Measure"}</button></div></section></>}
           {page === "color" && <><h2>Colour calibration</h2><p className="lead">Tune how colours look on the Push's display.</p>{s.calibration && <CalibrationPanel cal={s.calibration} test={d.test} send={d.send} />}</>}
           {page === "profiles" && <ProfilesPage close={dialog.close} />}
           {page === "media" && <MediaPage />}
@@ -59,8 +60,10 @@ export default function SettingsSheet({ dialog, page, setPage }: { dialog: Retur
           {page === "tests" && <><h2>Tests</h2><p className="lead">Run any test here, or rerun the last one with the Repeat button on the Push.</p>
             {groups.map(([g, list]) => <section key={g} className="setgroup"><h3>{g}</h3>{list.filter(([k]) => k !== "cal_red" && k !== "cal_green" && k !== "cal_blue" && k !== "cal_saturation").map(([k, t]) => (
               <div key={k} className="trow"><div><div className="t">{t.title}</div><div className="d">{t.description}{t.interactive ? " Needs you at the Push." : ""}</div></div>
-                <button className="btn" disabled={d.test.state === "running"} onClick={() => d.send({ type: "run_test", name: k })}><Icon name="play" size={14} />{d.test.state === "running" && d.test.name === k ? "Running…" : "Run"}</button></div>))}</section>)}
-            {d.test.state === "done" && <p className="muted" style={{ marginTop: 6 }}>Last result — {d.test.ok ? "pass" : "fail"}: {d.test.summary}</p>}</>}
+                {d.test.state === "running" && d.test.name === k
+                  ? <button className="btn" onClick={() => d.send({ type: "stop_test" })} title="End this test now. It also ends by itself after a minute without input, or when you press Repeat on the Push."><Orb state="working" size={18} />Stop</button>
+                  : <button className="btn" disabled={d.test.state === "running"} onClick={() => d.send({ type: "run_test", name: k })}><Icon name="play" size={14} />Run</button>}</div>))}</section>)}
+            {d.test.state === "done" && <p className="muted" style={{ marginTop: 6 }}>Last result — {d.test.stopped ? "stopped" : d.test.ok ? "pass" : "fail"}{d.test.stopped ? "" : `: ${d.test.summary}`}</p>}</>}
           {page === "device" && <><h2>Device</h2><p className="lead">Connection, power and diagnostics.</p>
             <section className="setgroup"><h3>Status</h3>
               <div className="trow"><div className="t">USB display</div><span className={`chipbadge ${d.status.usb ? "good" : "bad"}`}>{d.status.usb ? "Connected" : "Not found"}</span></div>

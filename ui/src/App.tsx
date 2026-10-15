@@ -121,7 +121,7 @@ function Shell() {
   useEffect(() => { if (d.error) { toast(d.error, "bad"); d.clearError(); } }, [d.error]); // eslint-disable-line
   const prevTest = useRef(d.test.state);
   useEffect(() => {
-    if (prevTest.current === "running" && d.test.state === "done") toast(`${d.test.ok ? "Passed" : "Failed"}: ${d.test.summary}`, d.test.ok ? "good" : "bad");
+    if (prevTest.current === "running" && d.test.state === "done") toast(d.test.stopped ? "Test stopped" : `${d.test.ok ? "Passed" : "Failed"}: ${d.test.summary}`, d.test.stopped ? undefined : d.test.ok ? "good" : "bad");
     prevTest.current = d.test.state;
   }, [d.test.state]); // eslint-disable-line
   useEffect(() => {

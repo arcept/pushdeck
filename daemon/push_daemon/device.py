@@ -52,8 +52,12 @@ class Push:
     # ---------- connection ----------
     def _watch(self):
         while not self._stop:
-            usb_ok = usb.core.find(idVendor=VID, idProduct=PID) is not None
-            midi_ok = USER_PORT in mido.get_output_names()
+            try:
+                usb_ok = usb.core.find(idVendor=VID, idProduct=PID) is not None
+                midi_ok = USER_PORT in mido.get_output_names()
+            except Exception:   # the port list can change under rtmidi's feet (a plug or unplug mid-scan): look again in a second, never end this watcher
+                time.sleep(1.0)
+                continue
             if usb_ok and midi_ok and self.out is None:
                 self._connect()
             elif not (usb_ok and midi_ok) and self.out is not None:

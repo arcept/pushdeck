@@ -59,6 +59,8 @@ class Engine:
         self.pending_confirm: dict[str, float] = {}
         self.overlay = None  # (image, until)
         self.test_running = False
+        self.test_task = None   # the running test, so it can be stopped
+        self.test_input = 0.0   # when the last input arrived during a test (tests give up after a quiet spell)
         self.repeat_color = (255, 255, 255)
         self.runner = Runner()
         self.pressed: set[str] = set()
@@ -262,6 +264,11 @@ class Engine:
         cid, kind = ev["control"], ev["kind"]
         if self.standby:
             return
+        if self.test_running:
+            self.test_input = time.time()
+            if kind == "press" and cid == R.REPEAT:   # Repeat re-runs the last test; while one is running it stops it
+                self.stop_test()
+                return
         if self.event_tap and self.event_tap(ev):
             return
         if kind in ("touch", "untouch") and cid.startswith("knob-"):   # the noise guard needs to see touches even while the question card takes the events
@@ -469,14 +476,21 @@ class Engine:
         theme = (self.active() or {}).get("theme", profiles.DEFAULT_THEME)
         self.overlay = (None, time.time() + seconds, (text, ok, sub))
 
-    async def wait_press(self, allowed, timeout=120):
-        """Used by interactive tests: resolve with the first press among `allowed` control ids (None on timeout)."""
+    async def wait_press(self, allowed, timeout=60):
+        """Used by interactive tests: resolve with the first press among `allowed` control ids. Gives up (None) after `timeout` seconds
+        with no input at all: every press, touch or turn on the Push counts as input and starts the count again."""
         fut = self.loop.create_future()
         self.press_waiter = (fut, set(allowed))
+        self.test_input = time.time()
         try:
-            return await asyncio.wait_for(fut, timeout)
-        except asyncio.TimeoutError:
-            return None
+            while True:
+                left = self.test_input + timeout - time.time()
+                if left <= 0:
+                    return None
+                try:
+                    return await asyncio.wait_for(asyncio.shield(fut), min(left, 1.0))
+                except asyncio.TimeoutError:
+                    continue
         finally:
             self.press_waiter = None
 
@@ -494,15 +508,29 @@ class Engine:
         self.test_running = True
         self.repeat_color = (255, 255, 255)
         self.broadcast({"type": "test", "state": "running", "name": name})
-        ok, summary = await self.runner.run(self, name, **kw)
+        self.test_task = asyncio.ensure_future(self.runner.run(self, name, **kw))
+        stopped = False
+        try:
+            ok, summary = await self.test_task
+        except asyncio.CancelledError:   # stopped from the app or with the Repeat button (a test's own clean-up has run)
+            ok, summary, stopped = False, "Stopped", True
+            self.push.raw = False
+            self.event_tap = None
+            self.push.set_strip([0] * 31)
+        self.test_task = None
         self.test_running = False
         self._leds_for = None
-        self.repeat_color = (60, 220, 120) if ok else (255, 60, 60)
+        self.repeat_color = (150, 150, 160) if stopped else (60, 220, 120) if ok else (255, 60, 60)
         self.push.clear_leds()
         self.push.set_led(R.REPEAT, self.repeat_color)
-        self.flash(("PASS: " if ok else "FAIL: ") + name, ok=ok, sub=summary, seconds=6)
-        self.broadcast({"type": "test", "state": "done", "name": name, "ok": ok, "summary": summary})
+        self.flash(("Stopped: " if stopped else "PASS: " if ok else "FAIL: ") + name, ok=None if stopped else ok, sub="" if stopped else summary, seconds=2 if stopped else 6)
+        self.broadcast({"type": "test", "state": "done", "name": name, "ok": ok, "summary": summary, "stopped": stopped})
         print(f"[test {name}] {'PASS' if ok else 'FAIL'}: {summary}")
+
+    def stop_test(self):
+        """End the running test now (the app's Stop button, or the Repeat button on the Push)."""
+        if self.test_task and not self.test_task.done():
+            self.test_task.cancel()
 
     async def rerun_test(self):
         if not self.runner.last:
@@ -951,6 +979,8 @@ class Engine:
             self.media._publish(True)
         elif t == "run_test":
             asyncio.ensure_future(self.run_test(msg["name"]))
+        elif t == "stop_test":
+            self.stop_test()
         elif t == "standby":
             await self.set_standby(bool(msg["on"]))
         elif t == "input":  # synthetic hardware-style event (UI knob scroll, tests); "echo" also reaches the UI like a real one

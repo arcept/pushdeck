@@ -119,13 +119,13 @@ async def _pick(ctx, title, hint, swatches):
             d.text(((box[0] + box[2]) / 2, (box[1] + box[3]) / 2), str(i + 1), font=scenes.font(26, True),
                    fill=(255, 255, 255), anchor="mm", stroke_width=3, stroke_fill=(0, 0, 0))
         d.text((480, 80), title, font=scenes.font(16, True), fill=(235, 235, 240), anchor="mm")
-        d.text((480, 98), hint, font=scenes.mono(11), fill=(150, 150, 162), anchor="mm")
+        d.text((480, 98), hint + "  ·  Repeat to stop", font=scenes.mono(11), fill=(150, 150, 162), anchor="mm")
         p.set_frame(img)
         p.clear_leds()
         for i, sw in enumerate(swatches):  # the button LEDs show the same colours for comparison
             c = sw[0] if isinstance(sw, list) else sw
             p.set_led(PICK_BUTTONS[i], tuple(c))
-        pick = await ctx.wait_press(PICK_BUTTONS, timeout=180)
+        pick = await ctx.wait_press(PICK_BUTTONS)
     finally:
         p.raw = False
         ctx._leds_for = None
@@ -137,7 +137,7 @@ async def cal_red(ctx):
     """10 reds; press the button under the one that looks most red."""
     i = await _pick(ctx, "WHICH RED LOOKS MOST RED?", "Press the button under it. 1-8 upper row, 9-10 lower row (first two).", RED_LEVELS)
     if i is None:
-        return False, "no choice made (timed out)"
+        return False, "no choice made (no input for a minute)"
     ctx.set_calibration(red=list(RED_LEVELS[i]))
     return True, f"red = level {i + 1} {RED_LEVELS[i]}"
 
@@ -147,7 +147,7 @@ async def cal_green(ctx):
     """10 greens; press the button under the one that looks most green."""
     i = await _pick(ctx, "WHICH GREEN LOOKS MOST GREEN?", "Press the button under it. 1-8 upper row, 9-10 lower row (first two).", GREEN_LEVELS)
     if i is None:
-        return False, "no choice made (timed out)"
+        return False, "no choice made (no input for a minute)"
     ctx.set_calibration(green=list(GREEN_LEVELS[i]))
     return True, f"green = level {i + 1} {GREEN_LEVELS[i]}"
 
@@ -166,7 +166,7 @@ async def cal_saturation(ctx):
         sw.append(stripes)
     i = await _pick(ctx, "PICK THE RICHEST COLOURS THAT STILL LOOK GOOD", "Level 1 = no boost. Press the button under your choice.", sw)
     if i is None:
-        return False, "no choice made (timed out)"
+        return False, "no choice made (no input for a minute)"
     ctx.set_calibration(saturation=SAT_LEVELS[i])
     return True, f"saturation = x{SAT_LEVELS[i]} (level {i + 1})"
 
@@ -180,7 +180,7 @@ async def cal_blue(ctx):
     """10 blues; press the button under the one that looks most blue."""
     i = await _pick(ctx, "WHICH BLUE LOOKS MOST BLUE?", "Press the button under it. 1-8 upper row, 9-10 lower row (first two).", BLUE_LEVELS)
     if i is None:
-        return False, "no choice made (timed out)"
+        return False, "no choice made (no input for a minute)"
     ctx.set_calibration(blue=list(BLUE_LEVELS[i]))
     return True, f"blue = level {i + 1} {BLUE_LEVELS[i]}"
 
@@ -209,17 +209,17 @@ async def knob_sensitivity(ctx, knob="knob-8"):
         return ev["control"] == knob  # the knob is ours while measuring
 
     ctx.event_tap = tap
-    waiter = asyncio.ensure_future(ctx.wait_press(["btn-select"], timeout=90))
+    waiter = asyncio.ensure_future(ctx.wait_press(["btn-select"]))
     try:
         while not waiter.done():
             spec = {"accent": "#d97757", "zones": {}, "active": [], "no_zones": True, "toast": None, "widgets": [
-                {"type": "title", "col": 0, "span": 8, "text": f"Turn Encoder 8 one full turn: {int(count['n'])}", "sub": "Then press Select", "size": "title"}]}
+                {"type": "title", "col": 0, "span": 8, "text": f"Turn Encoder 8 one full turn: {int(count['n'])}", "sub": "Then press Select  ·  Repeat to stop", "size": "title"}]}
             ctx.push.set_frame(render.draw(spec))
             await asyncio.sleep(0.1)
     finally:
         ctx.event_tap = None
     if await waiter is None:
-        return False, "timed out"
+        return False, "no input for a minute"
     n = int(count["n"])
     if n < 8:
         return False, f"only {n} ticks counted; turn the knob a full rotation first"

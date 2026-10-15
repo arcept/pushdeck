@@ -15,7 +15,8 @@ export default function CalibrationPanel({ cal, test, send }: { cal: Calibration
     <>
       {busy && <p className="runnote">Look at your Push: press the button under the swatch that looks truest. You can close this panel while it runs.</p>}
       <div className="row between wrap" style={{ marginBottom: 6 }}>
-        <button className="btn primary" disabled={busy} onClick={() => run("cal_all")}><Icon name="play" size={15} />{busy ? "Running…" : "Run the guided test"}</button>
+        {busy ? <button className="btn primary" onClick={() => send({ type: "stop_test" })} title="End the test now. It also ends by itself after a minute without input, or when you press Repeat on the Push."><Icon name="x" size={15} />Stop</button>
+          : <button className="btn primary" onClick={() => run("cal_all")}><Icon name="play" size={15} />Run the guided test</button>}
         <span className={`chipbadge ${isDefaultCal(cal) ? "" : "accent"}`}>{isDefaultCal(cal) ? "Default" : "Customised"}</span>
       </div>
       <p className="muted" style={{ marginTop: 8 }}>Pick the truest red, green and blue on the Push's display, then the saturation. Hold <span className="kbd">Shift</span> + <span className="kbd">Setup</span> on the Push to start it any time.</p>

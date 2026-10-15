@@ -27,7 +27,7 @@ export type Status = { usb: boolean; midi: boolean };
 export type Permissions = { accessibility: boolean | null; automation: Record<string, string> | null; downloads?: boolean | null };
 export type Input = { control: string; kind: string; value: number };
 export type TestMeta = { title: string; group: string; interactive: boolean; description: string };
-export type TestState = { state: "idle" | "running" | "done"; name?: string; ok?: boolean; summary?: string };
+export type TestState = { state: "idle" | "running" | "done"; name?: string; ok?: boolean; summary?: string; stopped?: boolean };
 
 export function useDaemon() {
   const [connected, setConnected] = useState(false);
@@ -72,7 +72,7 @@ export function useDaemon() {
         else if (m.type === "profiles") setProfiles(m.profiles);
         else if (m.type === "settings") setSettings(m.settings);
         else if (m.type === "active") setActive({ active: m.active, pinned: m.pinned, front: m.front, armed: !!m.armed });
-        else if (m.type === "test") setTest({ state: m.state, name: m.name, ok: m.ok, summary: m.summary });
+        else if (m.type === "test") setTest({ state: m.state, name: m.name, ok: m.ok, summary: m.summary, stopped: m.stopped });
         else if (m.type === "input") setLastInput({ control: m.control, kind: m.kind, value: m.value });
         else if (m.type === "volume") setVolume(m.value);
         else if (m.type === "standby") setStandby(!!m.standby);
