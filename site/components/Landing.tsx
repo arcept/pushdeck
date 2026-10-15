@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Device, { IN_APP } from "@/components/Device";
 import DisplayZoom from "@/components/DisplayZoom";
-import { ProfileCards, SeeItMove, TourCards } from "@/components/PhoneStory";
+import { ProfileCards, TourCards } from "@/components/PhoneStory";
 import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Share, Shield, Wave, Widgets } from "@/components/Icons";
 import {
   ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, faq, features, privacyRows,
@@ -497,7 +497,6 @@ export default function Landing({ version }: { version: string }) {
         <div className={scroll ? "after is-over" : "after"}>
         {!scroll && (
           <>
-          <SeeItMove />
           <section className="band still-app">
             <div data-reveal>{appBlock(<div className="frame"><img src={img("ui/app-ui.webp")} alt="The Push Deck window: the Claude Code profile, a replica of the Push 2 and the controls inspector" width={3200} height={2000} loading="lazy" /></div>)}</div>
           </section>

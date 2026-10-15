@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PAD_COLORS, REAL_CLIP, tour } from "@/content";
+import { PAD_COLORS, tour } from "@/content";
 import type { steps as Steps } from "@/content";
 
 // The phone (and reduced-motion) version of the page's stories: swipeable cards that play only while they are on screen,
@@ -113,26 +113,5 @@ export function ProfileCards({ steps }: { steps: typeof Steps }) {
       <div className="ps-text" aria-live="polite"><h3>{cur.name}</h3><p>{cur.text}</p></div>
       <p className="fine">Just three samples. Every app can have its own profile: its own pads, its own button lights and its own screen. Switch app and the Push follows.</p>
     </div>
-  );
-}
-
-/** A short loop right under the phone hero: the display changing with the app in front (or your own clip, if REAL_CLIP is set). */
-export function SeeItMove() {
-  const box = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = box.current, v = el?.querySelector("video"); if (!el || !v) return;
-    const io = new IntersectionObserver(([e]) => { e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }, { threshold: 0.3 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return (
-    <section className="band seeit" aria-label="The display changing with the app in front">
-      <p className="tag" data-reveal>Live</p>
-      <h2 data-reveal>It moves with you.</h2>
-      <div ref={box} className={`seeit-frame${REAL_CLIP ? " real" : ""}`} data-reveal>
-        <video src={REAL_CLIP || "/video/hero.mp4"} muted loop playsInline preload="metadata" aria-hidden="true" />
-      </div>
-      <p className="fine" style={{ marginTop: 12 }}>{REAL_CLIP ? "The Push 2, switching as the app in front changes." : "The Push 2 display, recorded live as the app in front changes: Claude Code, then Browser."}</p>
-    </section>
   );
 }

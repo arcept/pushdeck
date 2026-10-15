@@ -420,12 +420,7 @@ html { scroll-padding-top: 84px; }
 @media (max-width: 899px) { .menu-btn { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; margin-right: 4px; border: 0; border-radius: 99px; background: rgba(255,255,255,.08); color: var(--tx); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; } }
 @media (min-width: 900px) { .menu-scrim, .menu-sheet { display: none; } }
 
-/* the live strip and the swipe cards on phones */
-.seeit { padding-top: 24px; padding-bottom: 8px; }
-.seeit h2 { font-size: clamp(26px, 7vw, 40px); }
-.seeit-frame { margin-top: 22px; border-radius: 18px; overflow: hidden; background: #000; border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 60px rgba(255,154,60,.12); }
-.seeit-frame video { display: block; width: 100%; height: auto; }
-.seeit-frame.real video { aspect-ratio: 4 / 5; object-fit: cover; }
+/* the swipe cards on phones */
 .cdots { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
 .cdots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(255,255,255,.22); cursor: pointer; transition: width .3s, background-color .3s; }
 .cdots button.on { width: 24px; background: var(--accent); }
