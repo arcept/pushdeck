@@ -27,4 +27,5 @@ export const Key = (p: P) => <Stroke {...p}><circle cx="8" cy="15" r="4" /><path
 export const Wave = (p: P) => <Stroke {...p}><path d="M4 12v0M8 8v8M12 4v16M16 8v8M20 12v0" /></Stroke>;
 export const Folder = (p: P) => <Stroke {...p}><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" /></Stroke>;
 export const Ban = (p: P) => <Stroke {...p}><circle cx="12" cy="12" r="9" /><path d="m5.6 5.6 12.8 12.8" /></Stroke>;
+export const Share = (p: P) => <Stroke {...p}><path d="M12 15V3" /><path d="m7.5 7.5 4.5-4.5 4.5 4.5" /><path d="M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12" /></Stroke>;
 export const Widgets = (p: P) => <Stroke {...p}><rect x="3" y="3" width="8" height="8" rx="2" /><rect x="13" y="3" width="8" height="5" rx="2" /><rect x="13" y="10" width="8" height="11" rx="2" /><rect x="3" y="13" width="8" height="8" rx="2" /></Stroke>;

@@ -65,7 +65,7 @@ section { padding: 0 var(--gutter); }
 /* ---------- hero ---------- */
 /* --wf: the app window's width at the end of the hero move; --dh: the device's width at the start (smaller, so it grows into the window) */
 .hero { --dh: min(860px, 92vw); position: relative; padding-top: 196px; padding-bottom: 40px; }   /* 196 + the 64px nav = ~260px of air above the copy */
-.hero.is-scroll { --dh: min(1100px, 80vw, 120vh); height: 100vh; padding-top: clamp(72px, 10vh, 130px); padding-bottom: 0; perspective: 1150px; perspective-origin: 50% 35%; }
+.hero.is-scroll { --dh: min(1800px, 80vw, 112vh); height: 100vh; padding-top: clamp(72px, 10vh, 130px); padding-bottom: 0; perspective: 1150px; perspective-origin: 50% 35%; }
 .hero-copy { position: relative; }   /* in the scroll hero Landing.tsx nudges it (top) so it sits midway between the nav and the device */
 .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--container); margin: 0 auto; }
 .kicker { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 99px; background: rgba(255,255,255,.05); border: 1px solid var(--line); color: var(--mut); font-size: 13px; font-weight: 600; }
@@ -78,7 +78,7 @@ section { padding: 0 var(--gutter); }
 .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: clamp(16px, 2.8vh, 30px); }
 
 /* the device's place in the hero, with the two app pieces beside it */
-.slot { position: relative; width: var(--dh); aspect-ratio: 1520 / 1460; margin: calc(var(--dh) * -0.1) auto 0; pointer-events: none; }   /* pulled up: the top tenth of the picture is empty cable fade */   /* the faded cables give the air above the device */
+.slot { position: relative; width: var(--dh); aspect-ratio: 1520 / 1460; margin: 0 auto; pointer-events: none; }   /* its top is set by Landing.tsx (measure) so every screen shows the same share of the device */   /* the faded cables give the air above the device */
 .layer { position: absolute; z-index: 3; }
 .layer .float, .tilt, .win { will-change: transform; }   /* moved every frame by GSAP: keep them on their own layers so their shadows aren't redrawn */
 .card { filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)) drop-shadow(0 18px 28px rgba(0,0,0,.45)) drop-shadow(0 50px 70px rgba(0,0,0,.5)); }   /* static, stacked: contact + near + ambient. The images carry their own rounded edges */
@@ -228,7 +228,7 @@ h2 { font-size: clamp(30px, 4.4vw, 56px); line-height: 1.08; letter-spacing: -.0
 .recap .grid { margin-top: 26px; gap: 12px; }
 .recap .grid article { padding: 18px 20px; border-radius: 18px; }
 .recap .grid h3 { font-size: 17px; margin: 12px 0 6px; }
-.recap .grid p { font-size: 14px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.recap .grid p { font-size: 14px; line-height: 1.45;  }
 .mini { display: grid; grid-template-columns: repeat(3, 12px); gap: 4px; }
 .mini i { width: 12px; height: 12px; border-radius: 3px; background: rgba(255,255,255,.08); }
 .mini i.on { background: var(--c); }
@@ -381,3 +381,21 @@ html { scroll-padding-top: 84px; }
 .faq details[open] summary::after { transform: rotate(45deg); }
 .faq details p { color: var(--mut); font-size: 17px; line-height: 1.65; padding: 0 4px 28px; max-width: 82ch; }
 @media (max-width: 900px) { .scroll-cue { display: none; } }
+
+/* ---- phones ---- */
+.mbar { display: none; }
+@media (max-width: 899px) {
+  .hero { overflow-x: clip; }
+  .hero:not(.is-scroll) .slot { width: 122vw; max-width: none; margin-left: 50%; transform: translateX(-50%); }
+  .band { padding-top: 56px; padding-bottom: 56px; }
+  .mb { padding-top: 40px; padding-bottom: 56px; }
+  .recap { padding-top: 56px; padding-bottom: 48px; }
+  #privacy { padding-top: 64px; padding-bottom: 48px; }
+  .desk { min-height: 700px; }
+  .cmd { flex-direction: column; }
+  .cmd button { align-self: stretch; justify-content: center; }
+  footer { padding-bottom: 96px; }
+  .mbar { display: flex; gap: 8px; position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 40; padding: 8px; border-radius: 999px; background: rgba(17,17,23,.94); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 12px 32px rgba(0,0,0,.5); transform: translateY(160%); transition: transform .4s cubic-bezier(.34,1.3,.64,1); }
+  .mbar.on { transform: none; }
+  .mbar .btn { flex: 1; padding: 12px 10px; font-size: 14px; white-space: nowrap; }
+}

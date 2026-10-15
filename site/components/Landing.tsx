@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Device, { IN_APP } from "@/components/Device";
 import DisplayZoom from "@/components/DisplayZoom";
-import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Shield, Wave, Widgets } from "@/components/Icons";
+import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Share, Shield, Wave, Widgets } from "@/components/Icons";
 import {
   ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, faq, features, privacyRows,
   install, installNote, requirements, steps, tour,
@@ -74,6 +74,15 @@ export default function Landing({ version }: { version: string }) {
   const [fadePads, setFadePads] = useState(true);    // inside the app, the live pads give way to the real screenshot (?pads=live keeps them on)
   const [padsOff, setPadsOff] = useState(false);
   const [tourIdx, setTourIdx] = useState(0);
+  const [shared, setShared] = useState(false);
+  // Phones can't install a Mac app: offer to send the page to yourself (the share sheet, or the link copied)
+  const share = async () => {
+    const url = `${location.origin}/`;
+    try {
+      if (navigator.share) await navigator.share({ title: "Push Deck", text: "Push Deck turns an Ableton Push 2 into a controller for your Mac.", url });
+      else { await navigator.clipboard.writeText(url); setShared(true); setTimeout(() => setShared(false), 2200); }
+    } catch { /* closed the share sheet */ }
+  };
   const [navCta, setNavCta] = useState(false);   // a Get Push Deck button joins the nav once the first screen is behind you
   useEffect(() => {
     const on = () => setNavCta(scrollY > innerHeight * 0.6);
@@ -132,6 +141,12 @@ export default function Landing({ version }: { version: string }) {
         let Wpx = 1;   // the window's laid-out width in px (the chip's flight is in the window's units)
         const measure = () => {
           const vw = document.documentElement.clientWidth, vh = innerHeight;
+          // Every screen shows the same share of the device on the first view (about 37% of the picture): the slot is placed from the bottom of the screen, not from the text above it.
+          slot.style.marginTop = "0px";
+          const naturalTop = slot.offsetTop;
+          // (the 3D tilt makes a bigger device show a little less of itself, a smaller one a little more, so the share is nudged by size)
+          const dsz = slot.offsetWidth, adj = dsz < 1008 ? 0.00015 * (dsz - 1008) : 0.0002 * Math.max(0, dsz - 1020);
+          slot.style.marginTop = `${vh - (0.537 + adj) * slot.offsetHeight - naturalTop}px`;
           const dh = slot.offsetWidth, W = dh / IN_APP.width, H = W * 0.625;
           const dx = slot.offsetLeft + dh / 2, dy = slot.offsetTop + slot.offsetHeight / 2;   // device centre (hero coordinates)
           const left = dx - (IN_APP.left + IN_APP.width / 2) * W, top = dy - (IN_APP.top + IN_APP.height / 2) * H;
@@ -140,7 +155,7 @@ export default function Landing({ version }: { version: string }) {
           const copy = q(".hero-copy")[0] as HTMLElement | undefined;
           if (copy) {
             copy.style.top = "0px";
-            const from = 66, to = slot.offsetTop + slot.offsetHeight * 0.1;
+            const from = 66, to = slot.offsetTop + slot.offsetHeight * 0.17;
             copy.style.top = `${from + (to - from - copy.offsetHeight) / 2 - copy.offsetTop + 26}px`;
           }
           // the end: the window fits the screen width (max 1600) and is centred below the nav. Scaling happens about the device centre.
@@ -365,6 +380,10 @@ export default function Landing({ version }: { version: string }) {
   return (
     <div ref={root} className="page">
       <a className="skip" href="#install">Skip to install</a>
+      <div className={`mbar${navCta ? " on" : ""}`} role="region" aria-label="Quick actions">
+        <a className="btn primary small" href={RELEASE_LIVE ? RELEASES : "#install"}><Download />Get Push Deck</a>
+        <button type="button" className="btn ghost small" onClick={share}><Share />{shared ? "Link copied" : "Send to my Mac"}</button>
+      </div>
       <header className="nav">
         <div className="nav-in">
           <a className="brand" href="#top"><PadMark /><span className="name">Push Deck</span></a>
