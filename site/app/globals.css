@@ -342,7 +342,7 @@ footer a:hover { color: var(--tx); }
 .pm-cap { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; color: var(--mut); font-size: 14px; font-weight: 600; }
 .priv-sub { font-size: 22px; margin: 44px 0 6px; }
 .priv-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 36px; }
-.priv-grid li { display: flex; gap: 14px; align-items: flex-start; padding: 18px 0; border-top: 1px solid var(--line); color: var(--mut); font-size: 14.5px; line-height: 1.5; }
+.priv-grid li { display: block; padding: 18px 0; border-top: 1px solid var(--line); color: var(--mut); font-size: 14.5px; line-height: 1.5; }
 .priv-grid b { display: block; color: var(--tx); font-size: 16px; margin-bottom: 3px; }
 .priv-grid .vi { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: rgba(174,176,255,.1); color: var(--accent); }
 .priv-grid .vi svg { width: 19px; height: 19px; }
@@ -386,7 +386,7 @@ html { scroll-padding-top: 84px; }
 .mbar { display: none; }
 @media (max-width: 899px) {
   .hero { overflow-x: clip; }
-  .hero:not(.is-scroll) .slot { width: 122vw; max-width: none; margin-left: 50%; transform: translateX(-50%); }
+  .hero:not(.is-scroll) .slot { width: 108vw; max-width: none; aspect-ratio: auto; margin-left: 50%; transform: translateX(-50%); }
   .band { padding-top: 56px; padding-bottom: 56px; }
   .mb { padding-top: 40px; padding-bottom: 56px; }
   .recap { padding-top: 56px; padding-bottom: 48px; }
@@ -399,3 +399,60 @@ html { scroll-padding-top: 84px; }
   .mbar.on { transform: none; }
   .mbar .btn { flex: 1; padding: 12px 10px; font-size: 14px; white-space: nowrap; }
 }
+
+/* privacy points: the same list, closed rows on phones */
+.pp summary { list-style: none; display: flex; align-items: center; gap: 14px; cursor: pointer; }
+.pp summary::-webkit-details-marker { display: none; }
+.pp summary b { flex: 1; margin: 0; color: var(--tx); font-size: 16px; }
+.pp .chev { width: 9px; height: 9px; border-right: 2px solid var(--mut2); border-bottom: 2px solid var(--mut2); transform: rotate(45deg); transition: transform .25s; display: none; }
+.pp[open] .chev { transform: rotate(-135deg); }
+.pp p { padding: 8px 0 2px 50px; color: var(--mut); font-size: 14.5px; line-height: 1.5; }
+@media (min-width: 900px) { .pp summary { pointer-events: none; cursor: default; } }
+@media (max-width: 899px) { .pp .chev { display: block; } .priv-grid li { padding: 14px 0; } }
+
+/* the phone nav menu */
+.menu-btn { display: none; }
+.menu-scrim { position: fixed; inset: 0; z-index: 44; background: rgba(5,5,8,.55); border: 0; padding: 0; }
+.menu-sheet { position: fixed; z-index: 45; top: 74px; left: 12px; right: 12px; display: grid; padding: 8px; border-radius: 24px; background: rgba(17,17,23,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 24px 60px rgba(0,0,0,.6); animation: sheet .25s cubic-bezier(.34,1.3,.64,1); }
+.menu-sheet a { padding: 15px 16px; border-radius: 16px; font-size: 18px; font-weight: 700; text-decoration: none; }
+.menu-sheet a:hover, .menu-sheet a:active { background: rgba(174,176,255,.12); }
+@keyframes sheet { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 899px) { .menu-btn { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; margin-right: 4px; border: 0; border-radius: 99px; background: rgba(255,255,255,.08); color: var(--tx); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; } }
+@media (min-width: 900px) { .menu-scrim, .menu-sheet { display: none; } }
+
+/* the live strip and the swipe cards on phones */
+.seeit { padding-top: 24px; padding-bottom: 8px; }
+.seeit h2 { font-size: clamp(26px, 7vw, 40px); }
+.seeit-frame { margin-top: 22px; border-radius: 18px; overflow: hidden; background: #000; border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 60px rgba(255,154,60,.12); }
+.seeit-frame video { display: block; width: 100%; height: auto; }
+.seeit-frame.real video { aspect-ratio: 4 / 5; object-fit: cover; }
+.cdots { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
+.cdots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(255,255,255,.22); cursor: pointer; transition: width .3s, background-color .3s; }
+.cdots button.on { width: 24px; background: var(--accent); }
+.tcard-img { position: relative; }
+.sc { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.sc > img { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: contain; }
+.sc .tap { position: absolute; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; border: 2px solid var(--acc); opacity: 0; animation: tap 2.2s ease-out infinite; animation-play-state: paused; }
+@keyframes tap { 0% { transform: scale(.4); opacity: .9; } 70%, 100% { transform: scale(1.6); opacity: 0; } }
+.live .sc .tap { animation-play-state: running; }
+.sc .p2, .sc .p3, .sc-drag .done { opacity: 0; animation-play-state: paused; }
+.sc-drag .chip { position: absolute; width: 17.7%; height: auto; left: 28.4%; top: 36.6%; right: auto; bottom: auto; grid-area: auto; object-fit: contain; animation: chip 4.2s ease-in-out infinite; animation-play-state: paused; }
+.sc-drag .done { animation: done 4.2s ease-in-out infinite; animation-play-state: paused; }
+@keyframes chip { 0%, 8% { transform: translate(310%, 180%); opacity: 0; } 14% { opacity: 1; } 55% { transform: translate(0, 0); opacity: 1; } 62%, 100% { transform: translate(0, 0); opacity: 0; } }
+@keyframes done { 0%, 55% { opacity: 0; } 62%, 92% { opacity: 1; } 100% { opacity: 0; } }
+.sc-prof .p2 { animation: pf2 6s ease-in-out infinite; } .sc-prof .p3 { animation: pf3 6s ease-in-out infinite; }
+@keyframes pf2 { 0%, 28% { opacity: 0; } 36%, 62% { opacity: 1; } 70%, 100% { opacity: 0; } }
+@keyframes pf3 { 0%, 62% { opacity: 0; } 70%, 94% { opacity: 1; } 100% { opacity: 0; } }
+.sc-onb .p2 { animation: pf2 5s ease-in-out infinite; }
+.live .sc-prof .p2, .live .sc-prof .p3, .live .sc-onb .p2, .live .sc-drag .done, .live .sc-drag .chip { animation-play-state: running; }
+.sc-disp { background: #000; }
+.sc-disp .vid { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 0 60px rgba(92,100,255,.25); }
+@media (prefers-reduced-motion: reduce) { .sc .tap, .sc .p2, .sc .p3, .sc-drag .chip { animation: none; } .sc .p2, .sc .p3 { opacity: 0; } .sc-drag .done { animation: none; opacity: 1; } }
+.pcard { padding-bottom: 6px; }
+.pc-screen { margin: 18px 18px 0; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid var(--line); }
+.pc-screen video { display: block; width: 100%; height: auto; }
+.pc-pads { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 16px 18px 0; }
+.pc-pads i { aspect-ratio: 1.5; border-radius: 6px; opacity: .85; }
+.pcards { margin-top: 26px; }
+
+.slot-img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)); }

@@ -3,6 +3,9 @@
 /** Flip to true when the first release is published and the .dmg exists. */
 export const RELEASE_LIVE = false;
 
+/** A real clip of the Push 2 for the phone page (a path under public/, e.g. "/video/real.mp4"). Empty: the display recording is shown instead. */
+export const REAL_CLIP = "";
+
 export const REPO = "https://github.com/arcept/pushdeck";
 export const RELEASES = `${REPO}/releases/latest`;
 export const ISSUES = `${REPO}/issues`;

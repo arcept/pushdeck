@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Device, { IN_APP } from "@/components/Device";
 import DisplayZoom from "@/components/DisplayZoom";
+import { ProfileCards, SeeItMove, TourCards } from "@/components/PhoneStory";
 import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Share, Shield, Wave, Widgets } from "@/components/Icons";
 import {
   ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, faq, features, privacyRows,
@@ -74,6 +75,15 @@ export default function Landing({ version }: { version: string }) {
   const [fadePads, setFadePads] = useState(true);    // inside the app, the live pads give way to the real screenshot (?pads=live keeps them on)
   const [padsOff, setPadsOff] = useState(false);
   const [tourIdx, setTourIdx] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);   // privacy points are an open list on desktop, an accordion on phones
+  const [menu, setMenu] = useState(false);
+  useEffect(() => {
+    const mq = matchMedia("(min-width: 900px)"); const on = () => setIsDesktop(mq.matches);
+    on(); mq.addEventListener("change", on);
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setMenu(false);
+    addEventListener("keydown", esc);
+    return () => { mq.removeEventListener("change", on); removeEventListener("keydown", esc); };
+  }, []);
   const [shared, setShared] = useState(false);
   // Phones can't install a Mac app: offer to send the page to yourself (the share sheet, or the link copied)
   const share = async () => {
@@ -375,7 +385,7 @@ export default function Landing({ version }: { version: string }) {
       </ul>
     </>
   );
-  const heroDevice = <Device solid={scroll} palette={heroPalette} intro={1.2} paused={fadePads && padsOff} label="An Ableton Push 2 running Push Deck: lit pads and the live display" />;
+  const heroDevice = <Device solid palette={heroPalette} intro={1.2} paused={fadePads && padsOff} label="An Ableton Push 2 running Push Deck: lit pads and the live display" />;
 
   return (
     <div ref={root} className="page">
@@ -389,11 +399,21 @@ export default function Landing({ version }: { version: string }) {
           <a className="brand" href="#top"><PadMark /><span className="name">Push Deck</span></a>
           <nav className="chip links" aria-label="Sections">
             <a href="#profiles">Profiles</a><a href="#features" onClick={(e) => { if (scroll) { e.preventDefault(); jump.current(1); } }}>Features</a><a href="#privacy">Privacy</a><a href="#install">Install</a>
+            <button type="button" className="menu-btn" aria-expanded={menu} aria-controls="menu-sheet" onClick={() => setMenu((m) => !m)}>{menu ? "Close" : "Menu"}</button>
             {navCta && <a className="nav-cta" href={RELEASE_LIVE ? RELEASES : "#install"}>Get Push Deck</a>}
             <a className="gh" href={REPO} target="_blank" rel="noopener" aria-label="Push Deck on GitHub (opens in a new tab)" title="GitHub"><GitHub size={17} /></a>
           </nav>
         </div>
       </header>
+
+      {menu && (
+        <>
+          <button type="button" className="menu-scrim" aria-label="Close the menu" onClick={() => setMenu(false)} />
+          <nav className="menu-sheet" id="menu-sheet" aria-label="Sections">
+            {[["Profiles", "#profiles"], ["Menu bar", "#menubar"], ["Features", "#features"], ["Privacy", "#privacy"], ["Install", "#install"], ["FAQ", "#faq"]].map(([l, h]) => <a key={h} href={h} onClick={() => setMenu(false)}>{l}</a>)}
+          </nav>
+        </>
+      )}
 
       <main id="top">
         <section className={`hero${scroll ? " is-scroll" : ""}`}>
@@ -409,7 +429,7 @@ export default function Landing({ version }: { version: string }) {
 
           {/* Where the device sits in the hero. On the still version it holds the device itself; on the scroll version it is an empty box the window is measured against. */}
           <div className="slot">
-            {!scroll && <div className="rise">{heroDevice}</div>}
+            {!scroll && <img className="rise slot-img" src={img("device-view.webp")} alt="An Ableton Push 2 running Push Deck: lit pads and the live display" width={1500} height={1070} />}
           </div>
 
           {scroll && <div className="scroll-cue" aria-hidden="true"><span>Scroll</span><i /></div>}
@@ -474,47 +494,51 @@ export default function Landing({ version }: { version: string }) {
 
         <div className={scroll ? "after is-over" : "after"}>
         {!scroll && (
+          <>
+          <SeeItMove />
           <section className="band still-app">
             <div data-reveal>{appText}</div>
             <div className="frame" data-reveal><img src={img("ui/app-ui.webp")} alt="The Push Deck window: the Claude Code profile, a replica of the Push 2 and the controls inspector" width={3200} height={2000} loading="lazy" /></div>
           </section>
+          </>
         )}
 
         {!scroll && (
           <section className="band tour-still" id="tour-still" aria-label="A tour of the app">
-            <div className="carousel" data-reveal>
-              {tour.map((t) => (
-                <article className="tcard" key={t.key} style={{ ["--acc" as string]: t.accent }}>
-                  <div className="tcard-img"><img src={img(t.img)} alt={t.alt} loading="lazy" /></div>
-                  <div className="tcard-txt"><p className="tag">{t.tag}</p><h3>{t.title}</h3><p>{t.text}</p></div>
-                </article>
-              ))}
-            </div>
+            <TourCards />
           </section>
         )}
 
-        <section className="pin" id="profiles" data-pin>
-          <div className="pin-inner">
-            <div className="pin-head">
-              <div>
-                <p className="tag">Profiles</p>
-                <h2>{copy.displayTitle}</h2>
-              </div>
-              <div>
-                <div className="caps">
-                  {steps.map((s, i) => (
-                    <div className="cap" data-cap key={s.name}>
-                      <h3><span className="num mono" style={{ background: s.glow }}>{i + 1}</span>{s.name}</h3>
-                      <p>{s.text}</p>
-                    </div>
-                  ))}
+        {scroll ? (
+          <section className="pin" id="profiles" data-pin>
+            <div className="pin-inner">
+              <div className="pin-head">
+                <div>
+                  <p className="tag">Profiles</p>
+                  <h2>{copy.displayTitle}</h2>
                 </div>
-                <div className="progress" aria-hidden="true"><i /></div>
+                <div>
+                  <div className="caps">
+                    {steps.map((s, i) => (
+                      <div className="cap" data-cap key={s.name}>
+                        <h3><span className="num mono" style={{ background: s.glow }}>{i + 1}</span>{s.name}</h3>
+                        <p>{s.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="progress" aria-hidden="true"><i /></div>
+                </div>
               </div>
+              <DisplayZoom videos={steps.map((s) => s.video)} glows={steps.map((s) => s.glow)} step={step} label={`The Push 2 display with the ${steps[step].name} profile`} />
             </div>
-            <DisplayZoom videos={steps.map((s) => s.video)} glows={steps.map((s) => s.glow)} step={step} label={`The Push 2 display with the ${steps[step].name} profile`} />
-          </div>
-        </section>
+          </section>
+        ) : (
+          <section className="band" id="profiles">
+            <p className="tag" data-reveal>Profiles</p>
+            <h2 data-reveal>{copy.displayTitle}</h2>
+            <ProfileCards steps={steps} />
+          </section>
+        )}
 
         <section className="band mb" id="menubar">
           <div className="desk" data-reveal role="img" aria-label="A Mac desktop: the Push Deck icon in the menu bar opens a small panel with tabs for the player, display and settings">
@@ -580,8 +604,10 @@ export default function Landing({ version }: { version: string }) {
           <ul className="priv-grid">
             {privacyRows.map((r) => (
               <li key={r.title} data-reveal>
-                <span className="vi" aria-hidden="true">{ICONS[r.icon]}</span>
-                <span><b>{r.title}</b>{r.text}</span>
+                <details className="pp" open={isDesktop}>
+                  <summary><span className="vi" aria-hidden="true">{ICONS[r.icon]}</span><b>{r.title}</b><i className="chev" aria-hidden="true" /></summary>
+                  <p>{r.text}</p>
+                </details>
               </li>
             ))}
           </ul>

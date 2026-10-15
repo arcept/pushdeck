@@ -119,7 +119,7 @@ export default function Device({ palette, display = "/video/hero.mp4", autoplay 
       className={solid ? "device-pads lift" : "device-pads"}
       style={box(field)}
       onPointerMove={(e) => play(e, 0.4)}
-      onPointerDown={(e) => play(e, 1)}
+      onPointerDown={(e) => { play(e, 1); if (e.pointerType === "touch") navigator.vibrate?.(8); }}   /* a small tap you can feel on phones that allow it */
       onPointerLeave={() => { lastPad.current = ""; pf.current?.setHover(-1); }}
     />
   );

@@ -16,6 +16,8 @@ Rules that always apply (from `CLAUDE.md`): no personal info in the repo (names,
 | Menu bar panel | `public/img/menubar/panel-1..3.webp`: crops of `public/img/menu-bar.png` (a copy of `docs/images/menu-bar.png`) | the menu bar scene |
 | Words | `content.ts`: features, tour steps, profiles (`steps`), privacy rows, install, requirements, the FAQ (`faq`) notes | everywhere |
 | Version | `../VERSION` | footer, download button |
+| Phone hero picture | `public/img/device-view.webp`: a still of the hero device in its perspective view (captured from the desktop hero at 2300px wide with the page background hidden, tilted 40 degrees with a 3400px perspective so it looks natural on a small screen). Recapture it if the replica art or pad colours change | phones and reduced motion |
+| Phone page: the live strip and swipe cards | `components/PhoneStory.tsx` (reuses the tour crops, the profile videos and `hero.mp4`); set `REAL_CLIP` in `content.ts` to a real clip of the Push 2 (put it in `public/video/`) to replace the display recording in the strip | phones and reduced motion |
 
 The page never reads the app's code. Nothing updates itself: a change in the app only reaches the page when someone redoes the matching row above.
 
@@ -32,6 +34,8 @@ The page never reads the app's code. Nothing updates itself: a change in the app
 4. The tour's profiles step crossfades three header crops (`prof-*.webp`, the `zl-p-*` overlays and their timeline tweens in `Landing.tsx`). Add a fourth, or swap one. Recapture the header with `scripts/capture` (Auto mode needs that app in front, see section 3).
 5. Re-read the copy: the hero text, "Switch app. The Push follows." and the features list mention profiles in general terms; update them only if the new profile changes what is true.
 6. Check the Figma/Photoshop rule above before showing either.
+
+**Phone cards.** The swipe cards show the same crops as the desktop tour (`tour/*.webp`), the chip and the profile videos, so recapturing those updates both. If a tour step is added or removed, `Scene` in `PhoneStory.tsx` needs a matching case (and the keyframes in `globals.css`). Check the phone page at 390px after any change.
 
 **The menu bar panel changed.** Replace `public/img/menu-bar.png` (and `docs/images/menu-bar.png`, which the README uses), recut `public/img/menubar/panel-1..3.webp` (the panels are 555x832 at x = 33, 622, 1211, y = 33, with rounded corners), and check the cursor targets in the menu bar scene (`tab(0.32)` and `tab(0.855)` are the tab centres as a fraction of the panel width).
 
