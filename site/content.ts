@@ -65,7 +65,7 @@ export const copy = {
   kicker: "64 pads. Zero Ableton Live. Plenty of fun.",
   sub: "Plug in a Push 2 and it becomes a colourful controller for whatever you are doing, with a screen that shows what matters.",
   featuresTitle: "Pads that actually do things.",
-  displayTitle: "Switch app. The pads switch with you.",
+  displayTitle: "Switch app. The display switches with you.",
   privacyTitle: "No account. No cloud. No peeking.",
   installTitle: "Grab it. Plug in. Press a pad.",
 };

@@ -103,10 +103,10 @@ section { padding: 0 var(--gutter); }
 .body3d { position: absolute; transform-style: preserve-3d; pointer-events: none; }
 .body3d i { position: absolute; display: block; }
 .side { backface-visibility: hidden; }
-.s-bottom { left: 0; top: 100%; width: 100%; height: var(--t); transform-origin: top; transform: rotateX(-90deg); background: linear-gradient(180deg, #8a8e94 0, #4a4d52 2.5%, #303236 12%, #222427 55%, #17181b 100%); }
-.s-top { left: 0; bottom: 100%; width: 100%; height: var(--t); transform-origin: bottom; transform: rotateX(90deg); background: linear-gradient(0deg, #3a3d41, #1a1b1e); }
-.s-left { right: 100%; top: 0; width: var(--t); height: 100%; transform-origin: right; transform: rotateY(-90deg); background: linear-gradient(270deg, #6f7378 0, #3a3d41 3%, #2a2c30 30%, #1c1d20 100%); }
-.s-right { left: 100%; top: 0; width: var(--t); height: 100%; transform-origin: left; transform: rotateY(90deg); background: linear-gradient(90deg, #5a5d62 0, #2a2c30 3%, #1b1c1f 35%, #111214 100%); }
+.s-bottom { left: 0; top: 100%; width: 100%; height: var(--t); transform-origin: top; transform: rotateX(-90deg); background: linear-gradient(180deg, #34363a 0, #232427 3%, #18191b 14%, #101113 55%, #0a0a0c 100%); }
+.s-top { left: 0; bottom: 100%; width: 100%; height: var(--t); transform-origin: bottom; transform: rotateX(90deg); background: linear-gradient(0deg, #1c1d20, #0d0e0f); }
+.s-left { right: 100%; top: 0; width: var(--t); height: 100%; transform-origin: right; transform: rotateY(-90deg); background: linear-gradient(270deg, #2e3033 0, #1e1f22 3%, #151618 30%, #0d0e0f 100%); }
+.s-right { left: 100%; top: 0; width: var(--t); height: 100%; transform-origin: left; transform: rotateY(90deg); background: linear-gradient(90deg, #26282b 0, #181a1c 3%, #111214 35%, #0a0a0b 100%); }
 .floor { inset: -4% -5% -9%; transform: translateZ(calc(var(--t) * -1 - 2px)); background: radial-gradient(closest-side, rgba(0,0,0,.85), rgba(0,0,0,.45) 60%, rgba(0,0,0,0)); }
 .knobs3d { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
 .knob3d { position: absolute; aspect-ratio: 1; transform-style: preserve-3d; }
@@ -185,7 +185,7 @@ section { padding: 0 var(--gutter); }
 /* everything after the hero slides up over it like a card */
 .after.is-over { position: relative; z-index: 10; background: var(--bg); border-radius: 32px 32px 0 0; border-top: 1px solid var(--line); box-shadow: 0 -40px 100px rgba(0,0,0,.6); padding-top: 1px; }
 .slot .rise .device { filter: drop-shadow(0 40px 50px rgba(0,0,0,.6)); }
-.still-app .frame { margin-top: 36px; } .still-app .frame img { transform: none; }
+.still-app .frame { margin: 28px 0 32px; } .still-app .frame img { transform: none; }
 
 
 .band { max-width: calc(var(--container) + 2 * var(--gutter)); margin: 0 auto; padding-top: 90px; padding-bottom: 90px; }
@@ -281,6 +281,7 @@ footer a:hover { color: var(--tx); }
 
 /* the menu bar scene: a made-up Mac desktop (no real wallpaper or app art), the Push Deck icon opens the real panel */
 .mb { padding-top: 90px; padding-bottom: 130px; }
+.desk-wrap { position: relative; }
 .desk { position: relative; aspect-ratio: 16 / 8.4; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 40px 100px rgba(0,0,0,.5);
   background: radial-gradient(60% 80% at 18% 8%, rgba(88,84,220,.42), transparent 70%), radial-gradient(55% 75% at 88% 96%, rgba(170,70,150,.32), transparent 70%), radial-gradient(40% 60% at 55% 55%, rgba(47,200,184,.14), transparent 70%), linear-gradient(165deg, #0e0f1f, #181233 55%, #0b0b15); }
 .desk-bar { position: absolute; left: 0; right: 0; top: 0; height: 32px; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; background: rgba(14,14,24,.62); font-size: 13px; font-weight: 600; color: rgba(255,255,255,.88); }
@@ -300,12 +301,12 @@ footer a:hover { color: var(--tx); }
 .desk-panel .pn { position: absolute; inset: 0; width: 100%; height: 100%; }
 .desk-panel .pn-1, .desk-panel .pn-3 { opacity: 0; }
 .desk-cursor { position: absolute; left: 0; top: 0; opacity: 0; pointer-events: none; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); transform-origin: 2px 2px; }
-@media (max-width: 720px) {
-  .desk { aspect-ratio: auto; min-height: 820px; border-radius: 16px; }
-  .desk-scrim { width: 100%; height: 52%; bottom: auto; background: linear-gradient(180deg, rgba(11,11,15,.92), rgba(11,11,15,.7) 65%, transparent); }
-  .desk-copy { left: 6%; right: 6%; width: auto; top: 44px; bottom: auto; }
+@media (max-width: 720px) {   /* phones: the panel hangs from the menu bar icon, the words sit below the frame */
+  .desk { aspect-ratio: 1 / 1.2; border-radius: 16px; }
+  .desk-scrim { display: none; }
+  .desk-copy { position: static; width: auto; padding: 26px 2px 0; }
   .desk-bar .b-l i, .desk-bar .b-ic { display: none; }
-  .desk-panel { width: 62%; right: auto; left: 19%; top: auto; bottom: 22px; }
+  .desk-panel { width: 66%; right: 4%; left: auto; top: 42px; bottom: auto; }
 }
 
 * { scrollbar-width: thin; scrollbar-color: #2a2b36 transparent; }
@@ -386,12 +387,11 @@ html { scroll-padding-top: 84px; }
 .mbar { display: none; }
 @media (max-width: 899px) {
   .hero { overflow-x: clip; }
-  .hero:not(.is-scroll) .slot { width: 108vw; max-width: none; aspect-ratio: auto; margin-left: 50%; transform: translateX(-50%); }
+  .hero:not(.is-scroll) .slot { width: 100vw; max-width: none; aspect-ratio: auto; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }   /* no transform here: the clip inside blends with the page */
   .band { padding-top: 56px; padding-bottom: 56px; }
   .mb { padding-top: 40px; padding-bottom: 56px; }
   .recap { padding-top: 56px; padding-bottom: 48px; }
   #privacy { padding-top: 64px; padding-bottom: 48px; }
-  .desk { min-height: 700px; }
   .cmd { flex-direction: column; }
   .cmd button { align-self: stretch; justify-content: center; }
   footer { padding-bottom: 96px; }
@@ -455,4 +455,23 @@ html { scroll-padding-top: 84px; }
 .pc-pads i { aspect-ratio: 1.5; border-radius: 6px; opacity: .85; }
 .pcards { margin-top: 26px; }
 
-.slot-img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
+.slot-img { position: relative; width: 100%; aspect-ratio: 1200 / 830; }
+.slot-img img, .slot-img video { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: lighten; }
+@media (prefers-reduced-motion: reduce) { .slot-img video { display: none; } }
+
+/* phones: the profiles stage. The display is wide and short, so it runs edge to edge with the Push's lit buttons and pads around it */
+.pstage { margin-top: 28px; }
+.ps-device { margin: 0 -16px; padding: 14px 0 16px; background: linear-gradient(180deg, #111216, #0a0a0c); border-block: 1px solid var(--line); box-shadow: 0 0 90px color-mix(in srgb, var(--glow) 38%, transparent); transition: box-shadow .5s; }
+.ps-lights { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; padding: 0 22px; }
+.ps-lights i { height: 3px; border-radius: 2px; opacity: .95; transition: background-color .4s; }
+.ps-screen { position: relative; margin: 12px 0; aspect-ratio: 960 / 160; background: #000; }
+.ps-screen video { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .35s; }
+.ps-screen video.on { opacity: 1; }
+.ps-pads { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; padding: 6px 22px 0; }
+.ps-pads i { aspect-ratio: 1.35; border-radius: 4px; transition: background-color .4s; }
+.ps-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.ps-chips button { height: 38px; padding: 0 16px; border-radius: 99px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--mut); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: background-color .2s, color .2s, border-color .2s; }
+.ps-chips button.on { color: #0b0b0f; background: var(--c); border-color: var(--c); }
+.ps-more { display: inline-flex; align-items: center; height: 38px; padding: 0 14px; border-radius: 99px; border: 1px dashed var(--line); color: var(--mut2); font-size: 14px; font-weight: 600; }
+.ps-text h3 { font-size: 22px; margin: 20px 0 6px; }
+.ps-text p { color: var(--mut); margin: 0; font-size: 15.5px; line-height: 1.5; }

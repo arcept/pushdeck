@@ -77,27 +77,57 @@ export function TourCards() {
   );
 }
 
-/** The three profiles as swipeable cards: the display recording of the one in view plays, the pads show its colours. */
+/** The display is the point: one wide screen with the Push around it. Pick (or swipe to) a sample profile and the screen, the button lights and the pads all change with it. */
 export function ProfileCards({ steps }: { steps: typeof Steps }) {
-  const { row, on, go } = useSwipe(steps.length);
+  const [on, setOn] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
+  const [seen, setSeen] = useState(false);
   useEffect(() => {
-    const cards = [...(row.current?.children ?? [])] as HTMLElement[];
-    cards.forEach((c, i) => { const v = c.querySelector("video"); if (v) (i === on ? v.play().catch(() => {}) : v.pause()); });
-  }, [on, row]);
+    const el = box.current; if (!el) return;
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold: 0.25 });
+    io.observe(el); return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    [...(box.current?.querySelectorAll("video") ?? [])].forEach((v, i) => { if (seen && i === on) v.play().catch(() => {}); else v.pause(); });
+  }, [on, seen]);
+  const cur = steps[on];
+  const col = (i: number) => PAD_COLORS[cur.colors[i % cur.colors.length]];
+  const x0 = useRef(0);
+  const go = (d: number) => setOn((o) => (o + d + steps.length) % steps.length);
   return (
-    <div className="pcards">
-      <div className="carousel" ref={row}>
-        {steps.map((s, i) => (
-          <article className="tcard pcard" key={s.name} style={{ ["--acc" as string]: s.glow }}>
-            <div className="pc-screen" style={{ boxShadow: `0 0 60px ${s.glow}33` }}>
-              <video src={s.video} muted loop playsInline preload="metadata" aria-label={`The ${s.name} profile on the Push 2 display`} />
-            </div>
-            <div className="pc-pads" aria-hidden="true">{Array.from({ length: 16 }, (_, k) => <i key={k} style={{ background: k % 3 === 1 ? "rgba(255,255,255,.1)" : PAD_COLORS[s.colors[(k + (k >> 2)) % s.colors.length]] }} />)}</div>
-            <div className="tcard-txt"><p className="tag" style={{ color: s.glow }}>Profile {i + 1}</p><h3>{s.name}</h3><p>{s.text}</p></div>
-          </article>
-        ))}
+    <div className="pstage" ref={box} style={{ ["--glow" as string]: cur.glow }}
+      onTouchStart={(e) => { x0.current = e.touches[0].clientX; }}
+      onTouchEnd={(e) => { const dx = e.changedTouches[0].clientX - x0.current; if (Math.abs(dx) > 44) go(dx < 0 ? 1 : -1); }}>
+      <div className="ps-device" aria-hidden="true">
+        <div className="ps-lights">{Array.from({ length: 8 }, (_, k) => <i key={k} style={{ background: col(k * 3 + 1) }} />)}</div>
+        <div className="ps-screen">
+          {steps.map((s, i) => <video key={s.name} className={i === on ? "on" : ""} src={s.video} muted loop playsInline preload="metadata" />)}
+        </div>
+        <div className="ps-lights">{Array.from({ length: 8 }, (_, k) => <i key={k} style={{ background: col(k * 2 + 2) }} />)}</div>
+        <div className="ps-pads">{Array.from({ length: 16 }, (_, k) => <i key={k} style={{ background: k % 3 === 1 ? "rgba(255,255,255,.08)" : col(k + (k >> 2)) }} />)}</div>
       </div>
-      <Dots n={steps.length} on={on} go={go} label="Profiles" />
+      <div className="ps-chips" role="tablist" aria-label="Sample profiles">
+        {steps.map((s, i) => <button key={s.name} type="button" role="tab" aria-selected={i === on} className={i === on ? "on" : ""} style={{ ["--c" as string]: s.glow }} onClick={() => setOn(i)}>{s.name}</button>)}
+        <span className="ps-more" aria-hidden="true">+ any app</span>
+      </div>
+      <div className="ps-text" aria-live="polite"><h3>{cur.name}</h3><p>{cur.text}</p></div>
+      <p className="fine">Just three samples. Every app can have its own profile: its own pads, its own button lights and its own screen. Switch app and the Push follows.</p>
+    </div>
+  );
+}
+
+/** The phone hero: the tilted Push as a still, with a short looping clip of it playing on top. Both are drawn on black and blended onto the page, so the black disappears. */
+export function HeroLoop() {
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = box.current, v = el?.querySelector("video"); if (!el || !v) return;
+    const io = new IntersectionObserver(([e]) => { e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }, { threshold: 0.1 });
+    io.observe(el); return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={box} className="slot-img" role="img" aria-label="An Ableton Push 2 running Push Deck: lit pads and the live display">
+      <img src="/img/device-view.webp" alt="" width={1200} height={830} />
+      <video src="/video/device-loop.mp4" muted loop playsInline preload="auto" aria-hidden="true" />
     </div>
   );
 }

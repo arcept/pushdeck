@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Device, { IN_APP } from "@/components/Device";
 import DisplayZoom from "@/components/DisplayZoom";
-import { ProfileCards, SeeItMove, TourCards } from "@/components/PhoneStory";
+import { HeroLoop, ProfileCards, SeeItMove, TourCards } from "@/components/PhoneStory";
 import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Share, Shield, Wave, Widgets } from "@/components/Icons";
 import {
   ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, faq, features, privacyRows,
@@ -372,11 +372,12 @@ export default function Landing({ version }: { version: string }) {
   }, [scroll, sideAngle]);
 
   const origin = `${(IN_APP.left + IN_APP.width / 2) * 100}% ${(IN_APP.top + IN_APP.height / 2) * 100}%`;
-  const appText = (
+  const appBlock = (mid?: React.ReactNode) => (
     <>
       <p className="tag">The app</p>
       <h2>A replica of your Push, in a window.</h2>
       <p className="lead">Everything you set up here lands on the real device straight away.</p>
+      {mid}
       <ul className="points">
         <li><Pointer /><span><b>Click any control</b> on the replica to set it up: pads, buttons, knobs.</span></li>
         <li><Drag /><span><b>Drag actions onto the Push</b>: shortcuts, apps, links, text, shell commands.</span></li>
@@ -385,6 +386,7 @@ export default function Landing({ version }: { version: string }) {
       </ul>
     </>
   );
+  const appText = appBlock();
   const heroDevice = <Device solid palette={heroPalette} intro={1.2} paused={fadePads && padsOff} label="An Ableton Push 2 running Push Deck: lit pads and the live display" />;
 
   return (
@@ -429,7 +431,7 @@ export default function Landing({ version }: { version: string }) {
 
           {/* Where the device sits in the hero. On the still version it holds the device itself; on the scroll version it is an empty box the window is measured against. */}
           <div className="slot">
-            {!scroll && <img className="rise slot-img" src={img("device-view.webp")} alt="An Ableton Push 2 running Push Deck: lit pads and the live display" width={1500} height={1070} />}
+            {!scroll && <HeroLoop />}
           </div>
 
           {scroll && <div className="scroll-cue" aria-hidden="true"><span>Scroll</span><i /></div>}
@@ -497,8 +499,7 @@ export default function Landing({ version }: { version: string }) {
           <>
           <SeeItMove />
           <section className="band still-app">
-            <div data-reveal>{appText}</div>
-            <div className="frame" data-reveal><img src={img("ui/app-ui.webp")} alt="The Push Deck window: the Claude Code profile, a replica of the Push 2 and the controls inspector" width={3200} height={2000} loading="lazy" /></div>
+            <div data-reveal>{appBlock(<div className="frame"><img src={img("ui/app-ui.webp")} alt="The Push Deck window: the Claude Code profile, a replica of the Push 2 and the controls inspector" width={3200} height={2000} loading="lazy" /></div>)}</div>
           </section>
           </>
         )}
@@ -541,7 +542,8 @@ export default function Landing({ version }: { version: string }) {
         )}
 
         <section className="band mb" id="menubar">
-          <div className="desk" data-reveal role="img" aria-label="A Mac desktop: the Push Deck icon in the menu bar opens a small panel with tabs for the player, display and settings">
+          <div className="desk-wrap" data-reveal>
+          <div className="desk" role="img" aria-label="A Mac desktop: the Push Deck icon in the menu bar opens a small panel with tabs for the player, display and settings">
             <div className="desk-bar" aria-hidden="true">
               <span className="b-l"><b>Finder</b><i>File</i><i>Edit</i><i>View</i><i>Go</i><i>Window</i><i>Help</i></span>
               <span className="b-r">
@@ -552,17 +554,18 @@ export default function Landing({ version }: { version: string }) {
               </span>
             </div>
             <div className="desk-scrim" aria-hidden="true" />
-            <div className="desk-copy">
-              <p className="tag">Menu bar</p>
-              <h2>Always there. Never in the way.</h2>
-              <p className="lead">Push Deck lives in your menu bar. Pin a profile, switch the player, set the brightness or turn the Push on and off, without opening anything.</p>
-            </div>
             <div className="desk-panel" aria-hidden="true">
               <img className="pn pn-2" src={img("menubar/panel-2.webp")} alt="" loading="lazy" width={555} height={832} />
               <img className="pn pn-1" src={img("menubar/panel-1.webp")} alt="" loading="lazy" width={555} height={832} />
               <img className="pn pn-3" src={img("menubar/panel-3.webp")} alt="" loading="lazy" width={555} height={832} />
             </div>
             <svg className="desk-cursor" width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5 2 20l5-4.4 3.4 7.6 3.2-1.4-3.3-7.4H18z" fill="#fff" stroke="#111" strokeWidth="1.6" strokeLinejoin="round" /></svg>
+          </div>
+          <div className="desk-copy">
+            <p className="tag">Menu bar</p>
+            <h2>Always there. Never in the way.</h2>
+            <p className="lead">Push Deck lives in your menu bar. Pin a profile, switch the player, set the brightness or turn the Push on and off, without opening anything.</p>
+          </div>
           </div>
         </section>
 
