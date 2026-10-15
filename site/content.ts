@@ -19,9 +19,9 @@ export const features = [
 ];
 
 export const steps = [
-  { name: "Claude Code", text: "A live session on the display, with its mascot and usage meters. Pads send the keys you use every day.", colors: [0, 2, 4, 1] },
-  { name: "Browser", text: "The tab in front on your display. Pads open sites, switch tabs and run page shortcuts.", colors: [0, 3, 5, 6] },
-  { name: "ChatGPT / Codex", text: "Usage at a glance and the shortcuts you reach for, the moment the app comes to the front.", colors: [3, 5, 6, 7] },
+  { name: "Claude Code", text: "A live session on the display, with its mascot and usage meters. Pads send the keys you use every day.", colors: [0, 2, 4, 1], video: "/video/claude.mp4", glow: "#ff9a3c" },
+  { name: "Browser", text: "The tab in front on your display. Pads open sites, switch tabs and run page shortcuts.", colors: [0, 3, 5, 6], video: "/video/browser.mp4", glow: "#4f8cff" },
+  { name: "ChatGPT / Codex", text: "Usage at a glance and the shortcuts you reach for, the moment the app comes to the front.", colors: [3, 5, 6, 7], video: "/video/codex.mp4", glow: "#2fc8b8" },
 ];
 
 export const install = [

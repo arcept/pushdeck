@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Device, { IN_APP } from "@/components/Device";
+import DisplayZoom from "@/components/DisplayZoom";
+import { Check, Copy, Download, Drag, External, GitHub, Pointer, Screen, Widgets } from "@/components/Icons";
 import {
   ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, features,
   install, installNote, requirements, steps,
@@ -22,8 +24,8 @@ const layers = [
 
 const heroPalette = [0, 4, 2, 1, 3, 6, 5, 7];
 
-const NAV = 64;     // fixed nav height
-const MOVE = 2000;  // scroll distance (px) of the hero's move, before the next section slides over it
+const NAV = 80;     // room kept clear at the top for the floating nav
+const MOVE = 2600;  // scroll distance (px) of the hero's move, before the next section slides over it
 
 // The hero's big move needs room and motion: wide screens without reduced motion. Everything else gets a still version.
 const SCROLL_MQ = "(prefers-reduced-motion: no-preference) and (min-width: 900px)";
@@ -46,7 +48,7 @@ function CopyCmd({ cmd, live }: { cmd: string; live: boolean }) {
         aria-label="Copy command"
         disabled={!live}
         onClick={() => { navigator.clipboard?.writeText(cmd).then(() => { setDone(true); setTimeout(() => setDone(false), 1400); }).catch(() => {}); }}
-      >{done ? "Copied" : "Copy"}</button>
+      >{done ? <Check /> : <Copy />}{done ? "Copied" : "Copy"}</button>
     </div>
   );
 }
@@ -57,12 +59,15 @@ export default function Landing({ version }: { version: string }) {
   const [scroll, setScroll] = useState(false);       // the device-into-the-app hero is on
   const [fadePads, setFadePads] = useState(true);    // inside the app, the live pads give way to the real screenshot (?pads=live keeps them on)
   const [padsOff, setPadsOff] = useState(false);
+  const [sideAngle, setSideAngle] = useState(false);  // ?angle=side: the earlier three-quarter view; default is a balanced, straight-on lean
 
   useEffect(() => {
     const mq = matchMedia(SCROLL_MQ);
     const on = () => setScroll(mq.matches);
     on(); mq.addEventListener("change", on);
-    setFadePads(new URLSearchParams(location.search).get("pads") !== "live");
+    const qs = new URLSearchParams(location.search);
+    setFadePads(qs.get("pads") !== "live");
+    setSideAngle(qs.get("angle") === "side");
     return () => mq.removeEventListener("change", on);
   }, []);
 
@@ -81,7 +86,8 @@ export default function Landing({ version }: { version: string }) {
       const intro = gsap.timeline({ defaults: { ease: "back.out(1.6)" } });
       intro.from(q(".nav-in > *"), { opacity: 0, y: -12, duration: 0.6, stagger: 0.06, ease: "power3.out" })
         .from(q(".hero-copy > *"), { opacity: 0, y: 40, duration: 0.9, stagger: 0.08 }, 0.05)
-        .from(q(".rise"), { y: 160, scale: 0.92, opacity: 0, duration: 1.4, ease: "power3.out" }, 0.25)
+        .from(q(".slot .rise"), { y: 160, scale: 0.92, opacity: 0, duration: 1.4, ease: "power3.out" }, 0.25)
+        .from(q(".tilt"), { y: 320, duration: 1.6, ease: "power3.out" }, 0.2)   // no opacity here: it would flatten the 3D device while it fades
         .from(q(".layer .card"), { opacity: 0, scale: 0.7, y: 60, duration: 1, stagger: 0.12, ease: "back.out(1.7)" }, 0.8);
 
       q(".layer .float").forEach((el, i) => {
@@ -94,7 +100,7 @@ export default function Landing({ version }: { version: string }) {
       const tiltEl = q(".tilt")[0], win = q(".win")[0], slot = q(".slot")[0], hero = q(".hero")[0], over = q(".app-over")[0];
       let tl: gsap.core.Timeline | undefined;
       if (scroll && tiltEl && win && slot && over) {
-        let to = { x: 0, y: 0, scale: 1 };
+        let to = { x: 0, y: 0, scale: 1 }, mid = { x: 0, y: 0, scale: 1 };
         const measure = () => {
           const vw = document.documentElement.clientWidth, vh = innerHeight;
           const dh = slot.offsetWidth, W = dh / IN_APP.width, H = W * 0.625;
@@ -105,6 +111,11 @@ export default function Landing({ version }: { version: string }) {
           const wf = Math.min(1600, vw - 48), f = wf / W, tx = vw / 2, ty = NAV + (vh - NAV) / 2;
           const cx = left + W / 2, cy = top + H / 2;
           to = { scale: f, x: tx - (dx + f * (cx - dx)), y: ty - (dy + f * (cy - dy)) };
+          // halfway: the whole slab in view, still at an angle, so its edges and thickness show before it flattens
+          const bodyH = slot.offsetHeight * 0.82;
+          // (perspective enlarges the near edge, so aim for a bit over half the screen height)
+          const ms = Math.min(1, ((vh - NAV) * 0.58) / (bodyH * Math.cos((34 * Math.PI) / 180)));
+          mid = { scale: ms, x: vw / 2 - dx, y: NAV + (vh - NAV) * 0.5 - dy };
           // the text overlay sits on the window's final box; its text stays clear of the nav even when the window runs past the top
           const oh = wf * 0.625, ot = ty - oh / 2;
           Object.assign(over.style, { width: `${wf}px`, height: `${oh}px`, left: `${tx - wf / 2}px`, top: `${ot}px`, paddingTop: `${Math.max(ot + 64, NAV + 48) - ot}px` });
@@ -112,22 +123,34 @@ export default function Landing({ version }: { version: string }) {
         measure();
         ScrollTrigger.addEventListener("refreshInit", measure);
         cleanups.push(() => ScrollTrigger.removeEventListener("refreshInit", measure));
+        // any change of the hero's box (a resized window, a scrollbar appearing) re-measures and re-lays the move, so the device never stays off-centre
+        let timer = 0;
+        const ro = new ResizeObserver(() => { clearTimeout(timer); timer = window.setTimeout(() => ScrollTrigger.refresh(), 120); });
+        ro.observe(root.current!);   // not the hero: while it is pinned, its wrapper keeps the old width
+        cleanups.push(() => { ro.disconnect(); clearTimeout(timer); });
 
         // Timeline units are scroll distance / 1000: MOVE px of animation, then one screen height for the next section to slide over.
         const slide = innerHeight / 1000;
         tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
-            trigger: hero, start: "top top", end: () => `+=${MOVE + innerHeight}`, pin: true, pinSpacing: false, scrub: 0.7, invalidateOnRefresh: true, anticipatePin: 1,
-            onUpdate: () => setPadsOff((tl?.time() ?? 0) > 1.05),
+            trigger: hero, start: "top top", end: () => `+=${MOVE + innerHeight}`, pin: true, pinSpacing: false, scrub: 1.1, invalidateOnRefresh: true, anticipatePin: 1,
+            onUpdate: () => setPadsOff((tl?.time() ?? 0) > 1.5),
           },
         });
-        tl.fromTo(win, { x: 0, y: 0, scale: 1, rotationX: 22 }, { x: () => to.x, y: () => to.y, scale: () => to.scale, rotationX: 0, duration: 1.1, ease: "power2.inOut" }, 0)
-          .to(q(".hero-copy"), { opacity: 0, y: -100, duration: 0.35, ease: "power1.in" }, 0)
-          .to(q(".win-shadow"), { opacity: 0, duration: 0.4 }, 0.4)
-          .fromTo(q(".win-ui"), { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power1.inOut" }, 0.45)
-          .fromTo(q(".app-grad"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.1)
-          .fromTo(q(".app-text > *"), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" }, 1.15)
+        // from a steep desk angle (you see its front edge and side) to front-on, landing in the app
+        const a0 = sideAngle ? { rotationX: 50, rotationZ: -9, rotationY: -6 } : { rotationX: 52, rotationZ: 0, rotationY: 0 };
+        const a1 = sideAngle ? { rotationX: 34, rotationZ: -6, rotationY: -9 } : { rotationX: 36, rotationZ: 0, rotationY: 0 };
+        tl.fromTo(win, { x: 0, y: 0, scale: 1, ...a0 },
+            { x: () => mid.x, y: () => mid.y, scale: () => mid.scale, ...a1, duration: 0.6, ease: "power2.inOut" }, 0)
+          .to(win, { x: () => to.x, y: () => to.y, scale: () => to.scale, rotationX: 0, rotationZ: 0, rotationY: 0, duration: 0.9, ease: "power3.inOut" }, 0.65)
+          .to(q(".hero .sheen"), { opacity: 0, duration: 0.7, ease: "power1.in" }, 0.8)
+          .to(q(".hero .shade, .hero .disp-glow"), { opacity: 0, duration: 0.7, ease: "power1.inOut" }, 0.75)   // the lights come up as it lands, to match the app
+          .to(q(".hero .floor"), { opacity: 0, duration: 0.5 }, 0.9)
+          .to(q(".hero-copy"), { opacity: 0, y: -140, duration: 0.4, ease: "power1.in" }, 0)
+          .fromTo(q(".win-ui"), { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 0.95)
+          .fromTo(q(".app-grad"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.55)
+          .fromTo(q(".app-text > *"), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.07, ease: "power2.out" }, 1.6)
           .to({}, { duration: 0.01 }, MOVE / 1000 - 0.01)                       // hold on the app until the move distance is used up
           .fromTo(q(".hero-dim"), { opacity: 0 }, { opacity: 0.7, duration: slide }, MOVE / 1000);
         q(".layer").forEach((el, i) => {
@@ -136,20 +159,15 @@ export default function Landing({ version }: { version: string }) {
       }
 
       if (wide) {
-        // Pointer: the pieces drift by depth, the device leans toward the pointer (only while it is still a device).
+        // Pointer: the two app pieces drift by depth. The device itself stays put.
         const movers = q(".layer .par").map((el, i) => ({
           x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
           y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
           d: layers[i].depth,
         }));
-        const tilt = q(".tilt")[0];
-        const rx = tilt && gsap.quickTo(tilt, "rotationX", { duration: 1, ease: "power3.out" });
-        const ry = tilt && gsap.quickTo(tilt, "rotationY", { duration: 1, ease: "power3.out" });
         const onMove = (e: PointerEvent) => {
           const nx = e.clientX / innerWidth - 0.5, ny = e.clientY / innerHeight - 0.5;
-          const k = tl?.scrollTrigger ? Math.max(0, 1 - tl.scrollTrigger.progress * 4) : 1;
           movers.forEach((m) => { m.x(nx * -36 * m.d); m.y(ny * -28 * m.d); });
-          if (rx && ry) { rx(ny * -6 * k); ry(nx * 8 * k); }
         };
         window.addEventListener("pointermove", onMove);
         cleanups.push(() => window.removeEventListener("pointermove", onMove));
@@ -185,27 +203,33 @@ export default function Landing({ version }: { version: string }) {
     }, root.current ?? undefined);
 
     return () => mm.revert();
-  }, [scroll]);
+  }, [scroll, sideAngle]);
 
   const origin = `${(IN_APP.left + IN_APP.width / 2) * 100}% ${(IN_APP.top + IN_APP.height / 2) * 100}%`;
   const appText = (
     <>
       <p className="tag">The app</p>
       <h2>A replica of your Push, in a window.</h2>
-      <p className="lead">Click a pad to edit it. Mirror the display. Arrange widgets. Changes land on the real device straight away.</p>
+      <p className="lead">Everything you set up here lands on the real device straight away.</p>
+      <ul className="points">
+        <li><Pointer /><span><b>Click any control</b> on the replica to set it up: pads, buttons, knobs.</span></li>
+        <li><Drag /><span><b>Drag actions onto the Push</b>: shortcuts, apps, links, text, shell commands.</span></li>
+        <li><Screen /><span><b>Mirror the display</b> live, or preview a profile before you switch.</span></li>
+        <li><Widgets /><span><b>Arrange widgets</b> on the screen: clock, timers, usage, the player.</span></li>
+      </ul>
     </>
   );
-  const heroDevice = <Device palette={heroPalette} intro={1.2} paused={fadePads && padsOff} label="An Ableton Push 2 running Push Deck: lit pads and the live display" />;
+  const heroDevice = <Device solid={scroll} palette={heroPalette} intro={1.2} paused={fadePads && padsOff} label="An Ableton Push 2 running Push Deck: lit pads and the live display" />;
 
   return (
     <div ref={root} className="page">
       <header className="nav">
         <div className="nav-in">
           <a className="brand" href="#top"><PadMark /><span className="name">Push Deck</span></a>
-          <nav aria-label="Sections">
+          <nav className="chip links" aria-label="Sections">
             <a href="#profiles">Profiles</a><a href="#features">Features</a><a href="#privacy">Privacy</a><a href="#install">Install</a>
+            <a className="gh" href={REPO} target="_blank" rel="noopener" aria-label="Push Deck on GitHub (opens in a new tab)" title="GitHub"><GitHub size={17} /></a>
           </nav>
-          <a className="btn ghost small" href={REPO}>GitHub</a>
         </div>
       </header>
 
@@ -216,8 +240,8 @@ export default function Landing({ version }: { version: string }) {
             <h1>Your Push 2, your desk, <span className="rainbow">your rules.</span></h1>
             <p className="sub">{copy.sub}</p>
             <div className="cta">
-              <a className="btn primary" href={RELEASE_LIVE ? RELEASES : "#install"}>{RELEASE_LIVE ? `Download ${version}` : "Get Push Deck"}</a>
-              <a className="btn ghost" href={REPO}>View on GitHub</a>
+              <a className="btn primary" href={RELEASE_LIVE ? RELEASES : "#install"}><Download />{RELEASE_LIVE ? `Download ${version}` : "Get Push Deck"}</a>
+              <a className="btn ghost" href={REPO} target="_blank" rel="noopener"><GitHub />View on GitHub<External className="ext" /></a>
             </div>
           </div>
 
@@ -236,7 +260,6 @@ export default function Landing({ version }: { version: string }) {
               <div className="win" style={{ transformOrigin: origin }}>
                 <img className="win-ui" src={img("ui/app-ui.webp")} alt="The Push Deck window: the Claude Code profile, a replica of the Push 2 and the controls inspector" width={3200} height={2000} />
                 <div className="win-device" style={{ left: `${IN_APP.left * 100}%`, top: `${IN_APP.top * 100}%`, width: `${IN_APP.width * 100}%` }}>
-                  <div className="win-shadow" aria-hidden="true" />
                   <div className={fadePads && padsOff ? "dev-fade off" : "dev-fade"}>{heroDevice}</div>
                 </div>
               </div>
@@ -261,30 +284,26 @@ export default function Landing({ version }: { version: string }) {
           </section>
         )}
 
-        <section className="stats" aria-label="At a glance">
-          {[["64", "pads"], ["960×160", "live display"], ["0", "accounts"], ["127.0.0.1", "only"]].map(([n, l]) => (
-            <div key={l} data-reveal><b className="mono">{n}</b><span>{l}</span></div>
-          ))}
-        </section>
-
         <section className="pin" id="profiles" data-pin>
           <div className="pin-inner">
-            <div className="pin-text">
-              <p className="tag">Profiles</p>
-              <h2>{copy.displayTitle}</h2>
-              <div className="caps">
-                {steps.map((s, i) => (
-                  <div className="cap" data-cap key={s.name}>
-                    <h3><span className="num mono" style={{ background: PAD_COLORS[s.colors[0]] }}>{i + 1}</span>{s.name}</h3>
-                    <p>{s.text}</p>
-                  </div>
-                ))}
+            <div className="pin-head">
+              <div>
+                <p className="tag">Profiles</p>
+                <h2>{copy.displayTitle}</h2>
               </div>
-              <div className="progress" aria-hidden="true"><i /></div>
+              <div>
+                <div className="caps">
+                  {steps.map((s, i) => (
+                    <div className="cap" data-cap key={s.name}>
+                      <h3><span className="num mono" style={{ background: s.glow }}>{i + 1}</span>{s.name}</h3>
+                      <p>{s.text}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="progress" aria-hidden="true"><i /></div>
+              </div>
             </div>
-            <div className="pin-stage">
-              <Device palette={steps[step].colors} label={`The Push 2 with the ${steps[step].name} profile`} />
-            </div>
+            <DisplayZoom videos={steps.map((s) => s.video)} glows={steps.map((s) => s.glow)} step={step} label={`The Push 2 display with the ${steps[step].name} profile`} />
           </div>
         </section>
 
@@ -324,7 +343,7 @@ export default function Landing({ version }: { version: string }) {
                 <article key={r.id} data-reveal style={{ ["--c" as string]: PAD_COLORS[i * 2] }}>
                   <h3>{r.label}{!live && <em className="soon mono">Coming with the first release</em>}</h3>
                   {r.id === "dmg"
-                    ? <a className={`btn primary${live ? "" : " muted"}`} href={RELEASES}>{live ? `Download ${version} (.dmg)` : "Watch releases"}</a>
+                    ? <a className={`btn primary${live ? "" : " muted"}`} href={RELEASES} target="_blank" rel="noopener">{live ? <><Download />Download {version} (.dmg)</> : <>Watch releases<External className="ext" /></>}</a>
                     : <CopyCmd cmd={r.cmd} live={live} />}
                   <p>{r.note}</p>
                 </article>
@@ -340,7 +359,7 @@ export default function Landing({ version }: { version: string }) {
       <footer>
         <div className="brand"><PadMark /><span className="name">Push Deck</span><span className="ver mono">v{version}</span></div>
         <p>{disclaimer}</p>
-        <p>MIT licence · © Arcept · <a href={REPO}>Source</a> · <a href={ISSUES}>Issues</a> are open. Pull requests are by invitation for now.</p>
+        <p>MIT licence · © Arcept · <a href={REPO} target="_blank" rel="noopener"><GitHub size={14} />Source<External className="ext" /></a> · <a href={ISSUES} target="_blank" rel="noopener">Issues<External className="ext" /></a> are open. Pull requests are by invitation for now.</p>
         <p className="mono">Built with AI assistance.</p>
       </footer>
     </div>

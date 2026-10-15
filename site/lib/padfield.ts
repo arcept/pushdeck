@@ -3,10 +3,10 @@
 // WebGPU when the browser has it (a shader draws flat silicone faces with the LED glowing through, a dip when pressed and a little light spilling onto the body);
 // a plain 2D canvas otherwise. A small simulation plays the pads like someone is using the Push, and answers the pointer.
 
-export type Geometry = { grid0: [number, number]; pitch: [number, number]; pad: [number, number]; radius: number; margin: number; size: [number, number] };
+export type Geometry = { grid0: [number, number]; pitch: [number, number]; pad: [number, number]; radius: number; margin: number; size: [number, number]; spill: [number, number]; dark?: boolean };   // spill: [reach in pitches, strength]; dark: the dim hero deck, where unlit pads are drawn too (as raised rubber) instead of showing the picture's
 
 const SHADER = /* wgsl */ `
-struct U { res: vec2f, grid0: vec2f, pitch: vec2f, pad: vec2f, radius: f32, time: f32, glowR: f32, spare: f32 };
+struct U { res: vec2f, grid0: vec2f, pitch: vec2f, pad: vec2f, radius: f32, dark: f32, glowR: f32, spare: f32 };   // spare: glow strength
 @group(0) @binding(0) var<uniform> u: U;
 @group(0) @binding(1) var<storage, read> pads: array<vec4f, 128>;
 
@@ -22,10 +22,11 @@ fn sdBox(p: vec2f, b: vec2f, r: f32) -> f32 {
 
 @fragment fn fs(@builtin(position) fc: vec4f) -> @location(0) vec4f {
   let p = fc.xy;
-  let cell = floor((p - u.grid0) / u.pitch);
+  let cell = clamp(floor((p - u.grid0) / u.pitch), vec2f(0.0), vec2f(7.0));   // outside the grid, the edge pads still light the body
   var surf = vec3f(0.0);
   var a = 0.0;
   var glow = vec3f(0.0);
+  var onPad = 0.0;
   for (var dy = -1; dy <= 1; dy++) {
     for (var dx = -1; dx <= 1; dx++) {
       let c = cell + vec2f(f32(dx), f32(dy));
@@ -34,22 +35,38 @@ fn sdBox(p: vec2f, b: vec2f, r: f32) -> f32 {
       let pd = pads[i];
       let pr = pads[64u + i].x;
       let lit = pd.w;
-      let half = u.pad * 0.5 * (1.0 - 0.03 * pr);
+      let half = u.pad * 0.5;   // capacitive pads: they never move or change shape when hit, they only light up
       let lp = p - (u.grid0 + c * u.pitch + u.pad * 0.5);
       let d = sdBox(lp, half, u.radius);
       // a little light spills out around the pad
-      glow += pd.rgb * lit * lit * exp(-max(d, 0.0) / u.glowR) * 0.16 * step(0.0, d);
+      glow += pd.rgb * lit * lit * exp(-max(d, 0.0) / u.glowR) * u.spare * step(0.0, d);   // spare = spill strength
       if (d < 0.0) {
-        // a flat silicone face: even colour, a soft brighter middle where the LED sits, nothing sculpted
+        onPad = 1.0;
+        // a flat silicone face with the LED glowing through: a richer colour, a soft brighter middle and a tiny hot core
         let uvc = lp / u.pad;
         let hot = exp(-dot(uvc, uvc) * 3.0);
-        let emit = pd.rgb * (0.8 + 0.22 * hot) * (0.6 + 0.5 * lit) * (1.0 - 0.18 * pr);
-        let rubber = vec3f(0.6, 0.61, 0.63);
+        let core = exp(-dot(uvc, uvc) * 16.0);
+        let gry = dot(pd.rgb, vec3f(0.3, 0.59, 0.11));
+        let rich = clamp(mix(vec3f(gry), pd.rgb, 1.45), vec3f(0.0), vec3f(1.0));
+        let emit = rich * (0.8 + 0.22 * hot) * (0.6 + 0.5 * lit) * (1.0 - 0.12 * pr) + (rich * 0.3 + vec3f(0.05)) * core * lit;
+        // unlit: the picture's own pad, or on the dim deck a rubber top drawn here
+        var rubber = vec3f(0.6, 0.61, 0.63);
+        if (u.dark > 0.5) { rubber = mix(vec3f(0.265, 0.27, 0.285), vec3f(0.17, 0.175, 0.19), c.y / 7.0); }
         surf = mix(rubber, emit, smoothstep(0.03, 0.4, lit));
         a = smoothstep(0.0, 1.2, -d) * clamp(lit * 2.4, 0.0, 1.0);
+        if (u.dark > 0.5) {
+          a = smoothstep(0.0, 1.2, -d);
+          // raised, not engraved: the top and left edges catch the light, the bottom and right fall away
+          let q = abs(lp) / half;
+          var n = vec2f(0.0, sign(lp.y));
+          if (q.x > q.y) { n = vec2f(sign(lp.x), 0.0); }
+          let rim = 1.0 - smoothstep(0.0, u.pad.y * 0.07, -d);
+          surf *= 1.0 + rim * dot(n, vec2f(-0.45, -0.9)) * mix(0.55, 0.25, smoothstep(0.03, 0.4, lit));
+        }
       }
     }
   }
+  glow *= 1.0 - 0.8 * onPad;   // spill lights the body between pads, not the faces of dark pads
   let ga = clamp(max(glow.r, max(glow.g, glow.b)), 0.0, 1.0);
   return vec4f(surf * a + glow * (1.0 - a), max(a, ga));
 }
@@ -66,6 +83,7 @@ export class PadField {
   private level = new Float32Array(64);
   private press = new Float32Array(64);
   private ripples: Ripple[] = [];
+  private hover = -1;
   private data = new Float32Array(128 * 4);
   private t = 0;
   private nextHit = 0.6;
@@ -102,6 +120,9 @@ export class PadField {
     this.ripples.push({ r, c, t0: this.t, amp });
     if (this.ripples.length > 12) this.ripples.shift();
   }
+
+  /** the pad under the pointer lights fully while it stays there (-1: none) */
+  setHover(i: number) { this.hover = i; if (this.still) { for (let n = 0; n < 64; n++) this.level[n] = n === i ? 1 : this.base[n]; this.draw(); } }
 
   /** pointer position in canvas CSS pixels -> the pad under it, or null */
   padAt(x: number, y: number): [number, number] | null {
@@ -170,7 +191,7 @@ export class PadField {
     this.t += dt;
     // someone is playing: every so often a pad gets hit
     if (this.autoplay && this.t > this.nextHit) {
-      this.hit(Math.floor(Math.random() * 8), Math.floor(Math.random() * 8), 0.55 + Math.random() * 0.45);
+      this.hit(Math.floor(Math.random() * 8), Math.floor(Math.random() * 8), 0.45 + Math.random() * 0.35);
       this.nextHit = this.t + 0.45 + Math.random() * 0.9;
     }
     const fade = Math.exp(-dt * 5);
@@ -185,9 +206,9 @@ export class PadField {
       let boost = 0;
       for (const rp of this.ripples) {
         const age = this.t - rp.t0, dist = Math.hypot(r - rp.r, c - rp.c), front = dist - age * 9;
-        boost = Math.max(boost, rp.amp * Math.exp(-(front * front) / 1.4) * Math.exp(-age * 1.1));
+        boost = Math.max(boost, rp.amp * (dist < 0.5 ? 1 : 0.5) * Math.exp(-(front * front) / 0.5) * Math.exp(-age * 1.8));   // the hit pad flashes; the ring is thinner and fainter
       }
-      const want = Math.min(1, this.base[i] + boost * 0.85);
+      const want = i === this.hover ? 1 : Math.min(1, this.base[i] + boost * 0.85);
       this.level[i] += (want - this.level[i]) * (want > this.level[i] ? 0.6 : 1 - Math.exp(-dt * 3));
     }
   }
@@ -204,7 +225,7 @@ export class PadField {
     if (this.gpu) {
       const { device, ctx, pipe, ubuf, sbuf, bind } = this.gpu;
       device.queue.writeBuffer(ubuf, 0, new Float32Array([
-        w, h, g.margin * k, g.margin * k, g.pitch[0] * k, g.pitch[1] * k, g.pad[0] * k, g.pad[1] * k, g.radius * k, this.t, g.pitch[0] * k * 0.09, 0,
+        w, h, g.margin * k, g.margin * k, g.pitch[0] * k, g.pitch[1] * k, g.pad[0] * k, g.pad[1] * k, g.radius * k, g.dark ? 1 : 0, g.pitch[0] * k * g.spill[0], g.spill[1],
       ]));
       device.queue.writeBuffer(sbuf, 0, this.data);
       const enc = device.createCommandEncoder();
@@ -218,7 +239,7 @@ export class PadField {
     for (let i = 0; i < 64; i++) {
       const lit = this.level[i]; if (lit < 0.04) continue;
       const r = Math.floor(i / 8), col = i % 8, pr = this.press[i];
-      const s = 1 - 0.04 * pr;
+      const s = 1;
       const pw = g.pad[0] * k * s, ph = g.pad[1] * k * s;
       const x = (g.margin + col * g.pitch[0]) * k + (g.pad[0] * k - pw) / 2, y = (g.margin + r * g.pitch[1]) * k + (g.pad[1] * k - ph) / 2;
       const rgb = `${Math.round(this.colors[i * 3] * 255)},${Math.round(this.colors[i * 3 + 1] * 255)},${Math.round(this.colors[i * 3 + 2] * 255)}`;

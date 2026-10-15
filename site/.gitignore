@@ -4,3 +4,4 @@ out/
 next-env.d.ts
 *.tsbuildinfo
 public/img/push2-device.svg
+public/img/push2-lights.svg

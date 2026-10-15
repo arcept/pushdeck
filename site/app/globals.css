@@ -31,25 +31,42 @@ h1, h2, h3, p, figure { margin: 0; }
 @keyframes padwave { 0%, 100% { opacity: .16; } 12% { opacity: .95; } 30% { opacity: .16; } }
 @keyframes padcore { 0%, 100% { opacity: .9; } 12% { opacity: 1; } 40% { opacity: .75; } }
 
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; background: rgba(11,11,15,.72); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-.nav-in { max-width: calc(var(--container) + 2 * var(--gutter)); margin: 0 auto; padding: 12px var(--gutter); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.nav nav { display: flex; gap: 26px; font-size: 14px; color: var(--mut); }
-.nav nav a { text-decoration: none; } .nav nav a:hover { color: var(--tx); }
+/* nav: no bar. The logo floats top-left, a pill of links + GitHub floats top-right, both the same height and lined up with the page */
+.nav { position: fixed; top: 16px; left: 0; right: 0; z-index: 30; pointer-events: none; }
+.nav-in { max-width: calc(var(--container) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.chip { pointer-events: auto; height: 50px; display: flex; align-items: center; border-radius: 999px; background: rgba(17,17,23,.6); border: 1px solid rgba(255,255,255,.09); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05); }
+.nav .brand { pointer-events: auto; height: 50px; padding: 0 4px; }
+.links { gap: 2px; padding: 0 6px 0 8px; font-size: 14px; font-weight: 600; color: var(--mut); }
+.links a { text-decoration: none; padding: 8px 14px; border-radius: 99px; transition: background .2s, color .2s; }
+.links a:hover { color: var(--tx); background: rgba(255,255,255,.07); }
+.links .gh { width: 38px; height: 38px; padding: 0; margin-left: 6px; display: grid; place-items: center; color: var(--tx); background: rgba(255,255,255,.08); }
+.links .gh:hover { background: rgba(255,255,255,.16); }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 24px; border-radius: 999px; font-weight: 700; font-size: 15px; text-decoration: none; border: 1px solid var(--line); transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 24px; border-radius: 999px; font-weight: 700; font-size: 15px; text-decoration: none; border: 1px solid var(--line); transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
 .btn:hover { transform: translateY(-3px) scale(1.03); }
 .btn.small { padding: 8px 16px; font-size: 14px; }
+.ext { opacity: .65; margin-left: -4px; }
+footer a { display: inline-flex; align-items: center; gap: 5px; }
 .btn.primary { background: var(--tx); color: #0b0b0f; border-color: var(--tx); }
 .btn.primary.muted { background: transparent; color: var(--tx); border-color: var(--line); }
 .btn.ghost { background: rgba(255,255,255,.05); }
+.btn { transition: transform .35s cubic-bezier(.34,1.56,.64,1), background-color .25s, border-color .25s, color .25s; }
+.btn svg { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+.btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+.btn.primary:hover svg { transform: translateY(2px); }
+.btn.ghost:hover { background: rgba(174,176,255,.14); border-color: rgba(174,176,255,.5); }
+.btn.ghost:hover .ext { transform: translate(2px, -2px); opacity: 1; }
+.btn:focus-visible, .links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.btn:active { transform: translateY(-1px) scale(.99); }
 
 section { padding: 0 var(--gutter); }
 
 /* ---------- hero ---------- */
 /* --wf: the app window's width at the end of the hero move; --dh: the device's width at the start (smaller, so it grows into the window) */
 .hero { --dh: min(860px, 92vw); position: relative; padding-top: 196px; padding-bottom: 40px; }   /* 196 + the 64px nav = ~260px of air above the copy */
-.hero.is-scroll { --dh: min(860px, 62vw); height: 100vh; padding-bottom: 0; perspective: 1600px; perspective-origin: 50% 40%; }
-.hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--container); margin: 0 auto; }
+.hero.is-scroll { --dh: min(1100px, 80vw); height: 100vh; padding-bottom: 0; perspective: 1150px; perspective-origin: 50% 35%; }
+.hero.is-scroll .hero-copy { top: max(0px, calc(40vh - 339px)); }   /* the block's middle sits at ~40% of the screen height (it is ~290px tall, starting 196px down), without moving the device */
+.hero-copy { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--container); margin: 0 auto; }
 .kicker { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 99px; background: rgba(255,255,255,.05); border: 1px solid var(--line); color: var(--mut); font-size: 13px; font-weight: 600; }
 .kicker .dots { display: grid; grid-template-columns: repeat(2, 7px); gap: 2px; }
 .kicker .dots i { width: 7px; height: 7px; border-radius: 2px; }
@@ -60,43 +77,76 @@ section { padding: 0 var(--gutter); }
 .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
 
 /* the device's place in the hero, with the two app pieces beside it */
-.slot { position: relative; width: var(--dh); aspect-ratio: 1520 / 1260; margin: 64px auto 0; }
+.slot { position: relative; width: var(--dh); aspect-ratio: 1520 / 1460; margin: 20px auto 0; }   /* the faded cables give the air above the device */
 .layer { position: absolute; z-index: 3; }
-.card { filter: drop-shadow(0 30px 40px rgba(0,0,0,.55)); }   /* static; the images carry their own rounded edges */
+.layer .float, .tilt, .win { will-change: transform; }   /* moved every frame by GSAP: keep them on their own layers so their shadows aren't redrawn */
+.card { filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)) drop-shadow(0 18px 28px rgba(0,0,0,.45)) drop-shadow(0 50px 70px rgba(0,0,0,.5)); }   /* static, stacked: contact + near + ambient. The images carry their own rounded edges */
+.l-profile .card { filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)) drop-shadow(0 22px 34px rgba(0,0,0,.45)) drop-shadow(0 60px 80px rgba(0,0,0,.5)); }   /* the farther piece: a softer, wider shadow */
 .card img { width: 100%; }
-.l-profile { width: 220px; right: calc(100% - 90px); top: 6%; }
-.l-menu { width: 210px; left: calc(100% - 90px); top: -2%; }
+.l-profile { width: 236px; right: calc(100% - 100px); top: 18%; }
+.l-menu { width: 190px; left: calc(100% - 80px); top: 14%; }
 
 /* the app window: where the device ends up. Its start position is set by GSAP from .slot */
 .tilt { position: absolute; transform-style: preserve-3d; z-index: 2; }   /* size and place are set by GSAP (see Landing.tsx) */
-.win { position: relative; width: 100%; aspect-ratio: 1600 / 1000; border-radius: 14px; }
+.win { position: relative; width: 100%; aspect-ratio: 1600 / 1000; border-radius: 14px; transform-style: preserve-3d; }
+.win-device, .dev-fade { transform-style: preserve-3d; }
 .win-ui { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 14px; box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08); }
 .win-device { position: absolute; }
-.win-shadow { position: absolute; inset: 8% 4% -6%; border-radius: 40px; background: radial-gradient(closest-side, rgba(0,0,0,.7), transparent); transform: translateY(6%); }
-.dev-fade .device-art, .dev-fade .device-pads { transition: opacity .5s; }
-.dev-fade.off .device-art, .dev-fade.off .device-pads { opacity: 0; }   /* ?pads=fade only: the real screenshot shows through; the display keeps playing */
+.dev-fade .device-art, .dev-fade .device-lights, .dev-fade .device-pads { transition: opacity .5s; }
+.dev-fade.off .device-art, .dev-fade.off .device-lights, .dev-fade.off .device-pads { opacity: 0; }
+.dev-fade.off .pads3d { visibility: hidden; }   /* ?pads=fade only: the real screenshot shows through; the display keeps playing */
 
 .device { position: relative; width: 100%; }
-.device-art { width: 100%; height: 100%; user-select: none; }
+.front { position: absolute; inset: 0; }
+/* solid: the device as a slab. The top face is .front at z=0; four sides fold back from the body's edges; a contact shadow sits under it.
+   Light comes from the top-left front: the front edge catches a thin highlight, the right side is darkest. Nothing here animates except opacity. */
+.device.solid { transform-style: preserve-3d; }
+.body3d { position: absolute; transform-style: preserve-3d; pointer-events: none; }
+.body3d i { position: absolute; display: block; }
+.side { backface-visibility: hidden; }
+.s-bottom { left: 0; top: 100%; width: 100%; height: var(--t); transform-origin: top; transform: rotateX(-90deg); background: linear-gradient(180deg, #8a8e94 0, #4a4d52 2.5%, #303236 12%, #222427 55%, #17181b 100%); }
+.s-top { left: 0; bottom: 100%; width: 100%; height: var(--t); transform-origin: bottom; transform: rotateX(90deg); background: linear-gradient(0deg, #3a3d41, #1a1b1e); }
+.s-left { right: 100%; top: 0; width: var(--t); height: 100%; transform-origin: right; transform: rotateY(-90deg); background: linear-gradient(270deg, #6f7378 0, #3a3d41 3%, #2a2c30 30%, #1c1d20 100%); }
+.s-right { left: 100%; top: 0; width: var(--t); height: 100%; transform-origin: left; transform: rotateY(90deg); background: linear-gradient(90deg, #5a5d62 0, #2a2c30 3%, #1b1c1f 35%, #111214 100%); }
+.floor { inset: -4% -5% -9%; transform: translateZ(calc(var(--t) * -1 - 2px)); background: radial-gradient(closest-side, rgba(0,0,0,.85), rgba(0,0,0,.45) 60%, rgba(0,0,0,0)); }
+.knobs3d { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+.knob3d { position: absolute; aspect-ratio: 1; transform-style: preserve-3d; }
+.knob3d i { position: absolute; inset: 0; border-radius: 50%; transform: translateZ(calc(var(--kh) * var(--k))); background: linear-gradient(135deg, #2e3135 0%, #17191c 45%, #08090a 100%); }   /* stacked discs: their rims form the lit wall */
+.knob3d i.cap { background: linear-gradient(150deg, #212428, #15171a); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }   /* a flat, matte top: no highlight dome */
+/* the pads: short translucent-rubber blocks. Four walls each, folded back from the top face's edges (backface culled, so only the ones you can see are drawn) */
+.pads3d { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+.pad3d { position: absolute; transform-style: preserve-3d; }
+.pw { position: absolute; display: block; backface-visibility: hidden; }
+.pw-b { left: 0; top: 100%; width: 100%; height: var(--pad-h); transform-origin: top; transform: rotateX(-90deg); background: linear-gradient(180deg, #8a8d94, #4a4d52 35%, #25272b); }
+.pw-t { left: 0; bottom: 100%; width: 100%; height: var(--pad-h); transform-origin: bottom; transform: rotateX(90deg); background: linear-gradient(0deg, #2a2c30, #131416); }
+.pw-l { right: 100%; top: 0; width: var(--pad-h); height: 100%; transform-origin: right; transform: rotateY(-90deg); background: linear-gradient(270deg, #3a3d42, #17181b); }
+.pw-r { left: 100%; top: 0; width: var(--pad-h); height: 100%; transform-origin: left; transform: rotateY(90deg); background: linear-gradient(90deg, #2a2c30, #101113); }
+.device-pads.lift { transform: translateZ(var(--pad-h)); }
+.shade { position: absolute; pointer-events: none; background: linear-gradient(180deg, rgba(4,4,6,.5) 0%, rgba(4,4,6,.72) 40%, rgba(4,4,6,.9) 100%); }
+.disp-glow { position: absolute; pointer-events: none; background: radial-gradient(closest-side, rgba(150,200,255,.16), rgba(150,200,255,.05) 60%, transparent); }
+.sheen { position: absolute; pointer-events: none; border-radius: 3px; background: linear-gradient(165deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.02) 35%, rgba(0,0,0,0) 55%, rgba(0,0,0,.28) 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.14); }
+.device-art { width: 100%; height: 100%; user-select: none; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 15%); mask-image: linear-gradient(180deg, transparent 0%, #000 15%); }   /* the cables fade out upward */
+.device-lights { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 15%); mask-image: linear-gradient(180deg, transparent 0%, #000 15%); }
+.dz-art .device-lights, .dz-art img + img { -webkit-mask-image: none; mask-image: none; }
 .device-display, .device-pads { position: absolute; display: block; }
 .device-display { object-fit: fill; }
 .device-pads { cursor: pointer; touch-action: pan-y; }
 /* the app's own text, over its top-left corner once the window has landed */
 .app-over { position: absolute; z-index: 4; padding-left: 56px; pointer-events: none; }
-.app-grad { position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(90deg, rgba(11,11,15,.97) 0%, rgba(11,11,15,.9) 30%, rgba(11,11,15,.55) 46%, rgba(11,11,15,0) 62%); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 78%); mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 78%); }
-.app-text { position: relative; max-width: 540px; }
+.app-grad { position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(90deg, rgba(11,11,15,.97) 0%, rgba(11,11,15,.93) 32%, rgba(11,11,15,.65) 48%, rgba(11,11,15,0) 64%); }
+.app-text { position: relative; max-width: 560px; }
+.points { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
+.points li { display: flex; gap: 14px; align-items: flex-start; color: var(--mut); font-size: 16px; line-height: 1.45; }
+.points li svg { flex: none; margin-top: 1px; color: var(--accent); width: 20px; height: 20px; padding: 7px; box-sizing: content-box; border-radius: 10px; background: rgba(174,176,255,.1); }
+.points li span { padding-top: 6px; }
+.points b { color: var(--tx); font-weight: 700; }
 .app-text h2 { max-width: 14ch; }
 .hero-dim { position: absolute; inset: 0; z-index: 8; background: #000; opacity: 0; pointer-events: none; }
 /* everything after the hero slides up over it like a card */
 .after.is-over { position: relative; z-index: 10; background: var(--bg); border-radius: 32px 32px 0 0; border-top: 1px solid var(--line); box-shadow: 0 -40px 100px rgba(0,0,0,.6); padding-top: 1px; }
-.rise .device { filter: drop-shadow(0 40px 50px rgba(0,0,0,.6)); }
+.slot .rise .device { filter: drop-shadow(0 40px 50px rgba(0,0,0,.6)); }
 .still-app .frame { margin-top: 36px; } .still-app .frame img { transform: none; }
 
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: calc(var(--container) + 2 * var(--gutter)); margin: 80px auto 100px; }
-.stats div { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 4px; }
-.stats b { font-size: clamp(20px, 2.6vw, 32px); }
-.stats div:nth-child(1) b { color: var(--p1); } .stats div:nth-child(2) b { color: var(--p2); } .stats div:nth-child(3) b { color: var(--p6); } .stats div:nth-child(4) b { color: var(--p5); }
-.stats span { color: var(--mut); font-size: 14px; }
 
 .band { max-width: calc(var(--container) + 2 * var(--gutter)); margin: 0 auto; padding-top: 90px; padding-bottom: 90px; }
 .tag { display: inline-block; color: var(--accent); font-size: 13px; font-weight: 700; margin-bottom: 14px; padding: 4px 12px; border-radius: 99px; background: rgba(174,176,255,.1); }
@@ -109,9 +159,17 @@ h2 { font-size: clamp(30px, 4.4vw, 56px); line-height: 1.08; letter-spacing: -.0
 
 /* pinned profiles section */
 .pin { min-height: 100vh; display: flex; align-items: center; }
-.pin-inner { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: center; width: 100%; max-width: var(--container); margin: 0 auto; }
-.pin-stage { perspective: 1600px; }
-.pin-stage .device { transform: rotateX(14deg) rotateY(-10deg); }
+.pin-inner { display: grid; gap: 28px; width: 100%; max-width: var(--container); margin: 0 auto; }
+.pin-head { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; }
+.dz { position: relative; width: 100%; -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, #000 52%, transparent 100%); mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, #000 52%, transparent 100%); }
+.dz-soft, .dz-sharp { position: absolute; inset: 0; overflow: hidden; }
+.dz-soft { filter: blur(9px); }   /* static: the edges fall away through this blurred copy */
+.dz-sharp { -webkit-mask-image: radial-gradient(ellipse 56% 64% at 50% 52%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 56% 64% at 50% 52%, #000 58%, transparent 100%); }
+.dz-art { position: absolute; }
+.dz-art img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dz-glow { position: absolute; mix-blend-mode: screen; opacity: 0; transition: opacity .8s; pointer-events: none; }
+.dz-screen { position: absolute; object-fit: fill; opacity: 0; transition: opacity .6s; }
+.dz-glow.on, .dz-screen.on { opacity: 1; }
 .caps { position: relative; margin-top: 30px; display: grid; }
 .cap { grid-area: 1 / 1; padding-right: 10px; }
 .cap h3 { display: flex; align-items: center; gap: 12px; font-size: 26px; margin-bottom: 10px; }
@@ -140,7 +198,7 @@ figcaption { color: var(--mut); font-size: 14px; margin-top: 12px; }
 .installs p { color: var(--mut); font-size: 14px; }
 .cmd { display: flex; width: 100%; gap: 8px; align-items: stretch; }
 .cmd code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font-family: var(--mono); font-size: 13px; }
-.cmd button { all: unset; cursor: pointer; padding: 0 14px; border-radius: 12px; background: var(--tx); color: #0b0b0f; font-weight: 700; font-size: 13px; }
+.cmd button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border-radius: 12px; background: var(--tx); color: #0b0b0f; font-weight: 700; font-size: 13px; }
 .cmd button:disabled { opacity: .35; cursor: not-allowed; }
 .req { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 8px; color: var(--mut); font-size: 15px; }
 .req li::before { content: "✓"; color: var(--green); margin-right: 10px; }
@@ -151,14 +209,14 @@ footer .ver { color: var(--mut2); font-size: 12px; font-weight: 400; }
 footer a:hover { color: var(--tx); }
 
 @media (max-width: 899px) {
-  .nav nav { display: none; }
+  .links a:not(.gh) { display: none; } .links { padding: 0 6px; } .chip { height: 46px; }
+
   .hero { padding-top: 130px; }
   .slot { margin-top: 48px; }
   .l-profile { width: 30%; right: auto; left: -3%; top: auto; bottom: -14%; }
   .l-menu { width: 27%; left: auto; right: -3%; top: auto; bottom: -18%; }
-  .stats { grid-template-columns: 1fr 1fr; margin: 90px auto 60px; }
   .pin { min-height: 0; padding-top: 40px; padding-bottom: 40px; }
-  .pin-inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .pin-head { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .caps { gap: 22px; } .cap { grid-area: auto; }
   .progress { display: none; }
   .grid, .two, .installs { grid-template-columns: minmax(0, 1fr); }
