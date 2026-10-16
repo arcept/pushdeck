@@ -1,7 +1,7 @@
 # Homebrew cask for Push Deck. It lives in the tap repository (arcept/homebrew-tap, file Casks/pushdeck.rb);
 # this copy is the template. On each release, set `version` and `sha256` (the number inside PushDeck-<version>-arm64.dmg.sha256).
 cask "pushdeck" do
-  version "0.1.0"
+  version "1.0.0"
   sha256 "REPLACE_WITH_SHA256_OF_THE_DMG"
 
   url "https://github.com/arcept/pushdeck/releases/download/v#{version}/PushDeck-#{version}-arm64.dmg"

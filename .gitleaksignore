@@ -1,0 +1,8 @@
+# Random per-build keys of the landing page generator (Next.js) that were committed once inside its build cache (site/.next). They protect nothing
+# (the site is a static export). The folder is untracked and ignored now.
+bc61b0eb526e938d87433f1778c57cecb11106a1:site/.next/cache/.rscinfo:generic-api-key:1
+bc61b0eb526e938d87433f1778c57cecb11106a1:site/.next/cache/.previewinfo:generic-api-key:1
+bc61b0eb526e938d87433f1778c57cecb11106a1:site/.next/cache/.previewinfo:generic-api-key:1
+bc61b0eb526e938d87433f1778c57cecb11106a1:site/.next/prerender-manifest.json:generic-api-key:58
+bc61b0eb526e938d87433f1778c57cecb11106a1:site/.next/prerender-manifest.json:generic-api-key:59
+bc61b0eb526e938d87433f1778c57cecb11106a1:site/.next/server/server-reference-manifest.json:generic-api-key:4

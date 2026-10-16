@@ -17,7 +17,7 @@ body:
     id: version
     attributes:
       label: Push Deck version
-      description: Shown in the setup screen and the splash, for example v0.1.0
+      description: Shown in the setup screen and the splash, for example v1.0.0
     validations:
       required: true
   - type: input

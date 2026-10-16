@@ -4,6 +4,10 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+## 1.0.0 (2026-10-17)
+
+First public release. Push Deck turns an Ableton Push 2 into a per-app controller and live display for your Mac: profiles that follow the app in front, pads and buttons that send shortcuts and actions, window shortcuts, now playing, Claude and Codex usage, and a replica of the Push to set it all up on screen.
+
 - Window pads can be selected and personalised: rename them, change their colour and the colour while you hold them, and turn on "Confirm before running" (same in every profile; "Reset pad" puts the defaults back). They still can't be removed, moved or given another action, and the whole set is switched on or off in Settings and per profile.
 - Three new actions in "Add an action": **Close window** (the red button: an app with unsaved work still asks), **Minimize window** (the yellow button) and **Full screen**, for any pad. A full-screen window leaves full screen first when minimized, and Close works from full screen too. Also available as a "Window" choice in the pad editor.
 - The editor no longer shows the "Selected control / The one you picked" heading, and "Add an action" is always folded to start with.
