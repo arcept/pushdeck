@@ -86,7 +86,7 @@ Goal: make the Push a daily-use device: control apps, show ambient info, switch 
 
 **Done:** standalone app (bundled Python 3.12, prebuilt helpers, no Xcode needed), `.dmg` script, release workflow, one-line installer (`get.sh`), Homebrew cask template, smoke test, performance pass (daemon ~100 MB, window GPU about 9%), README with screenshots, public repo.
 
-**Next:** landing page; first release (tag `v0.1.0` when the owner says); Homebrew tap repo (`arcept/homebrew-tap`).
+**Released:** 1.0.0 on 2026-10-17 (GitHub Release with the arm64 .dmg; Homebrew tap `arcept/homebrew-tap` with the cask; on each release set `version` and `sha256` in the tap's `Casks/pushdeck.rb`). **Next:** landing page points at the release; test the one-line installer on a clean Mac.
 
 **Later:**
 - In-app "update available" (check GitHub Releases).

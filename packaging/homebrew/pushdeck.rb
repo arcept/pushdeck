@@ -10,7 +10,7 @@ cask "pushdeck" do
   homepage "https://github.com/arcept/pushdeck"
 
   depends_on arch: :arm64
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "Push Deck.app"
 
