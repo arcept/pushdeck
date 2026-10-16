@@ -62,7 +62,8 @@ final class WinGeoTests: XCTestCase {
     }
 
     func testFullScreenHasNoGeometry() {
-        XCTAssertNil(t(.fullScreen))
+        XCTAssertNil(t(.fullScreen)); XCTAssertNil(t(.close)); XCTAssertNil(t(.minimize))
+        XCTAssertEqual(Op(rawValue: "close"), .close); XCTAssertEqual(Op(rawValue: "minimize"), .minimize)
         XCTAssertEqual(Op(rawValue: "full-screen"), .fullScreen)
     }
 

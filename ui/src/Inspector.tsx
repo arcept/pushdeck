@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { DisplayIcon, Icon } from "./icons";
 import { useApp } from "./ctx";
 import type { Action, Ctl } from "./daemon";
-import { WINDOW_LAYER, controlKind, ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, PALETTE, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
+import { controlKind, ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ADDABLE, PALETTE, PAD_COLOURS, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
 import { useScenePage } from "./scenePage";
-import { Field, Switch, CustomColour, useToast } from "./ui";
+import { Field, Switch, CustomColour, TextArea, TextField, useToast } from "./ui";
 import { fmtTime } from "./profileFile";
 
 const isZone = (id: string) => /^btn-(upper|lower)-\d$/.test(id);
@@ -25,7 +25,7 @@ export function AppField({ value, onChange, className = "", placeholder }: { val
   };
   return (<div>
     <div style={{ display: "flex", gap: 6 }}>
-      <input type="text" className={className} style={{ flex: 1, minWidth: 0 }} value={value} placeholder={placeholder} aria-label="App name" onChange={(e) => onChange(e.target.value)} />
+      <TextField className={className} style={{ flex: 1, minWidth: 0 }} value={value} placeholder={placeholder} aria-label="App name" onChange={onChange} />
       <button type="button" className="btn" disabled={busy} onClick={choose} title="Pick the app from your Mac">{busy ? "Choosing..." : "Choose..."}</button>
     </div>
     {found === false && <div className="muted" style={{ fontSize: 12, marginTop: 5, color: "var(--bad)" }}>macOS can't find an app with this name. Use Choose... to pick it, or check the spelling.</div>}
@@ -54,6 +54,27 @@ export function ShortcutField({ value, onChange }: { value: string; onChange: (v
   );
 }
 
+function ColourFields({ ctl, set, pad, accent }: { ctl: Ctl; set: (c: Ctl) => void; pad: boolean; accent: string }) {
+  return (
+    <div className="isect">
+        <h3>{pad ? "Pad colour" : "Light colour"}</h3>
+        <div className="swatches" role="group" aria-label="Colour">
+          <button className="swatch none" aria-pressed={!ctl.color} title="Off" aria-label="Off" onClick={() => set({ ...ctl, color: undefined })} />
+          <button className="swatch" style={{ background: accent }} aria-pressed={ctl.color === accent} title="Profile colour" aria-label="Profile colour" onClick={() => set({ ...ctl, color: accent })} />
+          {PAD_COLOURS.map((c) => <button key={c} className="swatch" style={{ background: c }} aria-pressed={ctl.color?.toLowerCase() === c} title={colourName(c, accent)} aria-label={colourName(c, accent)} onClick={() => set({ ...ctl, color: c })} />)}
+          <CustomColour value={ctl.color ?? accent} active={!!ctl.color && ctl.color !== accent && !PAD_COLOURS.includes(ctl.color.toLowerCase())} onChange={(v) => set({ ...ctl, color: v })} />
+        </div>
+        <Field label="Colour while you hold it" hint="The colour the pad flashes while it is pressed. Default is white.">
+          <div className="swatches" role="group" aria-label="Colour while pressed">
+            <button className="swatch dflt" aria-pressed={!ctl.states?.active} title="Default (white)" aria-label="Default (white)" onClick={() => set({ ...ctl, states: { ...ctl.states, active: undefined } })}>Default</button>
+            {PAD_COLOURS.slice(0, 10).map((c) => <button key={c} className="swatch" style={{ background: c }} aria-pressed={ctl.states?.active?.toLowerCase() === c} title={colourName(c, accent)} aria-label={colourName(c, accent)} onClick={() => set({ ...ctl, states: { ...ctl.states, active: c } })} />)}
+            <CustomColour value={ctl.states?.active ?? "#ffffff"} active={!!ctl.states?.active && !PAD_COLOURS.slice(0, 10).includes(ctl.states.active.toLowerCase())} onChange={(v) => set({ ...ctl, states: { ...ctl.states, active: v } })} />
+          </div>
+        </Field>
+    </div>
+  );
+}
+
 function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
   const a = ctl.action, kind = actionKind(a?.type);
   const pick = (type: string) => { const k = actionKind(type)!; set({ ...ctl, action: { type, [k.field]: actionDefault(k) } as Action }); };
@@ -61,21 +82,23 @@ function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
     <>
       <div className="kinds" role="group" aria-label="Action type">
         {ACTION_KINDS.map((k) => (
-          <button key={k.type} className="kind" aria-pressed={a?.type === k.type} onClick={() => pick(k.type)}><Icon name={k.icon} size={18} />{k.label}</button>))}
-        <button className="kind" aria-pressed={!a} onClick={() => set({ ...ctl, action: undefined })}><Icon name="x" size={18} />None</button>
+          <button key={k.type} className="kind" aria-pressed={a?.type === k.type} onClick={() => pick(k.type)}><Icon name={k.icon} size={17} /><span>{k.label}</span></button>))}
+        <button className="kind none" aria-pressed={!a} onClick={() => set({ ...ctl, action: undefined })}><Icon name="x" size={17} /><span>No action</span></button>
       </div>
       {a && kind && (
         <Field label={kind.fieldLabel} hint={kind.hint}>
           {a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
             : a.type === "media" ? (
               <select value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
-            : a.type === "text" || a.type === "shell" ? <textarea className="mono" rows={3} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(e) => set({ ...ctl, action: { ...a, [kind.field]: e.target.value } })} />
+            : a.type === "window" ? (
+              <select value={String(a.op ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, op: e.target.value } })}>{WINDOW_ADDABLE.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
+            : a.type === "text" || a.type === "shell" ? <TextArea className="mono" rows={3} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, [kind.field]: v } })} />
             : a.type === "app" ? <AppField value={String(a.name ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
-            : <input type="text" className={a.type === "url" ? "mono" : ""} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(e) => set({ ...ctl, action: { ...a, [kind.field]: e.target.value } })} />}
+            : <TextField className={a.type === "url" ? "mono" : ""} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, [kind.field]: v } })} />}
         </Field>)}
       {a?.type === "keys" && String(a.keys ?? "").trim().toLowerCase() === "fn" && <Switch checked={!!a.hold} onChange={(v) => set({ ...ctl, action: { ...a, hold: v } })}
         label={<span>Hold while pressed<span className="muted" style={{ display: "block", fontWeight: 500, fontSize: 12, marginTop: 3 }}>Holds Fn down for as long as the pad is down, and lets go when you release it. Dictation tools like Wispr Flow listen for that.</span></span>} />}
-      {a && <Switch checked={!!ctl.risky} onChange={(v) => set({ ...ctl, risky: v })} label={<span>Ask before running<span className="muted" style={{ display: "block", fontWeight: 500, fontSize: 12, marginTop: 3 }}>Press twice: the first press arms it, and a second press within 2 seconds runs it. Use it for anything you can’t undo.</span></span>} />}
+      {a && <Switch checked={!!ctl.risky} onChange={(v) => set({ ...ctl, risky: v })} label={<span>Confirm before running<span className="muted" style={{ display: "block", fontWeight: 500, fontSize: 12, marginTop: 3 }}>Press twice to run it: the first press arms the pad, a second press within 2 seconds runs it. Good for anything you can’t undo.</span></span>} />}
     </>
   );
 }
@@ -92,14 +115,14 @@ export default function Inspector() {
       <ol className="steps">
         <li><b>Pick a control.</b> Click a pad, button or knob on the Push picture, or press it on your real Push.</li>
         <li><b>Say what it does.</b> Give it a label, a colour and an action.</li>
-        <li><b>Try it.</b> Press Test press, or press it on the Push.</li>
+        <li><b>Try it.</b> Press Try it now, or press it on the Push.</li>
       </ol>
       <p className="muted"><span className="kbd">⌘K</span> finds any control by name.</p></div></aside>);
   const name = d.controls[id]?.name ?? id;
   const gk = d.settings?.global_knobs?.[id];
   const si = SCENE_IDS.indexOf(id) >= 0 ? SCENE_IDS.indexOf(id) + scenePage * 8 : -1;
   const head = (title: string, chips: React.ReactNode) => (
-    <div className="head"><div className="coltitle"><b>Selected control</b><span>The one you picked</span></div><h2>{title}</h2><div className="id">{chips}<button className="btn ghost sm icon" style={{ marginLeft: "auto" }} aria-label="Deselect" title="Deselect this control" onClick={() => setSelected(null)}><Icon name="x" size={14} /></button></div></div>);
+    <div className="head"><h2>{title}</h2><div className="id">{chips}<button className="btn ghost sm icon" style={{ marginLeft: "auto" }} aria-label="Deselect" title="Deselect this control" onClick={() => setSelected(null)}><Icon name="x" size={14} /></button></div></div>);
 
   if (gk) {
     const f = GLOBAL_FN[gk]; const v = gk === "volume" ? d.volume : gk === "leds" ? d.settings!.brightness : d.settings!.display_brightness;
@@ -128,12 +151,25 @@ export default function Inspector() {
     return (<aside className="inspector">{head(name, <span className="chipbadge warn">not assignable yet</span>)}<div className="tips">Per-profile functions for encoders and the touch strip are planned. Today the encoders marked on the replica are global.</div></aside>);
   }
 
-  if (controlKind(id, d.settings, d.controls[id]?.kind, profile) === "window") {   // a built-in window pad: nothing to edit, only where to switch it off
-    const w = WINDOW_LAYER[id], own = rawControls?.[id], covers = !!own && !!(own.label || own.action || own.color);
-    return (<aside className="inspector">{head(w.label ?? "Window shortcut", <span className="chipbadge accent">window shortcut</span>)}
-      <div className="isect"><p className="hint" style={{ marginTop: 0 }}>Built in: moves and sizes the window in front. Press the same pad again to step through half, two-thirds and one-third; a full-screen window leaves full screen first.</p>
-        {covers && <p className="hint">This pad covers “{own!.label || "a pad"}” in this profile. It stays saved and comes back when window shortcuts are turned off for this profile.</p>}
-        <div className="row wrap"><button className="btn" onClick={() => openSettings("general")}><Icon name="grid" size={16} />Window shortcut settings</button></div></div></aside>);
+  if (controlKind(id, d.settings, d.controls[id]?.kind, profile) === "window") {   // a built-in window pad: it stays where it is and does what it does; its name, colours and confirm can change
+    const w: Ctl = profile.controls[id] ?? {}, own = rawControls?.[id], covers = !!own && !!(own.label || own.action || own.color), edited = !!d.settings?.window_pad_edits?.[id];
+    const setW = (c: Ctl) => updateControl(id, c);
+    return (<aside className="inspector" aria-label="Inspector">{head(w.label || "Window shortcut", <span className="capmono" title={id}>{name} · window shortcut</span>)}
+      <div className="isect"><p className="hint" style={{ marginTop: 0 }}>Built in: it {summarize(w.action).replace("Window: ", "does ").toLowerCase()} on the window in front. It can't be removed or moved, and the whole set is switched on or off in Settings. Name and colours are the same in every profile.</p>
+        {covers && <p className="hint">This pad covers “{own!.label || "a pad"}” in this profile. It stays saved and comes back when window shortcuts are off for this profile.</p>}
+        <div className="row wrap"><button className="btn" onClick={() => openSettings("general")}><Icon name="grid" size={16} />Window shortcut settings</button></div></div>
+      <div className="isect"><h3>Name</h3>
+        <div className="field"><TextField value={w.label ?? ""} maxLength={24} aria-label="Name" onChange={(v) => setW({ ...w, label: v })} placeholder="Name" /><span className="hint">Shown on this pad in the app.</span></div></div>
+      <ColourFields ctl={w} set={setW} pad accent={profile.theme.accent} />
+      <div className="isect"><Switch checked={!!w.risky} onChange={(v) => setW({ ...w, risky: v })} label={<span>Confirm before running<span className="muted" style={{ display: "block", fontWeight: 500, fontSize: 12, marginTop: 3 }}>Press twice to run it: the first press arms the pad, a second press within 2 seconds runs it.</span></span>} /></div>
+      <div className="ifoot">
+        <div className="row">
+          <button className="btn primary" onClick={() => { if (w.risky) toast("Armed. Press Try it now again within 2 seconds to run it.", "info"); d.send({ type: "press", control: id }); }}><Icon name="play" size={15} />Try it now</button>
+          <span className="spacer" />
+          <button className="btn ghost" onClick={() => updateControl(id, null)} disabled={!edited}><Icon name="reset" size={15} />Reset pad</button>
+        </div>
+        <div className="savestate" aria-live="polite">Changes save automatically</div>
+      </div></aside>);
   }
   const ctl: Ctl = profile.controls[id] ?? {};
   const set = (c: Ctl) => updateControl(id, c);
@@ -142,12 +178,12 @@ export default function Inspector() {
   const act = summarize(ctl.action);
   return (
     <aside className="inspector" aria-label="Inspector">
-      {head(ctl.label || act || "Unassigned", <span className="capmono" title={id}>{name}{pad ? " · pad" : zone ? " · display button" : ""}</span>)}
+      {head(ctl.label || act || "Unassigned", <span className="capmono" title={id}>{name}{zone ? " · display button" : ""}</span>)}
       <div className="isect"><h3>What it does</h3><ActionEditor ctl={ctl} set={set} /></div>
       <div className="isect">
         <h3>{zone ? "On the Push's screen" : "Name"}</h3>
-        <div className="field"><input type="text" value={ctl.label ?? ""} maxLength={24} aria-label={zone ? "Display label" : "Name"} onChange={(e) => set({ ...ctl, label: e.target.value })} placeholder={zone ? "e.g. Frame" : "e.g. Rectangle"} />
-          <span className="hint">{zone ? "Shown above or below this button on the display." : "Shown on the pad in this UI."}</span></div>
+        <div className="field"><TextField value={ctl.label ?? ""} maxLength={24} aria-label={zone ? "Display label" : "Name"} onChange={(v) => set({ ...ctl, label: v })} placeholder={zone ? "e.g. Frame" : "e.g. Close tab"} />
+          <span className="hint">{zone ? "Shown above or below this button on the Push's screen." : "Shown on this pad in the app."}</span></div>
         {zone && <>
           <div className="row between" style={{ marginBottom: 10 }}>
             <button className="btn sm" onClick={() => setIconsOpen(!iconsOpen)} aria-expanded={iconsOpen}>
@@ -158,21 +194,12 @@ export default function Inspector() {
           <div style={{ marginTop: 12 }}><Switch checked={!ctl.keep_case} onChange={(v) => set({ ...ctl, keep_case: !v })} label="ALL CAPS" /></div>
         </>}
       </div>
-      <div className="isect">
-        <h3>{pad ? "Pad colour" : "Light colour"}</h3>
-        <div className="swatches" role="group" aria-label="Colour">
-          <button className="swatch none" aria-pressed={!ctl.color} title="Off" onClick={() => set({ ...ctl, color: undefined })} />
-          {[profile.theme.accent, ...PALETTE.filter((c) => c !== profile.theme.accent)].slice(0, 10).map((c) => <button key={c} className="swatch" style={{ background: c }} aria-pressed={ctl.color === c} title={colourName(c, profile.theme.accent)} onClick={() => set({ ...ctl, color: c })} />)}
-          <CustomColour value={ctl.color ?? profile.theme.accent} active={!!ctl.color && ctl.color !== profile.theme.accent && !PALETTE.includes(ctl.color)} onChange={(v) => set({ ...ctl, color: v })} />
-        </div>
-        <Field label="When pressed"><div className="row"><input type="color" title="Colour while pressed" value={ctl.states?.active ?? "#ffffff"} onChange={(e) => set({ ...ctl, states: { ...ctl.states, active: e.target.value } })} aria-label="Pressed colour" />
-          <span className="hint">{ctl.states?.active ? ctl.states.active : "white (default)"}</span></div></Field>
-      </div>
+      <ColourFields ctl={ctl} set={set} pad={pad} accent={profile.theme.accent} />
       <div className="ifoot">
         <div className="row">
-          <button className="btn primary" onClick={() => { if (ctl.risky) toast("Armed. Press Test press again within 2 seconds to run it.", "info"); d.send({ type: "press", control: id }); }} disabled={!ctl.action}><Icon name="play" size={15} />Test press</button>
+          <button className="btn primary" onClick={() => { if (ctl.risky) toast("Armed. Press Try it now again within 2 seconds to run it.", "info"); d.send({ type: "press", control: id }); }} disabled={!ctl.action}><Icon name="play" size={15} />Try it now</button>
           <span className="spacer" />
-          <button className="btn ghost danger" onClick={() => updateControl(id, null)} disabled={!profile.controls[id]}><Icon name="trash" size={15} />Clear</button>
+          <button className="btn ghost danger" onClick={() => updateControl(id, null)} disabled={!profile.controls[id]}><Icon name="trash" size={15} />{zone ? "Clear button" : "Clear pad"}</button>
         </div>
         <div className="savestate" aria-live="polite">{saveState === "saving" ? <>Saving…</> : saveState === "saved" ? <><Icon name="check" size={14} />Saved {fmtTime(savedAt)}</> : <>Changes save automatically</>}</div>
       </div>

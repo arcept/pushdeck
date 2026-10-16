@@ -1,4 +1,4 @@
-import { isGlobalPad, WINDOW_LAYER, windowOn } from "./model";
+import { isGlobalPad, WINDOW_PAD_IDS, windowLayer, windowOn } from "./model";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppCtx, type App as AppModel, type SaveState, type SettingsPage } from "./ctx";
 import { useDaemon, type Ctl, type Profile } from "./daemon";
@@ -44,6 +44,7 @@ function Shell() {
 
   const serverProfile = d.profiles.find((p) => p.id === currentId) ?? d.profiles.find((p) => p.id === d.active.active) ?? d.profiles[0];
   const profile = draft && draft.id === serverProfile?.id ? draft : serverProfile;
+  const wOn = windowOn(d.settings, profile);
 
   // autosave: debounce edits, then send the whole profile
   useEffect(() => {
@@ -75,20 +76,25 @@ function Shell() {
   // The right-hand pad column is shared by every profile: it is stored in the settings, not in the profile.
   const sendGlobal = useCallback((next: Record<string, Ctl>) => d.send({ type: "set_setting", key: "global_pads", value: next }), [d]);
   const updateControl = useCallback((id: string, c: Ctl | null) => {
+    if (wOn && WINDOW_PAD_IDS.includes(id)) {   // a built-in window pad: only its name, colours and confirm can change (the same in every profile); null puts the defaults back
+      const edits = { ...(d.settings?.window_pad_edits ?? {}) };
+      if (c === null) delete edits[id]; else edits[id] = { label: c.label, color: c.color, states: c.states, risky: c.risky };
+      d.send({ type: "set_setting", key: "window_pad_edits", value: edits }); return;
+    }
     if (isGlobalPad(id)) { const next = { ...(gp ?? {}) }; if (c === null) delete next[id]; else next[id] = c; sendGlobal(next); return; }
     if (!profile) return;
     const controls = { ...profile.controls }; if (c === null) delete controls[id]; else controls[id] = c;
     commit({ ...profile, controls });
-  }, [profile, commit, gp, sendGlobal]);
+  }, [profile, commit, gp, sendGlobal, wOn, d]);
   const swapControls = useCallback((x: string, y: string) => {
-    if (!profile) return;
+    if (!profile || (wOn && (WINDOW_PAD_IDS.includes(x) || WINDOW_PAD_IDS.includes(y)))) return;   // the window pads stay where they are
     const controls = { ...profile.controls }, shared = { ...(gp ?? {}) };
     const get = (id: string) => (isGlobalPad(id) ? shared[id] : controls[id]);
     const put = (id: string, c?: Ctl) => { const t = isGlobalPad(id) ? shared : controls; if (c) t[id] = c; else delete t[id]; };
     const cx = get(x), cy = get(y); put(x, cy); put(y, cx); // dragging a pad into the global column makes it global, and back
     if (!isGlobalPad(x) || !isGlobalPad(y)) commit({ ...profile, controls });
     if (isGlobalPad(x) || isGlobalPad(y)) sendGlobal(shared);
-  }, [profile, commit, gp, sendGlobal]);
+  }, [profile, commit, gp, sendGlobal, wOn]);
   useEffect(() => { for (const p of d.profiles) baseline.current[p.id] ??= structuredClone(p); }, [d.profiles]);
   const undo = useCallback(() => {
     const h = profile && hist.current[profile.id], prev = h?.stack.pop();
@@ -132,8 +138,7 @@ function Shell() {
   useAppMotion(profile?.id, selected, false);
   // a profile change sends a wash of its colour out from the device
   useEffect(() => { if (profile) window.setTimeout(() => pulseAt(document.querySelector(".stagecol .replica"), profile.theme.accent, 1.3), 80); }, [profile?.id]); // eslint-disable-line
-  const wOn = windowOn(d.settings, profile);
-  const view = useMemo(() => (profile ? { ...profile, controls: { ...profile.controls, ...(gp ?? {}), ...(wOn ? WINDOW_LAYER : {}) } } : profile), [profile, gp, wOn]);   // the window pads cover the profile's own pads while on
+  const view = useMemo(() => (profile ? { ...profile, controls: { ...profile.controls, ...(gp ?? {}), ...(wOn ? windowLayer(d.settings) : {}) } } : profile), [profile, gp, wOn, d.settings]);   // the window pads cover the profile's own pads while on
   const model = useMemo<AppModel>(() => ({
     d, profile: view, rawControls: profile?.controls, setCurrent, selected, setSelected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, setListen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, setSceneHl,
     openSettings: (p) => { if (p) setPage(p); settings.show(); }, openPalette: palette.show,

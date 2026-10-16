@@ -54,6 +54,19 @@ enum WindowServer {
                 lasts[key] = nil
                 return reply(true, ["op": op.rawValue, "app": front.bundleIdentifier ?? "", "fullscreen": bool(win, fullScreenAttr)])
             }
+            if op == .close {   // the red button: the app still asks about unsaved work, as it does for a click
+                var button = closeButton(of: win)
+                if button == nil && wasFull, leaveFullScreen(win, pid: front.processIdentifier) { button = closeButton(of: win) }   // a full-screen window hides its buttons
+                guard let b = button, AXUIElementPerformAction(b, kAXPressAction as CFString) == .success else { return fail("can't close") }
+                lasts[key] = nil; restores[key] = nil
+                return reply(true, ["op": op.rawValue, "app": front.bundleIdentifier ?? ""])
+            }
+            if op == .minimize {   // the yellow button; a full-screen window leaves full screen first
+                if wasFull, !leaveFullScreen(win, pid: front.processIdentifier) { return fail("full screen not supported") }
+                guard AXUIElementSetAttributeValue(win, kAXMinimizedAttribute as CFString, kCFBooleanTrue) == .success else { return fail("can't minimize") }
+                lasts[key] = nil
+                return reply(true, ["op": op.rawValue, "app": front.bundleIdentifier ?? ""])
+            }
             let areas = displays()
             let moving = op == .nextDisplay || op == .previousDisplay
             if wasFull {   // a full-screen window can't be placed: leave full screen first (macOS animates this), then carry on as for any window
@@ -182,6 +195,11 @@ enum WindowServer {
                 if attempt == 0 { pause(0.7) }
             }
             return false
+        }
+
+        func closeButton(of win: AXUIElement) -> AXUIElement? {
+            var v: CFTypeRef?
+            return AXUIElementCopyAttributeValue(win, kAXCloseButtonAttribute as CFString, &v) == .success ? (v as! AXUIElement?) : nil
         }
 
         func bool(_ el: AXUIElement, _ attr: String) -> Bool {

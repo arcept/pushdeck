@@ -741,3 +741,25 @@ button.phead.pswitch[aria-expanded="true"] .pcaret svg { transform:rotate(180deg
 
 /* the Showpiece look makes the inspector's sticky footer and the action library header see-through, so scrolled content showed through the buttons: give them a solid-enough, blurred backing */
 :root[data-look="showpiece"] .ifoot, :root[data-look="showpiece"] .alhead { background:rgba(13,14,19,.96); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+
+/* ---- control editor: action buttons with the icon beside the label, clear hover / pressed / focus states ---- */
+.kinds { grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-bottom:14px; }
+.kind { flex-direction:row; justify-content:flex-start; gap:10px; height:42px; padding:0 12px; border-radius:11px; border:1px solid var(--line2); background:var(--raised); color:var(--tx2); font:600 13px/1.1 var(--ui); text-align:left; cursor:pointer; transition:background .14s, border-color .14s, color .14s, transform .14s; }
+.kind svg { flex:none; opacity:.85; } .kind span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.kind:hover { background:var(--raised2); border-color:rgba(255,255,255,.24); color:var(--tx); }
+.kind:active { transform:scale(.985); }
+.kind[aria-pressed="true"] { color:var(--tx); border-color:var(--accent); background:color-mix(in srgb, var(--accent) 20%, var(--raised)); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent); }
+.kind[aria-pressed="true"] svg { opacity:1; color:var(--accent); }
+.kind.none { grid-column:1 / -1; background:transparent; border-style:dashed; color:var(--tx3); height:36px; }
+.kind.none:hover { background:var(--raised); color:var(--tx); } .kind.none[aria-pressed="true"] { border-style:solid; color:var(--tx); }
+.kind:focus-visible, .swatch:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+/* text boxes in the editor: one look for rest, hover and focus */
+.inspector .field input[type="text"], .inspector .field textarea, .inspector .field select { border:1px solid var(--line2); background:var(--raised); border-radius:10px; transition:border-color .14s, background .14s, box-shadow .14s; }
+.inspector .field input[type="text"]:hover, .inspector .field textarea:hover, .inspector .field select:hover { border-color:rgba(255,255,255,.24); }
+.inspector .field input[type="text"]:focus, .inspector .field textarea:focus, .inspector .field select:focus { outline:none; border-color:var(--accent); background:var(--raised2); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+/* colours: a tidy grid, with a hover lift */
+.swatches { gap:8px; }
+.swatch { width:28px; height:28px; border-radius:8px; transition:transform .12s, outline-color .12s; }
+.swatch:hover { transform:translateY(-1px) scale(1.06); outline-color:rgba(255,255,255,.4); }
+.swatch[aria-pressed="true"] { border-color:var(--tx); box-shadow:0 0 0 2px var(--mod) inset; }
+.swatch.dflt { width:auto; padding:0 10px; background:var(--raised); color:var(--tx2); font:700 11px var(--ui); letter-spacing:.02em; } .swatch.dflt[aria-pressed="true"] { color:var(--tx); }

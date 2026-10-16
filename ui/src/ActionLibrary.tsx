@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Icon } from "./icons";
 import { useApp } from "./ctx";
-import { ACTION_KINDS, MEDIA_ACTIONS, controlKind, summarize } from "./model";
+import { ACTION_KINDS, MEDIA_ACTIONS, WINDOW_ADDABLE, controlKind, summarize } from "./model";
 import { useToast } from "./ui";
 
 // While a chip is dragged, every pad or button that can take an action is outlined on the replica and the one under the pointer lights up.
@@ -19,7 +19,7 @@ const over = (e: DragEvent) => {
 // Things to put on a pad or button: drag a chip onto the replica, or select a control first and click a chip.
 export default function ActionLibrary() {
   const { d, profile, selected, setSelected, updateControl } = useApp();
-  const [open, setOpen] = useState(() => window.innerHeight / (parseFloat(document.documentElement.style.zoom) || 1) >= 1000);   // short windows start with the list folded so the editor above it has room
+  const [open, setOpen] = useState(false);   // always folded to start with: the editor above it gets the room
   const toast = useToast();
   const ok = (id: string) => controlKind(id, d.settings, d.controls[id]?.kind, profile) === "editable";
   const drag = (a: object) => (e: React.DragEvent) => {
@@ -44,8 +44,9 @@ export default function ActionLibrary() {
         <span>Add an action<span className="alsub">drag onto the Push, or click</span></span><Icon name={open ? "down" : "right"} size={14} />
       </button>
       {open && <div className="alchips">
-        {ACTION_KINDS.filter((k) => k.type !== "media").map((k) => chip(k.type, k.icon, k.label, { type: k.type, [k.field]: "" }))}
+        {ACTION_KINDS.filter((k) => k.type !== "media" && k.type !== "window").map((k) => chip(k.type, k.icon, k.label, { type: k.type, [k.field]: "" }))}
         {MEDIA_ACTIONS.map(([v, l]) => chip(v, "media", l, { type: "media", name: v }))}
+        {WINDOW_ADDABLE.map(([v, l]) => chip(`win-${v}`, v === "close" ? "x" : v === "minimize" ? "down" : "grid", l, { type: "window", op: v }))}
       </div>}
     </section>
   );

@@ -127,6 +127,23 @@ export function Toaster({ children }: { children: ReactNode }) {
   );
 }
 
+// A text box that keeps its own text while it has focus, so nothing that arrives from outside while you type (a save coming back, a re-render) can move the caret or
+// swap the text under you; it takes the outside value again when you leave it. Spell-check and auto-correct are off: these fields hold names, commands and app names.
+type TextProps = { value: string; onChange: (v: string) => void } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange">;
+export function TextField({ value, onChange, onFocus, onBlur, ...rest }: TextProps) {
+  const [v, setV] = useState(value); const focused = useRef(false);
+  useEffect(() => { if (!focused.current) setV(value); }, [value]);
+  return <input type="text" {...rest} value={v} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
+    onFocus={(e) => { focused.current = true; onFocus?.(e); }} onBlur={(e) => { focused.current = false; setV(value); onBlur?.(e); }}
+    onChange={(e) => { setV(e.target.value); onChange(e.target.value); }} />;
+}
+export function TextArea({ value, onChange, ...rest }: { value: string; onChange: (v: string) => void } & Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "value" | "onChange">) {
+  const [v, setV] = useState(value); const focused = useRef(false);
+  useEffect(() => { if (!focused.current) setV(value); }, [value]);
+  return <textarea {...rest} value={v} spellCheck={false} autoCorrect="off" autoCapitalize="off"
+    onFocus={() => { focused.current = true; }} onBlur={() => { focused.current = false; setV(value); }} onChange={(e) => { setV(e.target.value); onChange(e.target.value); }} />;
+}
+
 // Native <dialog> wrapper: focus trap, Escape and backdrop click for free.
 export function useDialog() {
   const ref = useRef<HTMLDialogElement>(null);

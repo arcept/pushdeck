@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Icon } from "./icons";
 import { useApp } from "./ctx";
 import { AppField, ShortcutField } from "./Inspector";
-import { CustomColour } from "./ui";
+import { CustomColour, TextField } from "./ui";
 import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, PALETTE, actionDefault, colourName, actionKind, controlKind, describeControl } from "./model";
 import type { Action } from "./daemon";
 import { usePop } from "./motion";
@@ -39,20 +39,20 @@ export default function QuickPop({ id, rect, onClose }: { id: string; rect: DOMR
       <div className="mono tabular">{Math.round(v)}%</div></>);
   } else if (kind === "editable" && profile) {
     body = (<>
-      <input type="text" className="qp-in" value={ctl.label ?? ""} maxLength={24} aria-label={zone ? "Display label" : "Name"} placeholder={zone ? "Label on the display" : "Name"} onChange={(e) => set({ ...ctl, label: e.target.value })} />
+      <TextField className="qp-in" value={ctl.label ?? ""} maxLength={24} aria-label={zone ? "Display label" : "Name"} placeholder={zone ? "Label on the display" : "Name"} onChange={(v) => set({ ...ctl, label: v })} />
       <select className="qp-in" value={a?.type ?? ""} aria-label="Action type" onChange={(e) => { const kk = actionKind(e.target.value); set({ ...ctl, action: kk ? ({ type: kk.type, [kk.field]: actionDefault(kk) } as Action) : undefined }); }}>
         <option value="">No action</option>{ACTION_KINDS.map((x) => <option key={x.type} value={x.type}>{x.label}</option>)}</select>
       {a && k && (a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
         : a.type === "media" ? <select className="qp-in" value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
         : a.type === "app" ? <AppField className="qp-in" value={String(a.name ?? "")} placeholder={k.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
-        : <input type="text" className={`qp-in ${a.type === "url" || a.type === "shell" ? "mono" : ""}`} value={String(a[k.field] ?? "")} placeholder={k.placeholder} aria-label={k.fieldLabel} onChange={(e) => set({ ...ctl, action: { ...a, [k.field]: e.target.value } })} />)}
+        : <TextField className={`qp-in ${a.type === "url" || a.type === "shell" ? "mono" : ""}`} value={String(a[k.field] ?? "")} placeholder={k.placeholder} aria-label={k.fieldLabel} onChange={(v) => set({ ...ctl, action: { ...a, [k.field]: v } })} />)}
       <div className="swatches" role="group" aria-label="Colour">
         <button className="swatch none" aria-pressed={!ctl.color} title="Off" onClick={() => set({ ...ctl, color: undefined })} />
         {[profile.theme.accent, ...PALETTE.filter((c) => c !== profile.theme.accent)].slice(0, 7).map((c) => <button key={c} className="swatch" style={{ background: c }} aria-pressed={ctl.color === c} title={colourName(c, profile.theme.accent)} onClick={() => set({ ...ctl, color: c })} />)}
         <CustomColour value={ctl.color ?? profile.theme.accent} active={!!ctl.color && ctl.color !== profile.theme.accent && !PALETTE.includes(ctl.color)} onChange={(v) => set({ ...ctl, color: v })} />
       </div>
       <div className="row between" style={{ marginTop: 10 }}>
-        <button className="btn sm" disabled={!ctl.action} onClick={() => d.send({ type: "press", control: id })}><Icon name="play" size={13} />Test</button>
+        <button className="btn sm" disabled={!ctl.action} onClick={() => d.send({ type: "press", control: id })}><Icon name="play" size={13} />Try it</button>
         <button className="btn sm ghost danger" disabled={!profile.controls[id]} onClick={() => { updateControl(id, null); }}><Icon name="trash" size={13} />Clear</button>
       </div></>);
   } else body = <p className="muted" style={{ margin: 0 }}>{tip.secondary.join(" · ")}</p>;

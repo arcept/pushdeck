@@ -11,6 +11,7 @@ public enum Op: String, CaseIterable {
     case firstThird = "first-third", centerThird = "center-third", lastThird = "last-third"
     case maximize, center, restore
     case fullScreen = "full-screen"   // enter or leave full screen: no geometry, handled by the window server
+    case close, minimize              // the red and yellow buttons: no geometry either
     case nextDisplay = "next-display", previousDisplay = "previous-display"
 }
 
@@ -73,7 +74,7 @@ public func target(_ op: Op, window: CGRect, area: CGRect, last: Last?, restore:
         let cw = min(window.width, w), ch = min(window.height, h)
         return Result(frame: CGRect(x: (x + (w - cw) / 2).rounded(), y: (y + (h - ch) / 2).rounded(), width: cw, height: ch), step: 0)
     case .restore: return restore.map { Result(frame: $0, step: 0) }
-    case .nextDisplay, .previousDisplay, .fullScreen: return nil
+    case .nextDisplay, .previousDisplay, .fullScreen, .close, .minimize: return nil
     }
 }
 

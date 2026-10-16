@@ -6,21 +6,24 @@ export const formatKeys = (k: string) => k.split("+").map((p) => MODS[p.trim().t
 
 export type ActionKind = { type: string; label: string; fieldLabel: string; icon: IconName; field: string; placeholder: string; hint: string };
 export const ACTION_KINDS: ActionKind[] = [
-  { type: "keys", fieldLabel: "Keys", label: "Shortcut", icon: "keyboard", field: "keys", placeholder: "cmd+shift+r", hint: "Press Record, then the keys." },
-  { type: "text", fieldLabel: "Text to type", label: "Type text", icon: "text", field: "text", placeholder: "Text to type", hint: "Typed into the frontmost app." },
-  { type: "app", fieldLabel: "App name", label: "Open app", icon: "app", field: "name", placeholder: "Figma", hint: "The app's name." },
+  { type: "keys", fieldLabel: "Keys", label: "Shortcut", icon: "keyboard", field: "keys", placeholder: "cmd+shift+r", hint: "Click Record, then press the shortcut." },
+  { type: "text", fieldLabel: "Text to type", label: "Type text", icon: "text", field: "text", placeholder: "Text to type", hint: "Typed into whichever app is in front." },
+  { type: "app", fieldLabel: "Which app", label: "Open app", icon: "app", field: "name", placeholder: "Figma", hint: "Pick it with Choose, or type its name." },
   { type: "url", fieldLabel: "Address", label: "Open URL", icon: "globe", field: "url", placeholder: "https://", hint: "Opens in your default browser." },
-  { type: "shell", fieldLabel: "Command", label: "Shell", icon: "terminal", field: "command", placeholder: "open ~/Downloads", hint: "Runs in a shell. Mark it risky." },
-  { type: "shortcut", fieldLabel: "Shortcut name", label: "Shortcuts.app", icon: "bolt", field: "name", placeholder: "Shortcut name", hint: "Runs a macOS Shortcut." },
-  { type: "pin", fieldLabel: "Note", label: "Pin profile (Master)", icon: "bolt", field: "note", placeholder: "Optional", hint: "Makes this profile Master so it stays on screen whatever app is in front. Press again to follow your apps." },
+  { type: "shell", fieldLabel: "Command", label: "Shell", icon: "terminal", field: "command", placeholder: "open ~/Downloads", hint: "Runs a terminal command. Use “Confirm before running” for anything you can't undo." },
+  { type: "shortcut", fieldLabel: "Shortcut name", label: "Shortcuts.app", icon: "bolt", field: "name", placeholder: "Shortcut name", hint: "Runs a shortcut from the Shortcuts app, by its name." },
+  { type: "pin", fieldLabel: "Note", label: "Pin as Master", icon: "bolt", field: "note", placeholder: "Optional", hint: "Keeps this profile on the Push whichever app is in front. Press again to follow your apps." },
+  { type: "window", fieldLabel: "What to do", label: "Window", icon: "stack", field: "op", placeholder: "close", hint: "Closes, minimizes or goes full screen on the window in front, like the three buttons at its top left." },
   { type: "media", fieldLabel: "Action", label: "Media", icon: "media", field: "name", placeholder: "play_pause", hint: "Play/pause, next, previous, volume, mute." },
 ];
 export const MEDIA_ACTIONS = [["play_pause", "Play / pause"], ["next", "Next track"], ["prev", "Previous track"], ["volume_up", "Volume up"], ["volume_down", "Volume down"], ["mute", "Mute"]];
 // Window layouts (names match daemon/push_daemon/windows.py OPS).
 export const WINDOW_ACTIONS = [["top-left", "Top left"], ["top-half", "Top half"], ["top-right", "Top right"], ["maximize", "Maximize"], ["left-half", "Left half"], ["center", "Center"], ["right-half", "Right half"], ["full-screen", "Full screen"],
-  ["bottom-left", "Bottom left"], ["bottom-half", "Bottom half"], ["bottom-right", "Bottom right"], ["next-display", "Next display"], ["first-third", "First third"], ["center-third", "Center third"], ["last-third", "Last third"], ["previous-display", "Previous display"], ["restore", "Restore"]];
+  ["bottom-left", "Bottom left"], ["bottom-half", "Bottom half"], ["bottom-right", "Bottom right"], ["next-display", "Next display"], ["first-third", "First third"], ["center-third", "Center third"], ["last-third", "Last third"], ["previous-display", "Previous display"], ["restore", "Restore"], ["close", "Close window"], ["minimize", "Minimize window"]];
+/** The window actions a pad of your own can do (the layouts are the built-in pads). */
+export const WINDOW_ADDABLE = [["close", "Close window"], ["minimize", "Minimize window"], ["full-screen", "Full screen"]];
 /** What a freshly chosen action type starts with in its main field (a list kind starts on its first sensible choice). */
-export const actionDefault = (k: ActionKind) => (k.type === "media" ? "play_pause" : "");
+export const actionDefault = (k: ActionKind) => (k.type === "media" ? "play_pause" : k.type === "window" ? "close" : "");
 
 export const actionKind = (t?: string) => ACTION_KINDS.find((k) => k.type === t);
 export const summarize = (a?: Action): string => {
@@ -69,6 +72,12 @@ export const WINDOW_LAYER: Record<string, Ctl> = {
   "pad-3-0": WL("First third", "first-third", THIRD), "pad-3-1": WL("Center third", "center-third", THIRD), "pad-3-2": WL("Last third", "last-third", THIRD), "pad-3-3": WL("Previous display", "previous-display", DISPLAY),
 };
 export const WINDOW_PAD_IDS = Object.keys(WINDOW_LAYER);
+/** The built-in pads with the owner's changes on top (name, colours, confirm; settings.window_pad_edits). */
+export const windowLayer = (settings: Settings | null | undefined): Record<string, Ctl> => {
+  const edits = settings?.window_pad_edits ?? {}, out: Record<string, Ctl> = {};
+  for (const [id, base] of Object.entries(WINDOW_LAYER)) { const e = edits[id]; out[id] = e ? { ...base, ...(e.label ? { label: e.label } : {}), ...(e.color ? { color: e.color } : {}), ...(e.states?.active ? { states: { active: e.states.active } } : {}), ...(e.risky ? { risky: true } : {}) } : base; }
+  return out;
+};
 /** Are the window pads on for this profile? Its own choice wins; otherwise the global switch (on unless turned off). */
 export const windowOn = (settings: Settings | null | undefined, profile?: Pick<Profile, "window_pads">) =>
   profile?.window_pads === "on" ? true : profile?.window_pads === "off" ? false : settings?.window_pads !== false;
@@ -80,7 +89,11 @@ export const SCENE_IDS = ["btn-1-32t", "btn-1-32", "btn-1-16t", "btn-1-16", "btn
 export const COLOUR_NAMES: Record<string, string> = {
   "#d97757": "Clay", "#a259ff": "Violet", "#0acf83": "Green", "#1abcfe": "Sky blue", "#f24e1e": "Red orange",
   "#ffcd29": "Yellow", "#ff6bb5": "Pink", "#6ee7e7": "Aqua", "#ffffff": "White", "#8b8b99": "Grey",
+  "#ff4d4d": "Red", "#ff8a3d": "Orange", "#c8e04a": "Lime", "#2ee6a6": "Mint", "#3b82f6": "Blue", "#6366f1": "Indigo", "#d946ef": "Magenta", "#fb7185": "Rose", "#cfcfd8": "Silver", "#4b4b57": "Graphite",
 };
+/** The colours offered for a pad or light: warm to cool, then neutrals (two rows of ten). */
+export const PAD_COLOURS = ["#ff4d4d", "#f24e1e", "#ff8a3d", "#d97757", "#ffcd29", "#c8e04a", "#0acf83", "#2ee6a6", "#6ee7e7", "#1abcfe",
+  "#3b82f6", "#6366f1", "#a259ff", "#d946ef", "#ff6bb5", "#fb7185", "#ffffff", "#cfcfd8", "#8b8b99", "#4b4b57"];
 export const colourName = (hex: string, profileAccent?: string) => COLOUR_NAMES[hex.toLowerCase()] ?? (hex === profileAccent ? "Profile colour" : "Custom colour");
 export const PALETTE = ["#d97757", "#a259ff", "#0acf83", "#1abcfe", "#f24e1e", "#ffcd29", "#ff6bb5", "#6ee7e7", "#ffffff", "#8b8b99"];
 
@@ -102,7 +115,7 @@ export function describeControl(id: string, o: {
     return p ? { primary: `Switch to ${p.name}`, secondary: [`${sceneName(si)} · ${o.pinned === p.id ? "master, press to go back to Auto" : "press to make it master"}`] }
              : { primary: "Profile button, empty", secondary: [`${sceneName(si)} · no profile assigned`], muted: true };
   }
-  if (o.profile && WINDOW_LAYER[id] && windowOn(o.settings, o.profile)) return { primary: WINDOW_LAYER[id].label!.toUpperCase(), secondary: ["Built-in window shortcut", `${o.name} · set in Settings, per profile`] };
+  if (o.profile && WINDOW_LAYER[id] && windowOn(o.settings, o.profile)) return { primary: (windowLayer(o.settings)[id].label ?? "").toUpperCase(), secondary: ["Built-in window shortcut", `${o.name} · rename and recolour it, turn the set on or off in Settings`] };
   const glob = isGlobalPad(id) ? " · global, works in every profile" : "";
   const c: Ctl | undefined = o.profile?.controls[id];
   if (!c || (!c.label && !c.action && !c.icon && !c.color)) return { primary: "Unassigned", secondary: [`${o.name}${glob} · click to assign`], muted: true };

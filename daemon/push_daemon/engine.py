@@ -559,7 +559,7 @@ class Engine:
     def controls_for(self, prof):
         """The controls that act right now: the profile's own, plus the global pad column shared by every profile."""
         own = {k: v for k, v in ((prof or {}).get("controls") or {}).items() if (v.get("action") or {}).get("type") != "pin"}   # Master lives on the profile widget now
-        layer = windows.DEFAULT_PADS if windows.enabled(self.settings, prof) else {}   # built in; covers a profile's own pads in those places while on
+        layer = windows.layer(self.settings) if windows.enabled(self.settings, prof) else {}   # built in; covers a profile's own pads in those places while on
         return {**own, **(self.settings.get("global_pads") or {}), **layer}
 
     def live_buttons(self, prof):
@@ -930,7 +930,7 @@ class Engine:
         elif t == "set_setting":
             self.settings[msg["key"]] = msg["value"]
             settings.save(self.settings)
-            if msg["key"] in ("global_pads", "window_pads"):
+            if msg["key"] in ("global_pads", "window_pads", "window_pad_edits"):
                 self._leds_for = None
             if msg["key"] == "calibration":
                 color.set_calibration(msg["value"])

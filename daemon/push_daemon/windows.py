@@ -10,7 +10,7 @@ import threading
 from .registry import ROOT
 
 OPS = ["top-left", "top-half", "top-right", "left-half", "right-half", "bottom-left", "bottom-half", "bottom-right",
-       "first-third", "center-third", "last-third", "maximize", "center", "restore", "full-screen", "next-display", "previous-display"]
+       "first-third", "center-third", "last-third", "maximize", "center", "restore", "full-screen", "close", "minimize", "next-display", "previous-display"]
 
 QUARTER, HALF, THIRD, FILL, DISPLAY = "#a259ff", "#1abcfe", "#0acf83", "#ffcd29", "#e6e6e6"   # one colour per family
 
@@ -31,6 +31,26 @@ DEFAULT_PADS = {
     "pad-3-2": _pad("Last third", "last-third", THIRD), "pad-3-3": _pad("Previous display", "previous-display", DISPLAY),
 }
 
+def layer(settings) -> dict:
+    """The built-in pads with what the owner changed on them (settings["window_pad_edits"]: name, colour, colour while pressed, confirm-before-running; the action is fixed)."""
+    edits = settings.get("window_pad_edits") or {}
+    out = {}
+    for cid, ctl in DEFAULT_PADS.items():
+        e = edits.get(cid) or {}
+        c = dict(ctl)
+        if isinstance(e.get("label"), str) and e["label"].strip():
+            c["label"] = e["label"][:24]
+        if isinstance(e.get("color"), str) and e["color"].startswith("#") and len(e["color"]) in (4, 7):
+            c["color"] = e["color"]
+        active = (e.get("states") or {}).get("active") if isinstance(e.get("states"), dict) else None
+        if isinstance(active, str) and active.startswith("#") and len(active) in (4, 7):
+            c["states"] = {"active": active}
+        if e.get("risky") is True:
+            c["risky"] = True
+        out[cid] = c
+    return out
+
+
 def enabled(settings, prof) -> bool:
     """Are the window pads on for this profile? The profile's own choice ("on" / "off") wins; otherwise the global switch (default on)."""
     mode = (prof or {}).get("window_pads")
@@ -39,7 +59,8 @@ def enabled(settings, prof) -> bool:
 
 WHY = {"accessibility": "Windows need Accessibility for Push Deck", "no window": "No window to move", "minimized": "That window is minimized",
        "only one display": "Only one display", "no app in front": "No app in front",
-       "no display": "No display found", "nothing to restore": "Nothing to restore", "full screen not supported": "This app can't change full screen"}
+       "no display": "No display found", "nothing to restore": "Nothing to restore", "full screen not supported": "This app can't change full screen",
+       "can't close": "This window can't be closed from here", "can't minimize": "This window can't be minimized"}
 
 
 class Server:
