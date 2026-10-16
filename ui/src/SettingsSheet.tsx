@@ -7,6 +7,7 @@ import { GLOBAL_FN, KNOB_ROWS } from "./model";
 import { ConfirmButton, Field, Seg, Switch } from "./ui";
 import { AboutPage, ProfilesPage } from "./SettingsExtra";
 import MediaPage from "./MediaPage";
+import { useWindowPads } from "./WindowPads";
 
 const PAGES: { id: SettingsPage; label: string; icon: IconName }[] = [
   { id: "general", label: "General", icon: "sliders" }, { id: "display", label: "Display and lights", icon: "sun" },
@@ -19,6 +20,7 @@ export default function SettingsSheet({ dialog, page, setPage }: { dialog: Retur
   const { d } = useApp();
   const s = d.settings;
   const set = (key: string, value: unknown) => d.send({ type: "set_setting", key, value });
+  const wp = useWindowPads();
   useEffect(() => { const el = dialog.ref.current; if (!el) return; const h = (e: MouseEvent) => { if (e.target === el) dialog.close(); }; el.addEventListener("mousedown", h); return () => el.removeEventListener("mousedown", h); }, [dialog]);
   const groups = Object.entries(Object.entries(d.tests).reduce<Record<string, [string, typeof d.tests[string]][]>>((a, [k, v]) => ((a[v.group] ??= []).push([k, v]), a), {}));
   const knobFn = (k: string) => s?.global_knobs?.[k] ?? "";
@@ -38,7 +40,7 @@ export default function SettingsSheet({ dialog, page, setPage }: { dialog: Retur
             <Field label="When the Push runs" hint="Start-at-login needs the launch agent, which is not installed yet."><select value={s.lifecycle} onChange={(e) => set("lifecycle", e.target.value)}>{LIFECYCLE.map(([v, t]) => <option key={v} value={v}>{t}</option>)}</select></Field>
             <Field label="Turn the display and lights off after" hint="Any button wakes it. 0 means never."><div className="row"><input type="number" min={0} max={240} value={s.idle_minutes} style={{ width: 90 }} onChange={(e) => set("idle_minutes", +e.target.value)} /><span className="muted">minutes without input</span></div></Field>
             <Field label="Claude usage on the display" hint="Uses the Claude desktop app's own login (macOS asks to open its Keychain entry, Claude Safe Storage) and asks Anthropic's usage page, the same one the app uses, about every 90 seconds. Works for chat, co-work and Code with no terminal. Off: numbers come only from Claude Code's status line in a terminal. The login stays in memory and goes only to api.anthropic.com."><Switch checked={!!s.claude_usage_live} onChange={(v) => set("claude_usage_live", v)} label={<span className="sr">Read Claude usage live</span>} /></Field>
-            <Field label="Window pads" hint="The top-left 16 pads move and size the front app's window: halves, quarters, thirds, maximize, center and the next display. Needs Accessibility for Push Deck. Off hides them in every profile; your layout is kept."><Switch checked={s.window_pads !== false} onChange={(v) => set("window_pads", v)} label={<span className="sr">Window pads</span>} /></Field>
+            <Field label="Window shortcuts" hint="The 16 pads at the top left of the Push move and size the window in front: halves, quarters, thirds, maximize, center, full screen and the next or previous display. They are built in and cannot be edited. This is the default for every profile; each profile can switch them on or off for itself. While on they cover that profile's own pads in those places (kept, and back when off). Needs Accessibility for Push Deck."><Switch checked={wp.globalOn} onChange={wp.setGlobal} label={<span className="sr">Window shortcuts</span>} /></Field>
             <Field label="Welcome setup" hint="The first-run walk-through: your Push 2, permissions, Claude usage and a quick tour."><button className="btn" onClick={() => { dialog.close(); window.dispatchEvent(new Event("push-onboarding")); }}>Run the welcome setup again</button></Field></>}
           {page === "display" && <><h2>Display and lights</h2><p className="lead">The Swing encoder on the Push moves both together.</p>
             <Field label={`Display brightness · ${Math.round(s.display_brightness)}%`}><input type="range" min={5} max={100} value={s.display_brightness} onChange={(e) => set("display_brightness", +e.target.value)} /></Field>
@@ -81,6 +83,7 @@ export default function SettingsSheet({ dialog, page, setPage }: { dialog: Retur
           </>}
         </div>
       </div>
+      {wp.node}
     </dialog>
   );
 }

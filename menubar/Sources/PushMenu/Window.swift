@@ -14,6 +14,7 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
     private var splashWeb: WKWebView?
     private var launched = false
     private var released = false
+    private var fullScreenAsk: NSObjectProtocol?
 
     /// The first time the window is opened in a run, the splash comes first, on its own: a small see-through window with just the card and its
     /// shadow. When the splash page says it is done, the real window opens at its own size and the app behind it fades in.
@@ -91,13 +92,23 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
         let win = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 900), styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView], backing: .buffered, defer: false)
         win.title = (Bundle.main.infoDictionary?["CFBundleName"] as? String) ?? "Push Deck"
         win.contentView = w
-        win.contentMinSize = NSSize(width: 1280, height: 720)   // the lowest-resolution Mac screens; below this the layout breaks
+        // Below 1600 x 900 the layout does not hold. A smaller screen cannot show that, so there the minimum is the screen and the page scales itself down (ui/src/main.tsx).
+        let vis = (NSScreen.main ?? NSScreen.screens.first)?.visibleFrame.size ?? NSSize(width: 1600, height: 900)
+        win.contentMinSize = NSSize(width: min(1600, vis.width), height: min(900, vis.height - 40))
         win.isReleasedWhenClosed = false
         win.backgroundColor = .black
         win.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]   // opens where you are, not on the Space the app last used
         win.delegate = self
+        // The window sits over other apps' full-screen Spaces ("auxiliary"), which also means it cannot go full screen itself. The window pads' helper asks
+        // (WindowServer.swift) right before it wants this window full screen; it is allowed then, and back to auxiliary once it leaves full screen.
+        fullScreenAsk = DistributedNotificationCenter.default().addObserver(forName: Notification.Name("com.arcept.pushdeck.prepareFullScreen"), object: nil, queue: .main) { [weak self] n in
+            guard (n.userInfo?["pid"] as? NSNumber)?.int32Value == ProcessInfo.processInfo.processIdentifier else { return }
+            self?.window?.collectionBehavior = [.moveToActiveSpace, .fullScreenPrimary]
+        }
         win.setFrameAutosaveName("PushDeckWindow")
         if !win.setFrameUsingName("PushDeckWindow") { win.center() }
+        let need = win.contentMinSize, now = win.contentRect(forFrameRect: win.frame).size
+        if now.width < need.width || now.height < need.height { win.setContentSize(NSSize(width: max(now.width, need.width), height: max(now.height, need.height))) }   // a size saved before the minimum grew
         if let vis = (win.screen ?? NSScreen.main)?.visibleFrame, win.frame.width > vis.width || win.frame.height > vis.height {   // never larger than the screen
             win.setFrame(NSRect(x: vis.minX, y: vis.minY, width: min(win.frame.width, vis.width), height: min(win.frame.height, vis.height)), display: false)
         }
@@ -106,6 +117,7 @@ final class UIWindow: NSObject, NSWindowDelegate, WKNavigationDelegate, WKUIDele
     }
 
     func windowWillClose(_ n: Notification) { NSApp.setActivationPolicy(.accessory) }   // back to menu bar only
+    func windowDidExitFullScreen(_ n: Notification) { window?.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary] }   // over other apps' full-screen Spaces again
 
     // The daemon may still be starting: try again for a few seconds.
     func webView(_ w: WKWebView, didFailProvisionalNavigation n: WKNavigation!, withError e: Error) {

@@ -7,7 +7,8 @@ export type SaveState = "idle" | "saving" | "saved";
 
 export type App = {
   d: ReturnType<typeof useDaemon>;
-  profile: Profile | undefined;           // the profile being viewed/edited
+  profile: Profile | undefined;           // the profile being viewed/edited, with the shared pads and (while on) the window pads merged in
+  rawControls: Record<string, Ctl> | undefined;   // the profile's own controls as saved (what the window pads may be covering)
   setCurrent: (id: string) => void;
   selected: string | null;
   setSelected: (id: string | null) => void;

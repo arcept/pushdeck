@@ -40,6 +40,8 @@ def load_all() -> dict:
 def validate(prof: dict):
     if not re.fullmatch(r"[a-z0-9-]+", prof.get("id", "")):
         raise ValueError("id must be lowercase letters, digits, dashes")
+    if prof.get("window_pads") not in (None, "on", "off"):
+        raise ValueError('window_pads must be "on" or "off"')
     for cid in prof.get("controls", {}):
         if cid not in CONTROLS:
             raise ValueError(f"unknown control {cid}")

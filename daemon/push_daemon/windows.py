@@ -31,6 +31,12 @@ DEFAULT_PADS = {
     "pad-3-2": _pad("Last third", "last-third", THIRD), "pad-3-3": _pad("Previous display", "previous-display", DISPLAY),
 }
 
+def enabled(settings, prof) -> bool:
+    """Are the window pads on for this profile? The profile's own choice ("on" / "off") wins; otherwise the global switch (default on)."""
+    mode = (prof or {}).get("window_pads")
+    return mode == "on" if mode in ("on", "off") else bool(settings.get("window_pads", True))
+
+
 WHY = {"accessibility": "Windows need Accessibility for Push Deck", "no window": "No window to move", "minimized": "That window is minimized",
        "only one display": "Only one display", "no app in front": "No app in front",
        "no display": "No display found", "nothing to restore": "Nothing to restore", "full screen not supported": "This app can't change full screen"}

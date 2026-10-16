@@ -559,10 +559,8 @@ class Engine:
     def controls_for(self, prof):
         """The controls that act right now: the profile's own, plus the global pad column shared by every profile."""
         own = {k: v for k, v in ((prof or {}).get("controls") or {}).items() if (v.get("action") or {}).get("type") != "pin"}   # Master lives on the profile widget now
-        shared = self.settings.get("global_pads") or {}
-        if not self.settings.get("window_pads", True):
-            shared = {k: v for k, v in shared.items() if (v.get("action") or {}).get("type") != "window"}
-        return {**own, **shared}
+        layer = windows.DEFAULT_PADS if windows.enabled(self.settings, prof) else {}   # built in; covers a profile's own pads in those places while on
+        return {**own, **(self.settings.get("global_pads") or {}), **layer}
 
     def live_buttons(self, prof):
         """The display buttons the widgets on screen right now bring along ({button id: control}); none while a list is open in Browse."""

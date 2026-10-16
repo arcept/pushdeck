@@ -44,7 +44,7 @@ export default function Stage() {
     document.querySelectorAll<SVGGElement>(".replica g.control").forEach((g) => {
       const c = profile?.controls[g.id], on = !!c && !!(c.label || c.action || c.color);
       g.classList.toggle("is-assigned", on);
-      g.classList.toggle("dimmable", controlKind(g.id, d.settings, d.controls[g.id]?.kind) === "editable");
+      g.classList.toggle("dimmable", controlKind(g.id, d.settings, d.controls[g.id]?.kind, profile) === "editable");
     });
   }, [profile, d.settings, d.controls]);
   useEffect(() => { const off = () => setHover(null); window.addEventListener("keydown", off); window.addEventListener("blur", off); return () => { window.removeEventListener("keydown", off); window.removeEventListener("blur", off); }; }, []);
@@ -101,6 +101,7 @@ export default function Stage() {
     if (el) setPop({ id, rect: el.getBoundingClientRect() });
   };
   const drop = (id: string, payload: string) => {
+    if (controlKind(id, d.settings, d.controls[id]?.kind, profile) !== "editable") return;   // the window pads are built in
     try { const a = JSON.parse(payload); updateControl(id, { ...(profile?.controls[id] ?? {}), action: a }); setSelected(id); } catch { /* not an action */ }
   };
   const tip = hover ? describeControl(hover.id, { name: d.controls[hover.id]?.name ?? hover.id, settings: d.settings, profiles: d.profiles, pinned: d.active.pinned, profile }) : null;

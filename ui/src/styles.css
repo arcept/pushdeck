@@ -732,3 +732,12 @@ button.phead.pswitch[aria-expanded="true"] .pcaret svg { transform:rotate(180deg
 /* dot orbs */
 .orb { display:block; flex:none; }
 .pill .orb { margin:-4px -2px -4px -6px; }
+
+/* pad labels: black text on light pads (picked by contrast in model.ts labelOnDark), with a soft light halo instead of the dark shadow */
+.pad-name.dark { fill:#0b0b0f; filter:drop-shadow(0 1px 1px rgba(255,255,255,.4)); }
+/* the "window shortcuts will cover some pads" confirmation */
+.winwarn { max-width:440px; border:1px solid var(--line2); border-radius:14px; background:var(--mod); color:var(--tx); padding:20px 22px; box-shadow:0 24px 64px rgba(0,0,0,.55); }
+.winwarn::backdrop { background:rgba(0,0,0,.55); } .winwarn h3 { margin:0 0 8px; font-size:16px; } .winwarn ul { margin:8px 0; padding-left:18px; } .winwarn li { margin:3px 0; }
+
+/* the Showpiece look makes the inspector's sticky footer and the action library header see-through, so scrolled content showed through the buttons: give them a solid-enough, blurred backing */
+:root[data-look="showpiece"] .ifoot, :root[data-look="showpiece"] .alhead { background:rgba(13,14,19,.96); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }

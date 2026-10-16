@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { Icon } from "./icons";
 import { useApp } from "./ctx";
-import { PALETTE, colourName, isGlobalPad, sceneIndex, sceneName, summarize, uniqueId } from "./model";
+import { useWindowPads } from "./WindowPads";
+import { PALETTE, WINDOW_LAYER, colourName, isGlobalPad, sceneIndex, sceneName, summarize, uniqueId } from "./model";
 import ProfileIcon from "./ProfileIcon";
 import IconPicker from "./IconPicker";
 import { fmtTime, safeUrl, sourceLine, today } from "./profileFile";
@@ -21,6 +22,7 @@ export default function ProfileRail() {
   const { d, profile, updateProfile, setCurrent, saveState, savedAt, undo, canUndo, revert, canRevert, selected, setSelected, setSceneHl } = useApp();
   const [bundle, setBundle] = useState(""); const importer = useRef<HTMLInputElement>(null);
   const toast = useToast();
+  const wp = useWindowPads();
   if (!profile) return <nav className="rail" aria-label="Profile"><div className="tips"><h2>No profile</h2>Create or import one from the profile menu in the top bar.</div></nav>;
 
   const front = d.active.front, ids = profile.match.bundle_ids, disp = profile.display ?? {};
@@ -31,7 +33,7 @@ export default function ProfileRail() {
     const copy = { ...structuredClone(profile), created: today(), source: { kind: "created" as const }, id: uniqueId(profile.name + " copy", d.profiles.map((p) => p.id)), name: profile.name + " copy" } as typeof profile;
     delete copy.slot; d.send({ type: "save_profile", profile: copy }); setCurrent(copy.id); toast("Duplicated", "good");
   };
-  const assigned = Object.entries(profile.controls).filter(([, c]) => c.label || c.action || c.color).map(([id, c]) => ({ id, c, name: (d.controls[id]?.name ?? id) + (isGlobalPad(id) ? " · global" : "") }));
+  const assigned = Object.entries(profile.controls).filter(([id, c]) => (c.label || c.action || c.color) && !(WINDOW_LAYER[id] && c === WINDOW_LAYER[id])).map(([id, c]) => ({ id, c, name: (d.controls[id]?.name ?? id) + (isGlobalPad(id) ? " · global" : "") }));
   const buttons = assigned.filter((x) => !x.id.startsWith("pad-")), pads = assigned.filter((x) => x.id.startsWith("pad-"));
   const row = (x: (typeof assigned)[number]) => (
     <button key={x.id} className="arow" aria-current={selected === x.id} onClick={() => setSelected(x.id)}>
@@ -90,6 +92,14 @@ export default function ProfileRail() {
             <input type="text" maxLength={40} value={disp.subtitle ?? ""} placeholder="Automatic" onChange={(e) => updateProfile({ display: { ...disp, subtitle: e.target.value || undefined } })} />
           </Field>
           <Switch checked={disp.knobs !== false} onChange={(v) => updateProfile({ display: { ...disp, knobs: v ? undefined : false } })} label="Show knob readouts" />
+        </div>
+        <div className="isect">
+          <h3>Window shortcuts</h3>
+          <Field label="On the top-left pads" hint={`The 16 built-in pads that move and size the window in front. Default follows the global switch in Settings (now ${wp.globalOn ? "on" : "off"}). While on they cover this profile's own pads there; those stay saved.`}>
+            <Seg label="Window shortcuts for this profile" value={profile.window_pads ?? "default"} onChange={wp.setProfileMode}
+              options={[{ value: "default", label: "Default" }, { value: "on", label: "On" }, { value: "off", label: "Off" }]} />
+          </Field>
+          {wp.node}
         </div>
         <div className="isect">
           <h3>Everything this profile does <span>{assigned.length}</span></h3>

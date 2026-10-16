@@ -1,4 +1,4 @@
-import { isGlobalPad } from "./model";
+import { isGlobalPad, WINDOW_LAYER, windowOn } from "./model";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppCtx, type App as AppModel, type SaveState, type SettingsPage } from "./ctx";
 import { useDaemon, type Ctl, type Profile } from "./daemon";
@@ -132,11 +132,12 @@ function Shell() {
   useAppMotion(profile?.id, selected, false);
   // a profile change sends a wash of its colour out from the device
   useEffect(() => { if (profile) window.setTimeout(() => pulseAt(document.querySelector(".stagecol .replica"), profile.theme.accent, 1.3), 80); }, [profile?.id]); // eslint-disable-line
-  const view = useMemo(() => (profile ? { ...profile, controls: { ...profile.controls, ...(gp ?? {}) } } : profile), [profile, gp]);
+  const wOn = windowOn(d.settings, profile);
+  const view = useMemo(() => (profile ? { ...profile, controls: { ...profile.controls, ...(gp ?? {}), ...(wOn ? WINDOW_LAYER : {}) } } : profile), [profile, gp, wOn]);   // the window pads cover the profile's own pads while on
   const model = useMemo<AppModel>(() => ({
-    d, profile: view, setCurrent, selected, setSelected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, setListen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, setSceneHl,
+    d, profile: view, rawControls: profile?.controls, setCurrent, selected, setSelected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, setListen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, setSceneHl,
     openSettings: (p) => { if (p) setPage(p); settings.show(); }, openPalette: palette.show,
-  }), [d, view, setCurrent, selected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, settings.show, palette.show]);
+  }), [d, view, profile?.controls, setCurrent, selected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, settings.show, palette.show]);
 
   return (
     <AppCtx.Provider value={model}>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Profile, Settings } from "./daemon";
 import { ICON_PATHS } from "./icons";
-import { GLOBAL_FN, SCENE_IDS, profileAt, sceneName } from "./model";
+import { GLOBAL_FN, SCENE_IDS, labelOnDark, profileAt, sceneName } from "./model";
 import { useScenePage } from "./scenePage";
 import { useApp } from "./ctx";
 import { useTween } from "./motion";
@@ -77,14 +77,14 @@ export default function Rings({ overlay, settings, volume, profile, hoverId }: {
   const [page, setPage] = useScenePage();   // (a hook: before any early return)
   if (!overlay || !settings?.global_knobs) return null;
   const root = overlay.ownerSVGElement;
-  const names: { id: string; x: number; y: number; label: string; zone: boolean }[] = [];
+  const names: { id: string; x: number; y: number; label: string; zone: boolean; dark: boolean }[] = [];
   for (const [id, c] of Object.entries(profile?.controls ?? {})) {
     if (!c.label) continue;
     const pad = id.startsWith("pad-"), zone = /^btn-(upper|lower)-\d$/.test(id);
     if (!pad && !zone) continue;
     const p = at(root, id);
     if (!p) continue;
-    names.push({ id, zone, label: zone && !c.keep_case ? c.label.toUpperCase() : c.label, x: p.x + (pad ? 49 : 48), y: p.y + (pad ? 35 : 20) });
+    names.push({ id, zone, dark: pad && labelOnDark(c.color), label: zone && !c.keep_case ? c.label.toUpperCase() : c.label, x: p.x + (pad ? 49 : 48), y: p.y + (pad ? 35 : 20) });
   }
   // On each scene button: a dot in the colour of the profile it switches to (the same colours the buttons light on the Push); the active one is ringed.
   const scenes = SCENE_IDS.map((id, i) => ({ p: profileAt(d.profiles, page * 8 + i), i: page * 8 + i, at: at(root, id) })).filter((x) => x.at);
@@ -111,6 +111,6 @@ export default function Rings({ overlay, settings, volume, profile, hoverId }: {
         if (cx === undefined) return null;
         return <KnobRing key={knob} cx={cx} v={val(which)} icon={GLOBAL_FN[which]?.icon ?? "knob"} showNum={hoverId === knob || recent(knob)} />;
       })}
-      {names.map((n) => <text key={n.id} className={n.zone ? "zone-name" : "pad-name"} x={n.x} y={n.y}>{(() => { const L = wrapName(n.label, n.zone ? 10 : 11); return L.length === 1 ? L[0] : L.map((ln, i) => <tspan key={i} x={n.x} dy={i === 0 ? "-0.55em" : "1.1em"}>{ln}</tspan>); })()}</text>)}
+      {names.map((n) => <text key={n.id} className={n.zone ? "zone-name" : n.dark ? "pad-name dark" : "pad-name"} x={n.x} y={n.y}>{(() => { const L = wrapName(n.label, n.zone ? 10 : 11); return L.length === 1 ? L[0] : L.map((ln, i) => <tspan key={i} x={n.x} dy={i === 0 ? "-0.55em" : "1.1em"}>{ln}</tspan>); })()}</text>)}
     </>, overlay);
 }

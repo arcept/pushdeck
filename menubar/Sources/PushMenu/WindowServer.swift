@@ -42,8 +42,8 @@ enum WindowServer {
             lastUse = Date()
             guard let op = Op(rawValue: name) else { return fail("unknown layout \(name)") }
             guard AXIsProcessTrusted() else { return fail("accessibility") }   // checked every time: it can be granted while this runs
-            guard let front = NSWorkspace.shared.frontmostApplication, front.processIdentifier != getpid(),
-                  front.bundleIdentifier != "com.arcept.pushdeck.menubar" else { return fail("no app in front") }
+            // The Push Deck window itself counts as a window like any other: when its window is in front (testing a pad from the editor), that is the one that moves.
+            guard let front = frontApp() else { return fail("no app in front") }
             let appEl = AXUIElementCreateApplication(front.processIdentifier)
             guard let win = window(of: appEl) else { return fail("no window") }
             if bool(win, kAXMinimizedAttribute) { return fail("minimized") }
@@ -85,6 +85,19 @@ enum WindowServer {
                          "clamped": !nearlyEqual(got, want), "fullscreen": bool(win, fullScreenAttr)])
         }
 
+        /// The app whose window is in front. Normally what macOS says; if it says nothing (or says this helper), the owner of the topmost ordinary window on screen.
+        func frontApp() -> NSRunningApplication? {
+            if let f = NSWorkspace.shared.frontmostApplication, f.processIdentifier != getpid() { return f }
+            guard let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] else { return nil }   // front to back
+            for w in list {
+                guard let pid = w[kCGWindowOwnerPID as String] as? Int32, pid != getpid(), (w[kCGWindowLayer as String] as? Int) == 0,
+                      let b = w[kCGWindowBounds as String] as? [String: CGFloat], (b["Width"] ?? 0) > 100, (b["Height"] ?? 0) > 100,
+                      let app = NSRunningApplication(processIdentifier: pid), app.activationPolicy == .regular else { continue }
+                return app
+            }
+            return nil
+        }
+
         /// Usable area of every display (menu bar and Dock excluded) in the Accessibility API's space: origin at the primary display's top-left, y down.
         func displays() -> [CGRect] {
             guard let primary = NSScreen.screens.first else { return [] }
@@ -108,10 +121,21 @@ enum WindowServer {
 
         let fullScreenAttr = "AXFullScreen"
 
-        func setFullScreen(_ win: AXUIElement, _ on: Bool) -> Bool {
+        func trySetFullScreen(_ win: AXUIElement, _ on: Bool) -> Bool {
             var settable = DarwinBoolean(false)
             guard AXUIElementIsAttributeSettable(win, fullScreenAttr as CFString, &settable) == .success, settable.boolValue else { return false }
             return AXUIElementSetAttributeValue(win, fullScreenAttr as CFString, on ? kCFBooleanTrue : kCFBooleanFalse) == .success
+        }
+
+        /// Sets full screen. A window that is not allowed to (an app's own windows are often built "auxiliary", so they can sit over another app's full-screen
+        /// Space) gets one chance to allow it: the app is told by a distributed notification and answers by changing the window's behaviour (Push Deck's
+        /// own window does, see UIWindow.swift). Then it is tried once more.
+        func setFullScreen(_ win: AXUIElement, _ on: Bool, pid: pid_t) -> Bool {
+            if trySetFullScreen(win, on) { return true }
+            guard on else { return false }
+            DistributedNotificationCenter.default().postNotificationName(Notification.Name("com.arcept.pushdeck.prepareFullScreen"), object: nil, userInfo: ["pid": NSNumber(value: pid)], deliverImmediately: true)
+            pause(0.25)
+            return trySetFullScreen(win, on)
         }
 
         /// Runs the run loop in short slices until `done` is true or the time is up (the run loop must stay alive for screens and the front app to stay current).
@@ -139,7 +163,7 @@ enum WindowServer {
         /// (it takes about 0.6 s). Moving the window earlier leaves a ghost image of it behind on the old display.
         func leaveFullScreen(_ win: AXUIElement, pid: pid_t) -> Bool {
             let start = Date()
-            guard setFullScreen(win, false), waitUntil(2.5, { !bool(win, fullScreenAttr) }) else { return false }
+            guard setFullScreen(win, false, pid: pid), waitUntil(2.5, { !bool(win, fullScreenAttr) }) else { return false }
             _ = waitUntil(3.0) { let sizes = onScreenSizes(pid); return !sizes.isEmpty && !sizes.contains(where: isDisplaySized) }
             let rest = 0.7 - Date().timeIntervalSince(start)
             if rest > 0 { pause(rest) }
@@ -150,7 +174,7 @@ enum WindowServer {
         /// Enters full screen and waits until the animation has finished. A second try after a short pause: macOS refuses it while the window is still settling.
         func enterFullScreen(_ win: AXUIElement, pid: pid_t) -> Bool {
             for attempt in 0..<2 {
-                if setFullScreen(win, true), waitUntil(1.5, { bool(win, fullScreenAttr) }) {
+                if setFullScreen(win, true, pid: pid), waitUntil(1.5, { bool(win, fullScreenAttr) }) {
                     _ = waitUntil(3.0) { onScreenSizes(pid).contains(where: isDisplaySized) }
                     pause(0.25)   // it appears at the start of the animation; the reply only needs to wait a moment, the animation finishes by itself
                     return true

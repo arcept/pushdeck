@@ -3,8 +3,8 @@ import json
 import shutil
 import time
 
-from . import profiles, settings, windows
-from .registry import DATA, GLOBAL_PADS, WINDOW_PADS
+from . import profiles, settings
+from .registry import DATA, GLOBAL_PADS
 
 
 def _filled(c):
@@ -47,41 +47,15 @@ def global_pads(eng):
 
 
 def window_pads(eng):
-    """One-time: the top-left 4 x 4 pads become the window pads, shared by every profile. A profile's own pad in one of those places is
-    backed up (with notes) and left out: a shared pad always wins over a profile's, so it could never have fired anyway."""
-    if eng.settings.get("window_pads_seeded"):
-        if not eng.settings.get("window_pads_fullscreen"):   # the first version had Restore at pad-1-3: an unchanged one becomes Full screen
-            gp = dict(eng.settings.get("global_pads") or {})
-            if (gp.get("pad-1-3") or {}).get("action") == {"type": "window", "op": "restore"}:
-                gp["pad-1-3"] = windows.DEFAULT_PADS["pad-1-3"]
-                eng.settings["global_pads"] = gp
-            eng.settings["window_pads_fullscreen"] = True
-            settings.save(eng.settings)
+    """One-time: the first version stored the 16 window pads in settings["global_pads"] (editable); they are a built-in layer now. Take them out of
+    the shared set again (anything else in it stays); profiles' own pads in those places were never touched (they are only covered while the layer is on)."""
+    if eng.settings.get("window_pads_builtin"):
         return
-    notes, touched = [], []
-    for prof in eng.ordered():
-        for cid in WINDOW_PADS:
-            c = prof.get("controls", {}).get(cid)
-            if c is None:
-                continue
-            touched.append((prof, cid))
-            notes.append(f"{prof['name']} {cid}: " + (f"replaced by a window pad. It was {json.dumps(c)}" if _filled(c) else "empty, dropped"))
-    if touched:
-        backup = DATA / "backups" / "profiles-before-window-pads"
-        if not backup.exists():
-            shutil.copytree(profiles.DIR, backup)
-        (backup / "MIGRATION.md").write_text(f"# Window pads, {time.strftime('%Y-%m-%d %H:%M')}\n\n" + "\n".join(f"- {n}" for n in notes) + "\n")
-        for prof, cid in touched:
-            prof["controls"].pop(cid, None)
-        for prof in {id(p): p for p, _ in touched}.values():
-            profiles.save(prof)
-        print("window pads migration:\n  " + "\n  ".join(notes))
-    gp = dict(eng.settings.get("global_pads") or {})
-    for cid, ctl in windows.DEFAULT_PADS.items():
-        gp.setdefault(cid, ctl)   # a pad already in the shared set (set by hand) is kept
+    gp = {k: v for k, v in (eng.settings.get("global_pads") or {}).items() if (v.get("action") or {}).get("type") != "window"}
     eng.settings["global_pads"] = gp
-    eng.settings["window_pads_seeded"] = True
-    eng.settings["window_pads_fullscreen"] = True
+    for k in ("window_pads_seeded", "window_pads_fullscreen"):
+        eng.settings.pop(k, None)
+    eng.settings["window_pads_builtin"] = True
     settings.save(eng.settings)
 
 

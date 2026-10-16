@@ -8,6 +8,7 @@ export type Profile = {
   theme: { accent: string; bg: string }; controls: Record<string, Ctl>;
   display?: { subtitle?: string; knobs?: boolean; player_side?: "left" | "right"; widgets?: import("./display/render").Widget[] };
   icon?: ProfileIconSpec;
+  window_pads?: "on" | "off";   // the built-in window pads for this profile; absent follows the global switch
   author?: { name: string; url?: string }; description?: string; created?: string;
   source?: { kind: "bundled" | "created" | "imported"; imported_at?: string; file?: string; author?: string };
 };

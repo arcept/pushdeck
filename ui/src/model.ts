@@ -14,14 +14,13 @@ export const ACTION_KINDS: ActionKind[] = [
   { type: "shortcut", fieldLabel: "Shortcut name", label: "Shortcuts.app", icon: "bolt", field: "name", placeholder: "Shortcut name", hint: "Runs a macOS Shortcut." },
   { type: "pin", fieldLabel: "Note", label: "Pin profile (Master)", icon: "bolt", field: "note", placeholder: "Optional", hint: "Makes this profile Master so it stays on screen whatever app is in front. Press again to follow your apps." },
   { type: "media", fieldLabel: "Action", label: "Media", icon: "media", field: "name", placeholder: "play_pause", hint: "Play/pause, next, previous, volume, mute." },
-  { type: "window", fieldLabel: "Layout", label: "Window", icon: "grid", field: "op", placeholder: "left-half", hint: "Moves and sizes the front app's window, or enters / leaves full screen. Press the same pad again to step through half, two-thirds and one-third. A full-screen window leaves full screen first (and goes back to it after a display move). Needs Accessibility." },
 ];
 export const MEDIA_ACTIONS = [["play_pause", "Play / pause"], ["next", "Next track"], ["prev", "Previous track"], ["volume_up", "Volume up"], ["volume_down", "Volume down"], ["mute", "Mute"]];
-// Window layouts, in the order of the default pad block (names match daemon/push_daemon/windows.py OPS).
+// Window layouts (names match daemon/push_daemon/windows.py OPS).
 export const WINDOW_ACTIONS = [["top-left", "Top left"], ["top-half", "Top half"], ["top-right", "Top right"], ["maximize", "Maximize"], ["left-half", "Left half"], ["center", "Center"], ["right-half", "Right half"], ["full-screen", "Full screen"],
   ["bottom-left", "Bottom left"], ["bottom-half", "Bottom half"], ["bottom-right", "Bottom right"], ["next-display", "Next display"], ["first-third", "First third"], ["center-third", "Center third"], ["last-third", "Last third"], ["previous-display", "Previous display"], ["restore", "Restore"]];
 /** What a freshly chosen action type starts with in its main field (a list kind starts on its first sensible choice). */
-export const actionDefault = (k: ActionKind) => (k.type === "media" ? "play_pause" : k.type === "window" ? "left-half" : "");
+export const actionDefault = (k: ActionKind) => (k.type === "media" ? "play_pause" : "");
 
 export const actionKind = (t?: string) => ACTION_KINDS.find((k) => k.type === t);
 export const summarize = (a?: Action): string => {
@@ -56,8 +55,26 @@ export const sceneName = (i: number) => (i < 8 ? `Scene button ${i + 1} (${SCENE
 export const sceneOrder = (ps: Profile[]) => [...ps].sort((a, b) => (a.slot ?? 99) - (b.slot ?? 99) || a.id.localeCompare(b.id));
 export const sceneIndex = (ps: Profile[], id: string) => { const s = ps.find((p) => p.id === id)?.slot; return typeof s === "number" && s >= 0 && s < 16 ? s : -1; };
 export const profileAt = (ps: Profile[], slot: number) => ps.find((p) => p.slot === slot);
-// The right-hand column of pads and the top-left 4 x 4 window pads are one shared set that works in every profile (registry.py GLOBAL_PADS).
-export const isGlobalPad = (id: string) => /^pad-\d-7$/.test(id) || /^pad-[0-3]-[0-3]$/.test(id);
+// The right-hand column of pads is one shared set that works in every profile.
+export const isGlobalPad = (id: string) => /^pad-\d-7$/.test(id);
+
+// The built-in window pads: the top-left 4 x 4 pads, laid out like the screen (keep in step with daemon/push_daemon/windows.py DEFAULT_PADS). They are not
+// editable; a global switch and a per-profile choice turn them on, and while on they cover whatever a profile has on those pads (kept, shown again when off).
+const QUARTER = "#a259ff", HALF = "#1abcfe", THIRD = "#0acf83", FILL = "#ffcd29", DISPLAY = "#e6e6e6";
+const WL = (label: string, op: string, color: string): Ctl => ({ label, color, action: { type: "window", op } });
+export const WINDOW_LAYER: Record<string, Ctl> = {
+  "pad-0-0": WL("Top left", "top-left", QUARTER), "pad-0-1": WL("Top half", "top-half", HALF), "pad-0-2": WL("Top right", "top-right", QUARTER), "pad-0-3": WL("Maximize", "maximize", FILL),
+  "pad-1-0": WL("Left half", "left-half", HALF), "pad-1-1": WL("Center", "center", FILL), "pad-1-2": WL("Right half", "right-half", HALF), "pad-1-3": WL("Full screen", "full-screen", FILL),
+  "pad-2-0": WL("Bottom left", "bottom-left", QUARTER), "pad-2-1": WL("Bottom half", "bottom-half", HALF), "pad-2-2": WL("Bottom right", "bottom-right", QUARTER), "pad-2-3": WL("Next display", "next-display", DISPLAY),
+  "pad-3-0": WL("First third", "first-third", THIRD), "pad-3-1": WL("Center third", "center-third", THIRD), "pad-3-2": WL("Last third", "last-third", THIRD), "pad-3-3": WL("Previous display", "previous-display", DISPLAY),
+};
+export const WINDOW_PAD_IDS = Object.keys(WINDOW_LAYER);
+/** Are the window pads on for this profile? Its own choice wins; otherwise the global switch (on unless turned off). */
+export const windowOn = (settings: Settings | null | undefined, profile?: Pick<Profile, "window_pads">) =>
+  profile?.window_pads === "on" ? true : profile?.window_pads === "off" ? false : settings?.window_pads !== false;
+/** The pads of this profile (as saved) that the window pads would cover, by name. */
+export const windowConflicts = (controls: Record<string, Ctl> | undefined) =>
+  WINDOW_PAD_IDS.filter((id) => { const c = controls?.[id]; return !!c && !!(c.label || c.action || c.color); }).map((id) => controls![id].label || id.replace("pad-", "Pad ").replace("-", ","));
 export const SCENE_IDS = ["btn-1-32t", "btn-1-32", "btn-1-16t", "btn-1-16", "btn-1-8t", "btn-1-8", "btn-1-4t", "btn-1-4"];
 
 export const COLOUR_NAMES: Record<string, string> = {
@@ -85,6 +102,7 @@ export function describeControl(id: string, o: {
     return p ? { primary: `Switch to ${p.name}`, secondary: [`${sceneName(si)} · ${o.pinned === p.id ? "master, press to go back to Auto" : "press to make it master"}`] }
              : { primary: "Profile button, empty", secondary: [`${sceneName(si)} · no profile assigned`], muted: true };
   }
+  if (o.profile && WINDOW_LAYER[id] && windowOn(o.settings, o.profile)) return { primary: WINDOW_LAYER[id].label!.toUpperCase(), secondary: ["Built-in window shortcut", `${o.name} · set in Settings, per profile`] };
   const glob = isGlobalPad(id) ? " · global, works in every profile" : "";
   const c: Ctl | undefined = o.profile?.controls[id];
   if (!c || (!c.label && !c.action && !c.icon && !c.color)) return { primary: "Unassigned", secondary: [`${o.name}${glob} · click to assign`], muted: true };
@@ -92,11 +110,19 @@ export function describeControl(id: string, o: {
   return { primary: c.label ? (c.keep_case ? c.label : c.label.toUpperCase()) : act || "Colour only", secondary: [[c.label ? act : "", c.risky ? "needs a second press" : ""].filter(Boolean).join(" · "), o.name + glob].filter(Boolean) };
 }
 
+/** Black or white text for a label on a pad lit in `hex`: whichever has the higher WCAG contrast against the colour (so yellow, white and light blue get black). */
+export function labelOnDark(hex?: string): boolean {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex ?? ""); if (!m) return false;   // no colour: the pad is dark, the label stays white
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return (lum + 0.05) / 0.05 > 1.05 / (lum + 0.05);   // contrast with black (lum 0) beats contrast with white (lum 1)
+}
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "profile";
 export const uniqueId = (base: string, taken: string[]) => { let id = slugify(base), n = 2; while (taken.includes(id)) id = `${slugify(base)}-${n++}`; return id; };
 
-export type Kind = "global" | "reserved" | "repeat" | "setup" | "scene" | "unassignable" | "editable";
-export function controlKind(id: string, settings: Settings | null, kind?: string): Kind {
+export type Kind = "window" | "global" | "reserved" | "repeat" | "setup" | "scene" | "unassignable" | "editable";
+export function controlKind(id: string, settings: Settings | null, kind?: string, profile?: Pick<Profile, "window_pads">): Kind {
+  if (profile && WINDOW_LAYER[id] && windowOn(settings, profile)) return "window";
   if (settings?.global_knobs?.[id]) return "global";
   if (RESERVED_KNOBS.includes(id)) return "reserved";
   if (id === "btn-master") return "repeat";

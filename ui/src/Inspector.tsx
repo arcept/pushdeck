@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DisplayIcon, Icon } from "./icons";
 import { useApp } from "./ctx";
 import type { Action, Ctl } from "./daemon";
-import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ACTIONS, PALETTE, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
+import { WINDOW_LAYER, controlKind, ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, PALETTE, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
 import { useScenePage } from "./scenePage";
 import { Field, Switch, CustomColour, useToast } from "./ui";
 import { fmtTime } from "./profileFile";
@@ -69,8 +69,6 @@ function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
           {a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
             : a.type === "media" ? (
               <select value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
-            : a.type === "window" ? (
-              <select value={String(a.op ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, op: e.target.value } })}>{WINDOW_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
             : a.type === "text" || a.type === "shell" ? <textarea className="mono" rows={3} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(e) => set({ ...ctl, action: { ...a, [kind.field]: e.target.value } })} />
             : a.type === "app" ? <AppField value={String(a.name ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
             : <input type="text" className={a.type === "url" ? "mono" : ""} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(e) => set({ ...ctl, action: { ...a, [kind.field]: e.target.value } })} />}
@@ -84,7 +82,7 @@ function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
 
 export default function Inspector() {
   const [scenePage] = useScenePage();   // (a hook: before any early return)
-  const { d, profile, selected, setSelected, updateControl, saveState, savedAt, openSettings, setCurrent } = useApp();
+  const { d, profile, rawControls, selected, setSelected, updateControl, saveState, savedAt, openSettings, setCurrent } = useApp();
   const [iconsOpen, setIconsOpen] = useState(false);
   const id = selected; const toast = useToast();
   if (!id || !profile) return (
@@ -130,6 +128,13 @@ export default function Inspector() {
     return (<aside className="inspector">{head(name, <span className="chipbadge warn">not assignable yet</span>)}<div className="tips">Per-profile functions for encoders and the touch strip are planned. Today the encoders marked on the replica are global.</div></aside>);
   }
 
+  if (controlKind(id, d.settings, d.controls[id]?.kind, profile) === "window") {   // a built-in window pad: nothing to edit, only where to switch it off
+    const w = WINDOW_LAYER[id], own = rawControls?.[id], covers = !!own && !!(own.label || own.action || own.color);
+    return (<aside className="inspector">{head(w.label ?? "Window shortcut", <span className="chipbadge accent">window shortcut</span>)}
+      <div className="isect"><p className="hint" style={{ marginTop: 0 }}>Built in: moves and sizes the window in front. Press the same pad again to step through half, two-thirds and one-third; a full-screen window leaves full screen first.</p>
+        {covers && <p className="hint">This pad covers “{own!.label || "a pad"}” in this profile. It stays saved and comes back when window shortcuts are turned off for this profile.</p>}
+        <div className="row wrap"><button className="btn" onClick={() => openSettings("general")}><Icon name="grid" size={16} />Window shortcut settings</button></div></div></aside>);
+  }
   const ctl: Ctl = profile.controls[id] ?? {};
   const set = (c: Ctl) => updateControl(id, c);
   const zone = isZone(id), pad = id.startsWith("pad-");

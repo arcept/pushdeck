@@ -3,7 +3,7 @@ import { Icon } from "./icons";
 import { useApp } from "./ctx";
 import { AppField, ShortcutField } from "./Inspector";
 import { CustomColour } from "./ui";
-import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ACTIONS, PALETTE, actionDefault, colourName, actionKind, controlKind, describeControl } from "./model";
+import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, PALETTE, actionDefault, colourName, actionKind, controlKind, describeControl } from "./model";
 import type { Action } from "./daemon";
 import { usePop } from "./motion";
 
@@ -21,7 +21,7 @@ export default function QuickPop({ id, rect, onClose }: { id: string; rect: DOMR
   const W = 296, name = d.controls[id]?.name ?? id;
   const left = rect.right + 14 + W < window.innerWidth ? rect.right + 14 : Math.max(8, rect.left - 14 - W);
   const top = Math.max(64, Math.min(rect.top - 24, window.innerHeight - 380));
-  const kind = controlKind(id, d.settings, d.controls[id]?.kind);
+  const kind = controlKind(id, d.settings, d.controls[id]?.kind, profile);
   const ctl = profile?.controls[id] ?? {};
   const set = (c: typeof ctl) => updateControl(id, c);
   const tip = describeControl(id, { name, settings: d.settings, profiles: d.profiles, pinned: d.active.pinned, profile });
@@ -44,7 +44,6 @@ export default function QuickPop({ id, rect, onClose }: { id: string; rect: DOMR
         <option value="">No action</option>{ACTION_KINDS.map((x) => <option key={x.type} value={x.type}>{x.label}</option>)}</select>
       {a && k && (a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
         : a.type === "media" ? <select className="qp-in" value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
-        : a.type === "window" ? <select className="qp-in" value={String(a.op ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, op: e.target.value } })}>{WINDOW_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
         : a.type === "app" ? <AppField className="qp-in" value={String(a.name ?? "")} placeholder={k.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
         : <input type="text" className={`qp-in ${a.type === "url" || a.type === "shell" ? "mono" : ""}`} value={String(a[k.field] ?? "")} placeholder={k.placeholder} aria-label={k.fieldLabel} onChange={(e) => set({ ...ctl, action: { ...a, [k.field]: e.target.value } })} />)}
       <div className="swatches" role="group" aria-label="Colour">
