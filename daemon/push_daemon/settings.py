@@ -25,7 +25,8 @@ DEFAULTS = {
     "onboarded": False,          # the first-run setup has been completed or skipped (Settings can run it again)
     "claude_usage_live": False,  # read Claude's plan usage live from its usage endpoint (uses the Claude login token in the Keychain); see usage.py
     "display_widgets": [],       # the shared widget arrangement (one list); empty = display/tokens.py layout_default
-    "global_pads": {},           # pad-<row>-7 -> the same control setup as in a profile; works in every profile
+    "global_pads": {},           # pad-<row>-7 and the top-left 4 x 4 window pads -> the same control setup as in a profile; works in every profile
+    "window_pads": True,         # the window pads (type "window") are active; off hides them everywhere without deleting them
     "media": {"mode": "half", "style": "none", "idle": "last", "audio": True, "chrome": True, "spotify_desktop": True, "system": True, "auto_show": True, "favorites": []},
     "calibration": {"red": [255, 0, 0], "green": [0, 255, 0], "blue": [0, 0, 255], "saturation": 1.0},
 }

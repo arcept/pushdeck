@@ -1,6 +1,8 @@
-"""Action executors. Types: keys, text, app, url, shell, shortcut, media."""
+"""Action executors. Types: keys, text, app, url, shell, shortcut, media, window."""
 import subprocess
 import time
+
+from . import windows
 
 MODS = {"cmd": "command down", "command": "command down", "shift": "shift down", "alt": "option down",
         "opt": "option down", "option": "option down", "ctrl": "control down", "control": "control down"}
@@ -93,5 +95,7 @@ def run(action: dict):
         subprocess.Popen(["shortcuts", "run", action["name"]])
     elif t == "media":
         _osa(MEDIA[action["name"]])
+    elif t == "window":
+        windows.server.send(action["op"])
     else:
         raise ValueError(f"unknown action type {t!r}")

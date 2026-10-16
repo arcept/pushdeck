@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Icon } from "./icons";
 import { useApp } from "./ctx";
-import { ACTION_KINDS, MEDIA_ACTIONS, controlKind, summarize } from "./model";
+import { ACTION_KINDS, MEDIA_ACTIONS, WINDOW_ACTIONS, controlKind, summarize } from "./model";
 import { useToast } from "./ui";
 
 // While a chip is dragged, every pad or button that can take an action is outlined on the replica and the one under the pointer lights up.
@@ -44,8 +44,9 @@ export default function ActionLibrary() {
         <span>Add an action<span className="alsub">drag onto the Push, or click</span></span><Icon name={open ? "down" : "right"} size={14} />
       </button>
       {open && <div className="alchips">
-        {ACTION_KINDS.filter((k) => k.type !== "media").map((k) => chip(k.type, k.icon, k.label, { type: k.type, [k.field]: "" }))}
+        {ACTION_KINDS.filter((k) => k.type !== "media" && k.type !== "window").map((k) => chip(k.type, k.icon, k.label, { type: k.type, [k.field]: "" }))}
         {MEDIA_ACTIONS.map(([v, l]) => chip(v, "media", l, { type: "media", name: v }))}
+        {WINDOW_ACTIONS.map(([v, l]) => chip(v, "grid", l, { type: "window", op: v }))}
       </div>}
     </section>
   );

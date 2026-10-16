@@ -6,6 +6,8 @@ Push Deck is an independent project. It is **not affiliated with, endorsed by, o
 
 - The replica drawing in `ui/src/assets/push2.svg` is an original vector drawing made for this project. The Ableton logo that
   appeared in an earlier version has been removed and replaced with this project's own mark.
+- The window pads' layout names and repeat-to-cycle behaviour follow Rectangle (https://github.com/rxhanson/Rectangle, MIT License,
+  copyright Ryan Hanson and contributors). The code is written for this project and does not include Rectangle's source.
 - Fonts in `design/fonts/` are under the SIL Open Font License (Quicksand, IBM Plex Mono, IBM Plex Sans, Instrument Sans).
 
 ## Font copyrights

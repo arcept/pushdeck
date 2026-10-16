@@ -6,7 +6,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from . import actions, asks, downloads, favicons, limits, clock_timer, color, frontmost, usage, media_ui, migrate, permissions, profiles, scenes, settings, tabs, volume
+from . import actions, asks, downloads, favicons, limits, clock_timer, color, frontmost, usage, media_ui, migrate, permissions, profiles, scenes, settings, tabs, volume, windows
 from .display import layout, library, render
 from .media import MediaHub
 from . import registry as R
@@ -101,6 +101,8 @@ class Engine:
         render.ART_LOOKUP = lambda key: (self.media.art_cache.get(key) or (None, None, None))[1]
         self.media.start()
         migrate.global_pads(self)
+        migrate.window_pads(self)
+        windows.server.on_failure = lambda text: self.loop.call_soon_threadsafe(self.flash, text, False)
         migrate.widget_buttons(self)
         migrate.single_layout(self)
         migrate.player_overlay(self)
@@ -557,7 +559,10 @@ class Engine:
     def controls_for(self, prof):
         """The controls that act right now: the profile's own, plus the global pad column shared by every profile."""
         own = {k: v for k, v in ((prof or {}).get("controls") or {}).items() if (v.get("action") or {}).get("type") != "pin"}   # Master lives on the profile widget now
-        return {**own, **(self.settings.get("global_pads") or {})}
+        shared = self.settings.get("global_pads") or {}
+        if not self.settings.get("window_pads", True):
+            shared = {k: v for k, v in shared.items() if (v.get("action") or {}).get("type") != "window"}
+        return {**own, **shared}
 
     def live_buttons(self, prof):
         """The display buttons the widgets on screen right now bring along ({button id: control}); none while a list is open in Browse."""
@@ -927,7 +932,7 @@ class Engine:
         elif t == "set_setting":
             self.settings[msg["key"]] = msg["value"]
             settings.save(self.settings)
-            if msg["key"] == "global_pads":
+            if msg["key"] in ("global_pads", "window_pads"):
                 self._leds_for = None
             if msg["key"] == "calibration":
                 color.set_calibration(msg["value"])

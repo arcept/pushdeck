@@ -14,7 +14,7 @@ Goal: make the Push a daily-use device: control apps, show ambient info, switch 
 - Auto-switch by frontmost app; manual override via the scene-launch buttons (select profile).
 - One JSON file per profile in a project folder.
 - First profiles: ChatGPT/Codex, Figma, Claude Code/terminal, Spotify/YouTube Music, Browser/Slack/Notion.
-- Pads: freeform per profile (action, status tile, or both). No fixed global row.
+- Pads: freeform per profile (action, status tile, or both). Two shared sets work in every profile: the right-hand column and (since 2026-10-16) the top-left 4 x 4 window pads.
 - Encoders: first few global (volume, brightness), the rest per-profile. Touch strip: scrub/scroll per profile.
 - Action types: keyboard shortcuts + typed text; launch/focus apps, open URLs; shell scripts / Shortcuts.app; media + system controls.
 - Risky actions are flagged and need a second confirm press.

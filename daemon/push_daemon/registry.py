@@ -55,7 +55,8 @@ UPPER = [f"btn-upper-{i}" for i in range(1, 9)]
 LOWER = [f"btn-lower-{i}" for i in range(1, 9)]
 SCENE = [BTN_BY_CC[cc] for cc in range(43, 35, -1)]  # top to bottom: 1/32T ... 1/4  (CC 43 .. 36)
 REPEAT = "btn-repeat"
-GLOBAL_PADS = [f"pad-{r}-7" for r in range(8)]  # the right-hand pad column: one shared set for every profile
+WINDOW_PADS = [f"pad-{r}-{c}" for r in range(4) for c in range(4)]  # the top-left 4 x 4 pads: the window layouts (see windows.py)
+GLOBAL_PADS = [f"pad-{r}-7" for r in range(8)] + WINDOW_PADS  # pads shared by every profile: the right-hand column and the window pads
 
 if __name__ == "__main__":
     print(len(CONTROLS), "controls")

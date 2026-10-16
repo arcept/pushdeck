@@ -20,7 +20,7 @@ A Push 2 replica you can click, drag onto and edit that is a true two-way mirror
 ## Operating Context
 - Daemon owns the hardware; UI, menu bar and tests talk to it over WebSocket (`/ws`, port 8472).
 - Profiles: one JSON file per profile in `profiles/`; auto-switch by frontmost app, scene buttons (right of the pads) pin a profile. Pads are a freeform per-profile grid.
-- Global controls work in every profile: Encoder 1 display brightness, Encoder 2 pad/button brightness, Encoder 8 volume; Tempo, Swing and Master knobs are deliberately unused; Repeat reruns the last test; Shift+Setup starts colour calibration.
+- Global controls work in every profile: Encoder 1 display brightness, Encoder 2 pad/button brightness, Encoder 8 volume; Tempo, Swing and Master knobs are deliberately unused; Repeat reruns the last test; Shift+Setup starts colour calibration; the top-left 4 x 4 pads are window pads (halves, quarters, thirds, maximize, center, display moves).
 - Display rules: always pure black background; Quicksand (main) + IBM Plex Mono (secondary); 16 label zones, 105x34 px, ALL CAPS by default, optional icon; a popup shows global knob changes.
 - Risky actions need a second confirm press. The Push cannot be powered off by software; "Turn Push off" blanks it and ignores input.
 

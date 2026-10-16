@@ -93,7 +93,7 @@ The first-run setup walks you through these; macOS asks once for each.
 
 | Permission | Needed for |
 | --- | --- |
-| **Accessibility** | pads and buttons that send keyboard shortcuts or text |
+| **Accessibility** | pads and buttons that send keyboard shortcuts or text, and the window pads that move and size windows |
 | **Automation** (System Events, Chrome, Spotify) | pressing keys, reading and controlling players |
 | **Downloads folder** | showing downloads in progress on the display |
 | **System audio** (optional) | the music visualizer; audio is analysed on your Mac, never recorded |

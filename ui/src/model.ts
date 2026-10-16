@@ -14,8 +14,14 @@ export const ACTION_KINDS: ActionKind[] = [
   { type: "shortcut", fieldLabel: "Shortcut name", label: "Shortcuts.app", icon: "bolt", field: "name", placeholder: "Shortcut name", hint: "Runs a macOS Shortcut." },
   { type: "pin", fieldLabel: "Note", label: "Pin profile (Master)", icon: "bolt", field: "note", placeholder: "Optional", hint: "Makes this profile Master so it stays on screen whatever app is in front. Press again to follow your apps." },
   { type: "media", fieldLabel: "Action", label: "Media", icon: "media", field: "name", placeholder: "play_pause", hint: "Play/pause, next, previous, volume, mute." },
+  { type: "window", fieldLabel: "Layout", label: "Window", icon: "grid", field: "op", placeholder: "left-half", hint: "Moves and sizes the front app's window, or enters / leaves full screen. Press the same pad again to step through half, two-thirds and one-third. A full-screen window leaves full screen first (and goes back to it after a display move). Needs Accessibility." },
 ];
 export const MEDIA_ACTIONS = [["play_pause", "Play / pause"], ["next", "Next track"], ["prev", "Previous track"], ["volume_up", "Volume up"], ["volume_down", "Volume down"], ["mute", "Mute"]];
+// Window layouts, in the order of the default pad block (names match daemon/push_daemon/windows.py OPS).
+export const WINDOW_ACTIONS = [["top-left", "Top left"], ["top-half", "Top half"], ["top-right", "Top right"], ["maximize", "Maximize"], ["left-half", "Left half"], ["center", "Center"], ["right-half", "Right half"], ["full-screen", "Full screen"],
+  ["bottom-left", "Bottom left"], ["bottom-half", "Bottom half"], ["bottom-right", "Bottom right"], ["next-display", "Next display"], ["first-third", "First third"], ["center-third", "Center third"], ["last-third", "Last third"], ["previous-display", "Previous display"], ["restore", "Restore"]];
+/** What a freshly chosen action type starts with in its main field (a list kind starts on its first sensible choice). */
+export const actionDefault = (k: ActionKind) => (k.type === "media" ? "play_pause" : k.type === "window" ? "left-half" : "");
 
 export const actionKind = (t?: string) => ACTION_KINDS.find((k) => k.type === t);
 export const summarize = (a?: Action): string => {
@@ -30,6 +36,7 @@ export const summarize = (a?: Action): string => {
     case "shortcut": return `Runs Shortcut “${v("name")}”`;
     case "pin": return "Pins this profile (Master) · press again to follow your apps";
     case "media": return MEDIA_ACTIONS.find((m) => m[0] === v("name"))?.[1] ?? v("name");
+    case "window": return `Window: ${WINDOW_ACTIONS.find((w) => w[0] === v("op"))?.[1] ?? v("op")}`;
     default: return a.type;
   }
 };
@@ -49,8 +56,8 @@ export const sceneName = (i: number) => (i < 8 ? `Scene button ${i + 1} (${SCENE
 export const sceneOrder = (ps: Profile[]) => [...ps].sort((a, b) => (a.slot ?? 99) - (b.slot ?? 99) || a.id.localeCompare(b.id));
 export const sceneIndex = (ps: Profile[], id: string) => { const s = ps.find((p) => p.id === id)?.slot; return typeof s === "number" && s >= 0 && s < 16 ? s : -1; };
 export const profileAt = (ps: Profile[], slot: number) => ps.find((p) => p.slot === slot);
-// The right-hand column of pads is one shared set that works in every profile.
-export const isGlobalPad = (id: string) => /^pad-\d-7$/.test(id);
+// The right-hand column of pads and the top-left 4 x 4 window pads are one shared set that works in every profile (registry.py GLOBAL_PADS).
+export const isGlobalPad = (id: string) => /^pad-\d-7$/.test(id) || /^pad-[0-3]-[0-3]$/.test(id);
 export const SCENE_IDS = ["btn-1-32t", "btn-1-32", "btn-1-16t", "btn-1-16", "btn-1-8t", "btn-1-8", "btn-1-4t", "btn-1-4"];
 
 export const COLOUR_NAMES: Record<string, string> = {

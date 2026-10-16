@@ -114,6 +114,8 @@ if let i = CommandLine.arguments.firstIndex(of: "--perm") {   // used by the dae
     exit(0)
 }
 
+if CommandLine.arguments.contains("--windows") { WindowServer.run() }   // used by the daemon: the window pads (see WindowServer.swift); never returns
+
 let app = NSApplication.shared
 let delegate = App()
 app.delegate = delegate

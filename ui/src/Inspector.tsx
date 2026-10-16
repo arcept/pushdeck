@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DisplayIcon, Icon } from "./icons";
 import { useApp } from "./ctx";
 import type { Action, Ctl } from "./daemon";
-import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, PALETTE, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
+import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ACTIONS, PALETTE, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
 import { useScenePage } from "./scenePage";
 import { Field, Switch, CustomColour, useToast } from "./ui";
 import { fmtTime } from "./profileFile";
@@ -56,7 +56,7 @@ export function ShortcutField({ value, onChange }: { value: string; onChange: (v
 
 function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
   const a = ctl.action, kind = actionKind(a?.type);
-  const pick = (type: string) => { const k = actionKind(type)!; set({ ...ctl, action: { type, [k.field]: type === "media" ? "play_pause" : "" } as Action }); };
+  const pick = (type: string) => { const k = actionKind(type)!; set({ ...ctl, action: { type, [k.field]: actionDefault(k) } as Action }); };
   return (
     <>
       <div className="kinds" role="group" aria-label="Action type">
@@ -69,6 +69,8 @@ function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
           {a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
             : a.type === "media" ? (
               <select value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
+            : a.type === "window" ? (
+              <select value={String(a.op ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, op: e.target.value } })}>{WINDOW_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
             : a.type === "text" || a.type === "shell" ? <textarea className="mono" rows={3} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(e) => set({ ...ctl, action: { ...a, [kind.field]: e.target.value } })} />
             : a.type === "app" ? <AppField value={String(a.name ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
             : <input type="text" className={a.type === "url" ? "mono" : ""} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(e) => set({ ...ctl, action: { ...a, [kind.field]: e.target.value } })} />}

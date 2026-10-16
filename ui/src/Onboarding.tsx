@@ -118,7 +118,7 @@ export default function Onboarding() {
               <div className="perms">
                 <div className="perm rise" style={dly(100)}>
                   <span className={"pico " + (ax === true ? "on" : ax === false ? "off" : "")}><IconKeys size={22} /></span>
-                  <div className="pbody"><b>Accessibility {ax === true && <em className="ok">allowed</em>}{ax === false && <em className="no">needed</em>}</b><p>{ax === false ? "Already switched on but still showing here? In Settings select Push Deck, press − to remove it, then + to add it again." : "Lets pads and buttons send keyboard shortcuts and type text."}</p></div>
+                  <div className="pbody"><b>Accessibility {ax === true && <em className="ok">allowed</em>}{ax === false && <em className="no">needed</em>}</b><p>{ax === false ? "Already switched on but still showing here? In Settings select Push Deck, press − to remove it, then + to add it again." : "Lets pads and buttons send keyboard shortcuts, type text and move windows."}</p></div>
                   {ax !== true && <button className="btn sm" onClick={() => pane("accessibility")}>Open Settings</button>}
                 </div>
                 <div className="perm rise" style={dly(150)}>
