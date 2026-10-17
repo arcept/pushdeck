@@ -67,23 +67,9 @@ Everything runs on your Mac. No account, no cloud, no tracking.
 
 Push Deck is signed ad hoc, not with a paid Apple Developer ID, so a downloaded copy shows "unidentified developer" the first time. **Right-click the app, choose Open, then Open again**, once. The one-line route avoids this.
 
-### Build from source
-
-You need Python 3.9+, Node 18+, [Homebrew](https://brew.sh) (for `libusb`) and the Xcode command line tools (`xcode-select --install`).
-
-```bash
-./install.sh                # builds Push Deck.app into build/ and installs it in /Applications (asks before replacing)
-```
-
-To run only the daemon and the browser UI, without the app:
-
-```bash
-brew install libusb && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-cd ui && npm install && npm run build && cd ..
-./run_daemon.sh             # then open http://127.0.0.1:8472  (another port: set PUSH_PORT)
-```
-
 Settings and profiles live in `~/Library/Application Support/Push Deck`. Settings → General has "Open at login".
+
+Want to build it yourself or work on the code? See [docs/DEVELOPING.md](docs/DEVELOPING.md).
 
 ### macOS permissions
 
@@ -133,18 +119,7 @@ The **Layout** button turns the player On or Off. On, it takes half the display 
 - "Now playing" for other players uses Apple's private MediaRemote framework, which Apple can change in any macOS update.
 - After using the YouTube Music app window, Chrome keeps sending media keys to it while it is in front (Chrome and macOS behaviour).
 
-## Development
-
-**Dev mode is the test version.** `./dev.sh` runs the daemon from this folder (its own `settings.json` and `profiles/`) and rebuilds the UI on every save, at <http://127.0.0.1:8472>. Test there, then run `./install.sh`.
-
-```bash
-./dev.sh                    # daemon + UI rebuilt on save
-cd ui && npm run dev        # alternative: UI with hot reload, proxying /ws to the daemon
-cd ui && npm run build      # type-check, then build ui/dist
-PYTHONPATH=daemon .venv/bin/python -m push_daemon.display.tokens   # rewrite ui/src/display/tokens.json
-```
-
-The display is drawn twice on purpose: `daemon/push_daemon/display/render.py` draws what the Push shows and `ui/src/display/render.ts` draws the same scene in the browser. Change both together, and restart the daemon after any Python change.
+## Project layout
 
 | Path | What it is |
 | --- | --- |
