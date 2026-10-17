@@ -59,8 +59,6 @@ Everything runs on your Mac. No account, no cloud, no tracking.
 
 **You need:** an Apple Silicon Mac on macOS 13 or newer, and an **Ableton Push 2** on USB (not the original Push or Push 3). Nothing else: the app carries its own Python, libraries and helpers. The music visualizer needs macOS 14.2; the system "now playing" reader needs macOS 15.4 or newer to work as built. Chrome, Spotify and the Claude desktop app are optional; features that use them are simply off without them.
 
-> **Releases are not out yet.** The three easy routes below switch on with the first release. Until then, [build from source](#build-from-source).
-
 | Route | How |
 | --- | --- |
 | **Download** | Get the `.dmg` from [Releases](https://github.com/arcept/pushdeck/releases), drag Push Deck to Applications. |
