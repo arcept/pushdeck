@@ -4,6 +4,8 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Landing page (pushdeck.arcept.in): download, Homebrew and one-line install are live for 1.0.0 (the "from source" card is gone; build instructions stay in docs/DEVELOPING.md), and window shortcuts are added to the features, FAQ and requirements. The window screenshots and tour close-ups were recaptured from 1.0.0, so they show the window pads and the "Add an action" shelf.
+
 ## 1.0.0 (2026-10-17)
 
 First public release. Push Deck turns an Ableton Push 2 into a per-app controller and live display for your Mac: profiles that follow the app in front, pads and buttons that send shortcuts and actions, window shortcuts, now playing, Claude and Codex usage, and a replica of the Push to set it all up on screen.

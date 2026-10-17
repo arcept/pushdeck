@@ -623,7 +623,7 @@ export default function Landing({ version }: { version: string }) {
           <h2 data-reveal>{copy.installTitle}</h2>
           <div className="installs">
             {install.map((r, i) => {
-              const live = r.id === "src" || RELEASE_LIVE;
+              const live = RELEASE_LIVE;
               return (
                 <article key={r.id} data-reveal style={{ ["--c" as string]: PAD_COLORS[i * 2] }}>
                   <header>

@@ -1,7 +1,7 @@
 // All the words and links on the page, in one place. Keep this consistent with README.md.
 
-/** Flip to true when the first release is published and the .dmg exists. */
-export const RELEASE_LIVE = false;
+/** True once the .dmg is published on GitHub Releases (Push Deck 1.0.0 is out). */
+export const RELEASE_LIVE = true;
 
 export const REPO = "https://github.com/arcept/pushdeck";
 export const RELEASES = `${REPO}/releases/latest`;
@@ -13,8 +13,8 @@ export const features = [
   { title: "Profiles that follow your app", text: "Every app gets its own pads, buttons and knobs. Switch apps and the Push switches with you." },
   { title: "A live display", text: "The 960×160 screen shows clocks, timers, usage meters, the tab in front and a media player." },
   { title: "A replica to edit on", text: "A copy of your Push in a window: click a pad to set it up, mirror the display, arrange widgets." },
+  { title: "Window shortcuts", text: "Sixteen built-in pads snap and resize the front window in any profile: halves, quarters, thirds, maximize, centre, full screen, next or previous display." },
   { title: "A menu bar app", text: "Pin a profile, set the brightness or turn the Push on and off without opening anything." },
-  { title: "Set up in minutes", text: "First-run setup checks your Push and explains each macOS permission in plain words." },
   { title: "Private by design", text: "Runs on your Mac. No account, no cloud, no tracking. It listens on 127.0.0.1 only." },
 ];
 
@@ -35,9 +35,8 @@ export const steps = [
 
 export const install = [
   { id: "dmg", label: "Download", cmd: "", note: "The .dmg from GitHub Releases. Drag Push Deck to Applications.*" },
-  { id: "brew", label: "Homebrew", cmd: "brew install --cask arcept/tap/pushdeck", note: "Tap coming with the first release." },
+  { id: "brew", label: "Homebrew", cmd: "brew install --cask arcept/tap/pushdeck", note: "Installs the same app as the .dmg, from the arcept tap." },
   { id: "curl", label: "One line", cmd: "curl -fsSL https://raw.githubusercontent.com/arcept/pushdeck/main/get.sh | bash", note: "Checks the checksum. No security prompt." },
-  { id: "src", label: "From source", cmd: "./install.sh", note: "Works today. Clone the repo first." },
 ];
 
 /** Quick answers. Keep every line true to the app and the README. */
@@ -47,7 +46,8 @@ export const faq = [
   { q: "Which computers does it run on?", a: "Macs with Apple Silicon, on macOS 13 or newer. The app carries its own Python and helpers, so there is nothing else to install. The music visualizer needs macOS 14.2. There is no Windows or Linux version." },
   { q: "Does it send anything anywhere?", a: "No account, no cloud, no tracking, and no Push Deck server to send anything to. The app listens on 127.0.0.1 only, so other devices on your network can't reach it. One optional feature touches a login: live Claude usage reads the Claude desktop app's sign-in from the macOS Keychain, in memory only. It asks first and can be switched off at any time. The privacy section above lists everything it touches." },
   { q: "Why does my Mac say “unidentified developer”?", a: "Push Deck is signed ad hoc rather than with a paid Apple Developer ID, so macOS shows an “unidentified developer” warning the first time you open a downloaded copy. Right-click the app, choose Open, then Open, and you won't be asked again. The one-line installer checks the download's checksum and avoids the warning." },
-  { q: "Can I make my own profiles?", a: "Yes. A profile is an app (or a few apps) with its own pad colours, labels and actions: shortcuts, opening apps and links, typing text, running Shortcuts or shell commands, media keys. Drag actions onto the replica in the app window to set them up. In Auto mode the Push switches to a profile when its app comes to the front; Master keeps one pinned. It starts with profiles for Claude Code, Browser and ChatGPT / Codex." },
+  { q: "Can it move and resize my windows?", a: "Yes. A built-in layer of 16 pads (the top-left 4×4 block) snaps and resizes the front window in every profile: halves, quarters, thirds, maximize, centre, full screen, and next or previous display. Switch it on or off globally in Settings, or per profile (Default, On or Off). You can rename and recolour those pads, and put Close window, Minimize window or Full screen on any pad. It needs the Accessibility permission. The layouts are modelled on Rectangle." },
+  { q: "Can I make my own profiles?", a: "Yes. A profile is an app (or a few apps) with its own pad colours, labels and actions: shortcuts, opening apps and links, typing text, running Shortcuts or shell commands, media keys. Drag actions onto the replica in the app window to set them up; any pad can also close, minimize or full-screen the front window. In Auto mode the Push switches to a profile when its app comes to the front; Master keeps one pinned. It starts with profiles for Claude Code, Browser and ChatGPT / Codex." },
   { q: "Is it free? Can I contribute?", a: "It is free and open source under the MIT licence, © Arcept. The code is on GitHub and Issues are open for bugs and ideas. Pull requests are by invitation for now. Push Deck is an independent project and isn't affiliated with Ableton." },
 ];
 
@@ -55,6 +55,7 @@ export const requirements = [
   "Apple Silicon Mac, macOS 13 or newer",
   "An Ableton Push 2 on USB (not the original Push, not Push 3)",
   "The music visualizer needs macOS 14.2",
+  "Accessibility permission, for key shortcuts and the window pads",
   "Chrome, Spotify and the Claude desktop app are optional",
 ];
 
