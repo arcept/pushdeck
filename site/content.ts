@@ -5,6 +5,8 @@ export const RELEASE_LIVE = true;
 
 export const REPO = "https://github.com/arcept/pushdeck";
 export const RELEASES = `${REPO}/releases/latest`;
+/** The .dmg itself (a GitHub Releases asset), so the buttons start the download instead of opening the release page. */
+export const dmgUrl = (version: string) => `${REPO}/releases/download/v${version}/PushDeck-${version}-arm64.dmg`;
 export const ISSUES = `${REPO}/issues`;
 
 export const PAD_COLORS = ["#4f8cff", "#ff9a3c", "#a06bff", "#2fc8b8", "#ff5fa8", "#3cdc78", "#ffc93c", "#ff5a5a"];
@@ -34,7 +36,7 @@ export const steps = [
 ];
 
 export const install = [
-  { id: "dmg", label: "Download", cmd: "", note: "The .dmg from GitHub Releases. Drag Push Deck to Applications.*" },
+  { id: "dmg", label: "Download", cmd: "", note: "Downloads the .dmg (from GitHub Releases). Drag Push Deck to Applications.*" },
   { id: "brew", label: "Homebrew", cmd: "brew install --cask arcept/tap/pushdeck", note: "Installs the same app as the .dmg, from the arcept tap." },
   { id: "curl", label: "One line", cmd: "curl -fsSL https://raw.githubusercontent.com/arcept/pushdeck/main/get.sh | bash", note: "Checks the checksum. No security prompt." },
 ];

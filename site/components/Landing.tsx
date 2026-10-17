@@ -8,7 +8,7 @@ import DisplayZoom from "@/components/DisplayZoom";
 import { ProfileCards, TourCards } from "@/components/PhoneStory";
 import { Ban, Check, CloudOff, Copy, Download, Drag, External, Folder, GitHub, Key, Laptop, Pointer, Screen, Share, Shield, Wave, Widgets } from "@/components/Icons";
 import {
-  ISSUES, PAD_COLORS, RELEASES, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, faq, features, privacyRows,
+  ISSUES, PAD_COLORS, RELEASE_LIVE, REPO, claudeNote, copy, disclaimer, dmgUrl, faq, features, privacyRows,
   install, installNote, requirements, steps, tour,
 } from "@/content";
 
@@ -393,7 +393,7 @@ export default function Landing({ version }: { version: string }) {
     <div ref={root} className="page">
       <a className="skip" href="#install">Skip to install</a>
       <div className={`mbar${navCta ? " on" : ""}`} role="region" aria-label="Quick actions">
-        <a className="btn primary small" href={RELEASE_LIVE ? RELEASES : "#install"}><Download />Get Push Deck</a>
+        <a className="btn primary small" href={RELEASE_LIVE ? dmgUrl(version) : "#install"}><Download />Get Push Deck</a>
         <button type="button" className="btn ghost small" onClick={share}><Share />{shared ? "Link copied" : "Send to my Mac"}</button>
       </div>
       <header className="nav">
@@ -402,7 +402,7 @@ export default function Landing({ version }: { version: string }) {
           <nav className="chip links" aria-label="Sections">
             <a href="#profiles">Profiles</a><a href="#features" onClick={(e) => { if (scroll) { e.preventDefault(); jump.current(1); } }}>Features</a><a href="#privacy">Privacy</a><a href="#install">Install</a>
             <button type="button" className="menu-btn" aria-expanded={menu} aria-controls="menu-sheet" onClick={() => setMenu((m) => !m)}>{menu ? "Close" : "Menu"}</button>
-            {navCta && <a className="nav-cta" href={RELEASE_LIVE ? RELEASES : "#install"}>Get Push Deck</a>}
+            {navCta && <a className="nav-cta" href={RELEASE_LIVE ? dmgUrl(version) : "#install"}>Get Push Deck</a>}
             <a className="gh" href={REPO} target="_blank" rel="noopener" aria-label="Push Deck on GitHub (opens in a new tab)" title="GitHub"><GitHub size={17} /></a>
           </nav>
         </div>
@@ -424,7 +424,7 @@ export default function Landing({ version }: { version: string }) {
             <h1>Your Push 2, your desk, <span className="rainbow">your rules.</span></h1>
             <p className="sub">{copy.sub}</p>
             <div className="cta">
-              <a className="btn primary" href={RELEASE_LIVE ? RELEASES : "#install"}><Download />{RELEASE_LIVE ? `Download ${version}` : "Get Push Deck"}</a>
+              <a className="btn primary" href={RELEASE_LIVE ? dmgUrl(version) : "#install"}><Download />{RELEASE_LIVE ? `Download ${version}` : "Get Push Deck"}</a>
               <a className="btn ghost" href={REPO} target="_blank" rel="noopener"><GitHub />View on GitHub<External className="ext" /></a>
             </div>
           </div>
@@ -632,7 +632,7 @@ export default function Landing({ version }: { version: string }) {
                     {!live && <em className="soon">Coming with the first release</em>}
                   </header>
                   {r.id === "dmg"
-                    ? <a className={`btn primary${live ? "" : " muted"}`} href={RELEASES} target="_blank" rel="noopener">{live ? <><Download />Download {version} (.dmg)</> : <>Watch releases<External className="ext" /></>}</a>
+                    ? <a className={`btn primary${live ? "" : " muted"}`} href={live ? dmgUrl(version) : `${REPO}/releases`} {...(live ? { download: "" } : { target: "_blank", rel: "noopener" })}>{live ? <><Download />Download {version} (.dmg)</> : <>Watch releases<External className="ext" /></>}</a>
                     : <CopyCmd cmd={r.cmd} live={live} />}
                   <p>{r.note}</p>
                 </article>

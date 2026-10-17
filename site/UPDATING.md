@@ -49,7 +49,7 @@ The page never reads the app's code. Nothing updates itself: a change in the app
 
 **A feature was added or removed.** Update `features` in `content.ts`, the tour if it deserves a step, and the README. Keep the page and the README saying the same thing.
 
-**Release.** `RELEASE_LIVE` is true (1.0.0 is out); the buttons link to the latest release. The install section shows the README's three routes (Download, Homebrew, One line); build-from-source lives in `docs/DEVELOPING.md` and is not linked from the page. The version comes from `VERSION`. Add a line to `CHANGELOG.md`.
+**Release.** `RELEASE_LIVE` is true (1.0.0 is out); the buttons link to the latest release. The install section shows the README's three routes (Download, Homebrew, One line); build-from-source lives in `docs/DEVELOPING.md` and is not linked from the page. The Download buttons link straight to the release asset (`dmgUrl` in `content.ts`: `releases/download/v<VERSION>/PushDeck-<VERSION>-arm64.dmg`), so each release must keep that file name. The version comes from `VERSION`. Add a line to `CHANGELOG.md`.
 
 **Name, legal or footer text.** `disclaimer` and the footer in `content.ts` / `Landing.tsx`. The Ableton non-affiliation line, MIT licence, issues-open and "pull requests by invitation" lines must stay.
 
