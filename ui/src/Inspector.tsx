@@ -4,7 +4,7 @@ import { useApp } from "./ctx";
 import type { Action, Ctl } from "./daemon";
 import { controlKind, ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ADDABLE, PALETTE, PAD_COLOURS, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
 import { useScenePage } from "./scenePage";
-import { Field, Switch, CustomColour, TextArea, TextField, useToast } from "./ui";
+import { Field, Select, Switch, CustomColour, TextArea, TextField, useToast } from "./ui";
 import { fmtTime } from "./profileFile";
 
 const isZone = (id: string) => /^btn-(upper|lower)-\d$/.test(id);
@@ -89,9 +89,9 @@ function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
         <Field label={kind.fieldLabel} hint={kind.hint}>
           {a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
             : a.type === "media" ? (
-              <select value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
+              <Select value={String(a.name ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} options={MEDIA_ACTIONS as unknown as [string, string][]} />)
             : a.type === "window" ? (
-              <select value={String(a.op ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, op: e.target.value } })}>{WINDOW_ADDABLE.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>)
+              <Select value={String(a.op ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, op: v } })} options={WINDOW_ADDABLE as unknown as [string, string][]} />)
             : a.type === "text" || a.type === "shell" ? <TextArea className="mono" rows={3} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, [kind.field]: v } })} />
             : a.type === "app" ? <AppField value={String(a.name ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
             : <TextField className={a.type === "url" ? "mono" : ""} value={String(a[kind.field] ?? "")} placeholder={kind.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, [kind.field]: v } })} />}

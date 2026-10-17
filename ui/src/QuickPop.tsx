@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Icon } from "./icons";
 import { useApp } from "./ctx";
 import { AppField, ShortcutField } from "./Inspector";
-import { CustomColour, TextField } from "./ui";
+import { CustomColour, Select, TextField } from "./ui";
 import { ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, PALETTE, actionDefault, colourName, actionKind, controlKind, describeControl } from "./model";
 import type { Action } from "./daemon";
 import { usePop } from "./motion";
@@ -40,10 +40,9 @@ export default function QuickPop({ id, rect, onClose }: { id: string; rect: DOMR
   } else if (kind === "editable" && profile) {
     body = (<>
       <TextField className="qp-in" value={ctl.label ?? ""} maxLength={24} aria-label={zone ? "Display label" : "Name"} placeholder={zone ? "Label on the display" : "Name"} onChange={(v) => set({ ...ctl, label: v })} />
-      <select className="qp-in" value={a?.type ?? ""} aria-label="Action type" onChange={(e) => { const kk = actionKind(e.target.value); set({ ...ctl, action: kk ? ({ type: kk.type, [kk.field]: actionDefault(kk) } as Action) : undefined }); }}>
-        <option value="">No action</option>{ACTION_KINDS.map((x) => <option key={x.type} value={x.type}>{x.label}</option>)}</select>
+      <Select className="qp-in" value={a?.type ?? ""} ariaLabel="Action type" onChange={(v) => { const kk = actionKind(v); set({ ...ctl, action: kk ? ({ type: kk.type, [kk.field]: actionDefault(kk) } as Action) : undefined }); }} options={[["", "No action"], ...ACTION_KINDS.map((x) => [x.type, x.label] as [string, string])]} />
       {a && k && (a.type === "keys" ? <ShortcutField value={String(a.keys ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, keys: v } })} />
-        : a.type === "media" ? <select className="qp-in" value={String(a.name ?? "")} onChange={(e) => set({ ...ctl, action: { ...a, name: e.target.value } })}>{MEDIA_ACTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
+        : a.type === "media" ? <Select className="qp-in" value={String(a.name ?? "")} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} options={MEDIA_ACTIONS as unknown as [string, string][]} />
         : a.type === "app" ? <AppField className="qp-in" value={String(a.name ?? "")} placeholder={k.placeholder} onChange={(v) => set({ ...ctl, action: { ...a, name: v } })} />
         : <TextField className={`qp-in ${a.type === "url" || a.type === "shell" ? "mono" : ""}`} value={String(a[k.field] ?? "")} placeholder={k.placeholder} aria-label={k.fieldLabel} onChange={(v) => set({ ...ctl, action: { ...a, [k.field]: v } })} />)}
       <div className="swatches" role="group" aria-label="Colour">

@@ -763,3 +763,17 @@ button.phead.pswitch[aria-expanded="true"] .pcaret svg { transform:rotate(180deg
 .swatch:hover { transform:translateY(-1px) scale(1.06); outline-color:rgba(255,255,255,.4); }
 .swatch[aria-pressed="true"] { border-color:var(--tx); box-shadow:0 0 0 2px var(--mod) inset; }
 .swatch.dflt { width:auto; padding:0 10px; background:var(--raised); color:var(--tx2); font:700 11px var(--ui); letter-spacing:.02em; } .swatch.dflt[aria-pressed="true"] { color:var(--tx); }
+
+/* Select (ui.tsx): the page's own dropdown */
+.selwrap { position:relative; width:100%; }
+.selbtn { display:flex; align-items:center; height:34px; width:100%; padding:0 28px 0 10px; border-radius:var(--r-ctl,8px); border:1px solid var(--line2); background-color:var(--raised); color:var(--tx); font:500 13px/1 var(--ui); text-align:left; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8a97' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; }
+.selbtn > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.selbtn:hover { border-color:rgba(255,255,255,.24); }
+.selbtn:focus-visible, .selbtn[aria-expanded="true"] { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent); }
+.selbtn.qp-in { height:32px; }
+.sellist { position:absolute; z-index:80; left:0; right:0; top:calc(100% + 6px); max-height:260px; overflow:auto; padding:6px; background:var(--raised); border:1px solid var(--line2); border-radius:12px; box-shadow:0 14px 34px rgba(0,0,0,.5); }
+.sellist.up { top:auto; bottom:calc(100% + 6px); }
+.selopt { display:block; width:100%; padding:8px 10px; border:0; border-radius:8px; background:none; color:var(--tx); font:500 13px/1.2 var(--ui); text-align:left; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.selopt[data-at="true"] { background:var(--raised2); }
+.selopt[aria-selected="true"] { color:var(--accent); font-weight:700; }

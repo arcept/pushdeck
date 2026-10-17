@@ -53,6 +53,48 @@ export function AnchoredPopover({ trigger, children, width = 300 }: { trigger: (
   );
 }
 
+// A dropdown drawn by the page instead of the system's pop-up menu. The Mac app's web view would not open native <select> menus, so every
+// choice list uses this. The list sits right under the button (above it near the bottom of the window), inside it in the DOM, so outside-click
+// handlers of a surrounding popover or dialog treat a click on it as inside.
+export function Select({ value, onChange, options, className = "", ariaLabel }: { value: string; onChange: (v: string) => void; options: [string, string][]; className?: string; ariaLabel?: string }) {
+  const [open, setOpen] = useState(false);
+  const [at, setAt] = useState(0);
+  const [up, setUp] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null), btn = useRef<HTMLButtonElement>(null), list = useRef<HTMLDivElement>(null);
+  const cur = options.findIndex(([v]) => v === value);
+  const show = () => {
+    const r = btn.current!.getBoundingClientRect(), h = Math.min(260, options.length * 36 + 12);
+    setUp(r.bottom + 6 + h > innerHeight && r.top > h + 12); setAt(Math.max(0, cur)); setOpen(true);
+  };
+  const pick = (v: string) => { setOpen(false); btn.current?.focus(); if (v !== value) onChange(v); };
+  useEffect(() => {
+    if (!open) return;
+    const down = (e: MouseEvent) => { if (!wrap.current?.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", down);
+    return () => document.removeEventListener("mousedown", down);
+  }, [open]);
+  useEffect(() => { if (open) list.current?.querySelector<HTMLElement>('[data-at="true"]')?.scrollIntoView({ block: "nearest" }); }, [open, at]);
+  const key = (e: React.KeyboardEvent) => {
+    if (!open) { if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) { e.preventDefault(); show(); } return; }
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); setOpen(false); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); setAt((a) => Math.min(options.length - 1, a + 1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setAt((a) => Math.max(0, a - 1)); }
+    else if (e.key === "Home") { e.preventDefault(); setAt(0); }
+    else if (e.key === "End") { e.preventDefault(); setAt(options.length - 1); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(options[at][0]); }
+    else if (e.key === "Tab") setOpen(false);
+  };
+  return (
+    <div className="selwrap" ref={wrap}>
+      <button type="button" ref={btn} className={`selbtn ${className}`} aria-haspopup="listbox" aria-expanded={open} aria-label={ariaLabel} onClick={() => (open ? setOpen(false) : show())} onKeyDown={key}>
+        <span>{options[cur]?.[1] ?? ""}</span></button>
+      {open && <div ref={list} className={`sellist ${up ? "up" : ""}`} role="listbox">
+        {options.map(([v, l], i) => <button type="button" key={v} role="option" className="selopt" aria-selected={i === cur} data-at={i === at} onMouseEnter={() => setAt(i)} onClick={() => pick(v)}>{l}</button>)}
+      </div>}
+    </div>
+  );
+}
+
 // A small dropdown surface that closes on outside click or Escape.
 function PopPanel({ className, children }: { className: string; children: ReactNode }) {
   const r = useRef<HTMLDivElement>(null); usePop(r, { y: -6 });
