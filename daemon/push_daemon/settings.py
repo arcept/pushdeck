@@ -6,7 +6,7 @@ from .registry import DATA
 PATH = DATA / "settings.json"
 DEFAULTS = {
     "lifecycle": "login",        # login | manual | login_sleep | ui_only
-    "idle_minutes": 10,          # fully off after this long without input
+    "idle_seconds": 600,         # display and lights go off after this long without input; 0 = never
     "brightness": 100,           # pad & button LED brightness 0-100
     "display_brightness": 100,   # 0-100
     "global_knobs": {"knob-swing": "brightness", "knob-master": "volume"},  # Swing: display + pad brightness together; Encoder 1 scrolls the song list when it is open
@@ -35,9 +35,13 @@ DEFAULTS = {
 
 def load() -> dict:
     try:
-        out = {**DEFAULTS, **json.loads(PATH.read_text())}
+        saved = json.loads(PATH.read_text())
+        out = {**DEFAULTS, **saved}
     except (OSError, ValueError):
         return dict(DEFAULTS)
+    if "idle_seconds" not in saved and "idle_minutes" in saved:  # the idle time used to be whole minutes
+        out["idle_seconds"] = int(saved["idle_minutes"]) * 60
+    out.pop("idle_minutes", None)
     gk = dict(out.get("global_knobs") or {})
     if gk.get("knob-1") == "display" and gk.get("knob-2") == "leds":  # the old two brightness knobs become one, on Swing
         gk.pop("knob-1"), gk.pop("knob-2")

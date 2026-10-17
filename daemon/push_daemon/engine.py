@@ -802,7 +802,7 @@ class Engine:
                 self._settings_dirty = False
                 settings.save(self.settings)
                 self.broadcast({"type": "settings", "settings": self.settings})
-            idle_s = self.settings["idle_minutes"] * 60
+            idle_s = self.settings["idle_seconds"]
             if not self.asleep and not self.standby and idle_s and now - self.last_input > idle_s and not self.test_running:
                 self.sleep()
             if self.standby:

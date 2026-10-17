@@ -4,6 +4,7 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Idle sleep is a dropdown in Settings → General: 30 seconds, 1, 2, 5, 10 or 30 minutes, or Never (it was a whole-minutes number box). Your old setting carries over. Stored as `idle_seconds` (was `idle_minutes`).
 - Landing page (pushdeck.arcept.in): download, Homebrew and one-line install are live for 1.0.0 (the "from source" card is gone; build instructions stay in docs/DEVELOPING.md), and window shortcuts are added to the features, FAQ and requirements. The window screenshots and tour close-ups were recaptured from 1.0.0, so they show the window pads and the "Add an action" shelf.
 
 ## 1.0.0 (2026-10-17)

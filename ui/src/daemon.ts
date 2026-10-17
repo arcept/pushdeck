@@ -14,7 +14,7 @@ export type Profile = {
 };
 export type ProfileIconSpec = { type: "glyph"; name: string } | { type: "app"; bundle: string } | { type: "image"; data: string };
 export type Calibration = { red: number[]; green: number[]; blue: number[]; saturation: number };
-export type Settings = { onboarded?: boolean; claude_usage_live?: boolean; knob_turns_full_range?: number; knob_ticks_per_turn?: number; knob_measured?: boolean; require_touch?: boolean; global_knobs?: Record<string, string>; global_pads?: Record<string, Ctl>; window_pads?: boolean; window_pad_edits?: Record<string, Partial<Ctl>>; display_brightness: number; calibration?: Calibration; lifecycle: string; idle_minutes: number; brightness: number };
+export type Settings = { onboarded?: boolean; claude_usage_live?: boolean; knob_turns_full_range?: number; knob_ticks_per_turn?: number; knob_measured?: boolean; require_touch?: boolean; global_knobs?: Record<string, string>; global_pads?: Record<string, Ctl>; window_pads?: boolean; window_pad_edits?: Record<string, Partial<Ctl>>; display_brightness: number; calibration?: Calibration; lifecycle: string; idle_seconds: number; brightness: number };
 export type MediaTrack = { source: string; title: string; artist: string; album: string; art: string; duration: number; playing: boolean; shuffle: boolean | null; repeat: boolean | null; liked: boolean | null; caps: string[] };
 export type MediaState = {
   player: string; track: MediaTrack | null; position: number; tint: string | null; tint2?: string | null;
