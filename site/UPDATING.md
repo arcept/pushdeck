@@ -17,6 +17,7 @@ Rules that always apply (from `CLAUDE.md`): no personal info in the repo (names,
 | Words | `content.ts`: features, tour steps, profiles (`steps`), privacy rows, install, requirements, the FAQ (`faq`) notes | everywhere |
 | Version | `../VERSION` | footer, download button |
 | Phone hero | `public/img/device-view.webp`: a still of the hero device in its tilted view on a transparent background, 1800px wide. Capture it from the desktop hero at 2300x1250 with the nav, copy and page background hidden (`omitBackground`), `.win` set to `rotateX(40deg)` and the hero perspective at 3400px, then crop to the device. Redo it if the replica art, pad colours or the display content change | phones and reduced motion |
+| Share preview | `public/og.png` (1200x630): the `device-view.webp` still on the page background with the tagline, made with Pillow and Quicksand. Linked from `app/layout.tsx` (Open Graph and Twitter tags). Redo it if the hero still or the tagline changes. WhatsApp and others cache previews, so a new image can take a while to show | link previews |
 | Phone page: swipe cards | `components/PhoneStory.tsx` (reuses the tour crops, the profile videos and `hero.mp4`) | phones and reduced motion |
 
 The page never reads the app's code. Nothing updates itself: a change in the app only reaches the page when someone redoes the matching row above.
