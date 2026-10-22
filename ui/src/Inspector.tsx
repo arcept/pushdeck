@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DisplayIcon, Icon } from "./icons";
 import { useApp } from "./ctx";
 import type { Action, Ctl } from "./daemon";
-import { controlKind, ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ADDABLE, PALETTE, PAD_COLOURS, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize } from "./model";
+import { controlKind, ACTION_KINDS, GLOBAL_FN, MEDIA_ACTIONS, WINDOW_ADDABLE, PALETTE, PAD_COLOURS, actionDefault, colourName, RESERVED_KNOBS, SCENE_IDS, actionKind, profileAt, sceneName, summarize, isGlobalOn, isGlobalPad } from "./model";
 import { useScenePage } from "./scenePage";
 import { Field, Select, Switch, CustomColour, TextArea, TextField, useToast } from "./ui";
 import { fmtTime } from "./profileFile";
@@ -59,7 +59,7 @@ function ColourFields({ ctl, set, pad, accent }: { ctl: Ctl; set: (c: Ctl) => vo
     <div className="isect">
         <h3>{pad ? "Pad colour" : "Light colour"}</h3>
         <div className="swatches" role="group" aria-label="Colour">
-          <button className="swatch none" aria-pressed={!ctl.color} title="Off" aria-label="Off" onClick={() => set({ ...ctl, color: undefined })} />
+          {!ctl.action && <button className="swatch none" aria-pressed={!ctl.color} title="Off" aria-label="Off" onClick={() => set({ ...ctl, color: undefined })} />}
           <button className="swatch" style={{ background: accent }} aria-pressed={ctl.color === accent} title="Profile colour" aria-label="Profile colour" onClick={() => set({ ...ctl, color: accent })} />
           {PAD_COLOURS.map((c) => <button key={c} className="swatch" style={{ background: c }} aria-pressed={ctl.color?.toLowerCase() === c} title={colourName(c, accent)} aria-label={colourName(c, accent)} onClick={() => set({ ...ctl, color: c })} />)}
           <CustomColour value={ctl.color ?? accent} active={!!ctl.color && ctl.color !== accent && !PAD_COLOURS.includes(ctl.color.toLowerCase())} onChange={(v) => set({ ...ctl, color: v })} />
@@ -105,7 +105,7 @@ function ActionEditor({ ctl, set }: { ctl: Ctl; set: (c: Ctl) => void }) {
 
 export default function Inspector() {
   const [scenePage] = useScenePage();   // (a hook: before any early return)
-  const { d, profile, rawControls, selected, setSelected, updateControl, saveState, savedAt, openSettings, setCurrent } = useApp();
+  const { d, profile, rawControls, setScope, selected, setSelected, updateControl, saveState, savedAt, openSettings, setCurrent } = useApp();
   const [iconsOpen, setIconsOpen] = useState(false);
   const id = selected; const toast = useToast();
   if (!id || !profile) return (
@@ -195,6 +195,8 @@ export default function Inspector() {
         </>}
       </div>
       <ColourFields ctl={ctl} set={set} pad={pad} accent={profile.theme.accent} />
+      {!isGlobalPad(id) && (ctl.action || ctl.label || ctl.color) && <div className="isect"><Switch checked={isGlobalOn(id, d.settings?.global_pads, rawControls)} onChange={(v) => setScope(id, v)}
+        label={<span>Works in every profile<span className="muted" style={{ display: "block", fontWeight: 500, fontSize: 12, marginTop: 3 }}>Global: it stays on the Push whichever app you are in. A profile with its own control at the same place still shows that one. Turning this off keeps it only in {profile.name}.</span></span>} /></div>}
       <div className="ifoot">
         <div className="row">
           <button className="btn primary" onClick={() => { if (ctl.risky) toast("Armed. Press Try it now again within 2 seconds to run it.", "info"); d.send({ type: "press", control: id }); }} disabled={!ctl.action}><Icon name="play" size={15} />Try it now</button>

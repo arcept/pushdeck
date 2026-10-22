@@ -104,6 +104,7 @@ class Engine:
         migrate.window_pads(self)
         windows.server.on_failure = lambda text: self.loop.call_soon_threadsafe(self.flash, text, False)
         migrate.widget_buttons(self)
+        migrate.action_colours(self)
         migrate.single_layout(self)
         migrate.player_overlay(self)
         migrate.alerts_simplified(self)
@@ -557,10 +558,18 @@ class Engine:
 
     # ---------- rendering ----------
     def controls_for(self, prof):
-        """The controls that act right now: the profile's own, plus the global pad column shared by every profile."""
+        """The controls that act right now: global ones that any control can be set to, under the profile's own (which win at the same place),
+        then the global pad column shared by every profile (always global), then the built-in window layer."""
+        loose, fixed = self.shared_controls()
         own = {k: v for k, v in ((prof or {}).get("controls") or {}).items() if (v.get("action") or {}).get("type") != "pin"}   # Master lives on the profile widget now
         layer = windows.layer(self.settings) if windows.enabled(self.settings, prof) else {}   # built in; covers a profile's own pads in those places while on
-        return {**own, **(self.settings.get("global_pads") or {}), **layer}
+        return {**loose, **own, **fixed, **layer}
+
+    def shared_controls(self):
+        """settings["global_pads"] split in two: (controls set to Global on any place, the fixed global pad column)."""
+        gp = self.settings.get("global_pads") or {}
+        return ({k: v for k, v in gp.items() if k not in R.GLOBAL_PADS and (v.get("action") or {}).get("type") != "pin"},
+                {k: v for k, v in gp.items() if k in R.GLOBAL_PADS})
 
     def live_buttons(self, prof):
         """The display buttons the widgets on screen right now bring along ({button id: control}); none while a list is open in Browse."""
@@ -600,8 +609,9 @@ class Engine:
         """The profile's own labels for the display buttons. The buttons under the player (in `widgets`, else the live layout) are left empty."""
         out = {}
         taken = media_ui.owned(media_ui.player_in(widgets) if widgets is not None else media_ui.player_def(self, prof))
+        loose = self.shared_controls()[0]
         for cid in R.UPPER + R.LOWER:
-            c = (prof or {}).get("controls", {}).get(cid) or {}
+            c = (prof or {}).get("controls", {}).get(cid) or loose.get(cid) or {}
             if (c.get("action") or {}).get("type") == "pin" or cid in taken:
                 c = {}   # Master lives on the profile widget now; a player's buttons are its own
             out[cid] = {"label": c.get("label", ""), "icon": c.get("icon"), "keep_case": bool(c.get("keep_case"))}

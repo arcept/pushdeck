@@ -33,7 +33,7 @@ export default function ProfileRail() {
     const copy = { ...structuredClone(profile), created: today(), source: { kind: "created" as const }, id: uniqueId(profile.name + " copy", d.profiles.map((p) => p.id)), name: profile.name + " copy" } as typeof profile;
     delete copy.slot; d.send({ type: "save_profile", profile: copy }); setCurrent(copy.id); toast("Duplicated", "good");
   };
-  const assigned = Object.entries(profile.controls).filter(([id, c]) => (c.label || c.action || c.color) && !(WINDOW_PAD_IDS.includes(id) && windowOn(d.settings, profile))).map(([id, c]) => ({ id, c, name: (d.controls[id]?.name ?? id) + (isGlobalPad(id) ? " · global" : "") }));
+  const assigned = Object.entries(profile.controls).filter(([id, c]) => (c.label || c.action || c.color) && !(WINDOW_PAD_IDS.includes(id) && windowOn(d.settings, profile))).map(([id, c]) => ({ id, c, name: (d.controls[id]?.name ?? id) + (isGlobalPad(id) || d.settings?.global_pads?.[id] === c ? " · global" : "") }));
   const buttons = assigned.filter((x) => !x.id.startsWith("pad-")), pads = assigned.filter((x) => x.id.startsWith("pad-"));
   const row = (x: (typeof assigned)[number]) => (
     <button key={x.id} className="arow" aria-current={selected === x.id} onClick={() => setSelected(x.id)}>

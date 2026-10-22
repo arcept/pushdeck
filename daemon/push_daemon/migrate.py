@@ -151,3 +151,34 @@ def alerts_simplified(eng):
     eng.settings["limit_alert"] = {"on": True}
     eng.settings["alerts_simplified"] = True
     settings.save(eng.settings)
+
+
+# A pad with an action always has a colour. Keep in step with KIND_COLOUR in ui/src/model.ts.
+_KIND_COLOUR = {"keys": "#1abcfe", "text": "#c8e04a", "app": "#0acf83", "url": "#a259ff", "shell": "#ff4d4d", "shortcut": "#ffcd29", "media": "#ff8a3d", "window": "#6ee7e7"}
+
+
+def action_colours(eng):
+    """One-time: give every control that has an action but no colour the colour for its kind of action (names are left alone). Profiles are backed up first."""
+    if eng.settings.get("action_colours_migrated"):
+        return
+
+    def fill(controls):
+        n = 0
+        for c in controls.values():
+            t = (c.get("action") or {}).get("type")
+            if t in _KIND_COLOUR and not c.get("color"):
+                c["color"] = _KIND_COLOUR[t]
+                n += 1
+        return n
+
+    changed = [p for p in eng.ordered() if any((c.get("action") or {}).get("type") in _KIND_COLOUR and not c.get("color") for c in p.get("controls", {}).values())]
+    if changed:
+        backup = DATA / "backups" / "profiles-before-action-colours"
+        if not backup.exists():
+            shutil.copytree(profiles.DIR, backup)
+        for prof in changed:
+            fill(prof["controls"])
+            profiles.save(prof)
+    fill(eng.settings.get("global_pads") or {})
+    eng.settings["action_colours_migrated"] = True
+    settings.save(eng.settings)

@@ -60,6 +60,11 @@ export const sceneIndex = (ps: Profile[], id: string) => { const s = ps.find((p)
 export const profileAt = (ps: Profile[], slot: number) => ps.find((p) => p.slot === slot);
 // The right-hand column of pads is one shared set that works in every profile.
 export const isGlobalPad = (id: string) => /^pad-\d-7$/.test(id);
+// Any other pad or button can be set to Global too: it is stored with the shared pads and shows in every profile that has nothing of its own at that place.
+export const fixedGlobal = (gp?: Record<string, Ctl>) => Object.fromEntries(Object.entries(gp ?? {}).filter(([id]) => isGlobalPad(id)));
+export const looseGlobal = (gp?: Record<string, Ctl>) => Object.fromEntries(Object.entries(gp ?? {}).filter(([id]) => !isGlobalPad(id)));
+/** Is this place global right now (the profile has no control of its own there to cover it)? */
+export const isGlobalOn = (id: string, gp?: Record<string, Ctl>, own?: Record<string, Ctl>) => isGlobalPad(id) || (!!gp?.[id] && !own?.[id]);
 
 // The built-in window pads: the top-left 4 x 4 pads, laid out like the screen (keep in step with daemon/push_daemon/windows.py DEFAULT_PADS). They are not
 // editable; a global switch and a per-profile choice turn them on, and while on they cover whatever a profile has on those pads (kept, shown again when off).
@@ -97,6 +102,41 @@ export const PAD_COLOURS = ["#ff4d4d", "#f24e1e", "#ff8a3d", "#d97757", "#ffcd29
 export const colourName = (hex: string, profileAccent?: string) => COLOUR_NAMES[hex.toLowerCase()] ?? (hex === profileAccent ? "Profile colour" : "Custom colour");
 export const PALETTE = ["#d97757", "#a259ff", "#0acf83", "#1abcfe", "#f24e1e", "#ffcd29", "#ff6bb5", "#6ee7e7", "#ffffff", "#8b8b99"];
 
+// A pad with an action always has a colour (so you can see it is assigned) and starts with a name. Both are suggested from the action and follow it
+// until you pick your own colour or type your own name. Keep KIND_COLOUR in step with daemon/push_daemon/migrate.py.
+export const KIND_COLOUR: Record<string, string> = { keys: "#1abcfe", text: "#c8e04a", app: "#0acf83", url: "#a259ff", shell: "#ff4d4d", shortcut: "#ffcd29", media: "#ff8a3d", window: "#6ee7e7" };
+const KNOWN_KEYS: Record<string, string> = { "cmd+c": "Copy", "cmd+v": "Paste", "cmd+x": "Cut", "cmd+z": "Undo", "cmd+shift+z": "Redo", "cmd+s": "Save", "cmd+a": "Select all", "cmd+f": "Find", "cmd+w": "Close tab",
+  "cmd+t": "New tab", "cmd+n": "New", "cmd+q": "Quit app", "cmd+space": "Spotlight", "cmd+tab": "Switch app", "cmd+p": "Print", "cmd+r": "Reload", "cmd+shift+4": "Screenshot", "fn": "Fn", "globe": "Fn" };
+const clip = (t: string, n = 24) => (t.length > n ? t.slice(0, n - 1).trimEnd() + "…" : t);
+/** The name and colour an action starts with (the name is empty while the action is still blank). */
+export function suggest(a?: Action): { label: string; color?: string } {
+  if (!a || a.type === "pin") return { label: "" };
+  const v = String(a[actionKind(a.type)?.field ?? ""] ?? "").trim(), color = KIND_COLOUR[a.type];
+  switch (a.type) {
+    case "keys": return { label: v ? clip(KNOWN_KEYS[v.toLowerCase().replace(/\s/g, "")] ?? formatKeys(v)) : "", color };
+    case "text": return { label: clip(v.replace(/\s+/g, " ")), color };
+    case "app": return { label: clip(v), color };
+    case "url": return { label: clip(v.replace(/^https?:\/\/(www\.)?/i, "").split(/[/?#]/)[0]), color };
+    case "shell": return { label: v ? clip("Run " + v.split(/\s+/)[0].split("/").pop()) : "", color };
+    case "shortcut": return { label: clip(v), color };
+    case "media": return { label: MEDIA_ACTIONS.find((m) => m[0] === v)?.[1] ?? "", color };
+    case "window": return { label: WINDOW_ADDABLE.find((w) => w[0] === v)?.[1] ?? "", color };
+    default: return { label: "", color };
+  }
+}
+/** Applies the naming and colour rules to an edit: `prev` is the control before, `next` after. A suggested name or colour is replaced when the action changes;
+ *  one you typed or picked stays. A control with an action never ends up without a colour. */
+export function withSuggestions(prev: Ctl | undefined, next: Ctl): Ctl {
+  const was = suggest(prev?.action), now = suggest(next.action), out = { ...next };
+  const changed = JSON.stringify(prev?.action ?? null) !== JSON.stringify(next.action ?? null);
+  if (changed) {
+    if (!out.label || out.label === was.label) out.label = now.label || undefined;
+    if (!out.color || out.color === was.color) out.color = now.color;
+  }
+  if (out.action && out.action.type !== "pin" && !out.color) out.color = now.color;
+  return out;
+}
+
 export type Tip = { primary: string; secondary: string[]; muted?: boolean };
 
 // Hover text: the function first (what it does), the mechanics (which control, scope) small underneath.
@@ -116,7 +156,7 @@ export function describeControl(id: string, o: {
              : { primary: "Profile button, empty", secondary: [`${sceneName(si)} · no profile assigned`], muted: true };
   }
   if (o.profile && WINDOW_LAYER[id] && windowOn(o.settings, o.profile)) return { primary: (windowLayer(o.settings)[id].label ?? "").toUpperCase(), secondary: ["Built-in window shortcut", `${o.name} · rename and recolour it, turn the set on or off in Settings`] };
-  const glob = isGlobalPad(id) ? " · global, works in every profile" : "";
+  const glob = isGlobalPad(id) || (o.profile?.controls[id] && o.settings?.global_pads?.[id] === o.profile.controls[id]) ? " · global, works in every profile" : "";
   const c: Ctl | undefined = o.profile?.controls[id];
   if (!c || (!c.label && !c.action && !c.icon && !c.color)) return { primary: "Unassigned", secondary: [`${o.name}${glob} · click to assign`], muted: true };
   const act = summarize(c.action);

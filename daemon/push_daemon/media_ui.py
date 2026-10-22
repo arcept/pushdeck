@@ -143,6 +143,8 @@ def scene(eng, prof, mode_text, toast):
         eng.browse = br = None
     if not d:
         eng.media_ui = None
+        if "play" in (eng.media.track or {}).get("caps", []):
+            eng.media_map["btn-play"] = "play"   # the Play button works with the player hidden too (a profile's own action on it still wins)
         return None
     active_now = hub.active()
     idle = ""
@@ -447,8 +449,6 @@ def leds(eng) -> dict:
     out = {}
     c = cfg(eng)
     out[MODE_BTN] = (255, 170, 40) if c["mode"] != "off" else DIM
-    if not eng.media_ui:
-        return out
     t = eng.media.track or {}
     for cid, op in eng.media_map.items():
         if cid == MODE_BTN:

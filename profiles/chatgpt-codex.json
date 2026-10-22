@@ -26,7 +26,8 @@
       "action": {
         "type": "keys",
         "keys": "cmd+n"
-      }
+      },
+      "color": "#1abcfe"
     },
     "btn-upper-2": {
       "label": "Search",
@@ -34,7 +35,8 @@
       "action": {
         "type": "keys",
         "keys": "cmd+k"
-      }
+      },
+      "color": "#1abcfe"
     },
     "btn-upper-3": {
       "label": "Prefs",
@@ -42,7 +44,8 @@
       "action": {
         "type": "keys",
         "keys": "cmd+,"
-      }
+      },
+      "color": "#1abcfe"
     },
     "btn-lower-1": {
       "label": "Undo",
@@ -50,7 +53,8 @@
       "action": {
         "type": "keys",
         "keys": "cmd+z"
-      }
+      },
+      "color": "#1abcfe"
     },
     "btn-lower-2": {
       "label": "Redo",
@@ -58,7 +62,8 @@
       "action": {
         "type": "keys",
         "keys": "cmd+shift+z"
-      }
+      },
+      "color": "#1abcfe"
     },
     "pad-7-0": {
       "label": "New",

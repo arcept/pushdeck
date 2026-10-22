@@ -1,4 +1,4 @@
-import { isGlobalPad, WINDOW_PAD_IDS, windowLayer, windowOn } from "./model";
+import { withSuggestions, fixedGlobal, isGlobalOn, isGlobalPad, looseGlobal, WINDOW_PAD_IDS, windowLayer, windowOn } from "./model";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppCtx, type App as AppModel, type SaveState, type SettingsPage } from "./ctx";
 import { useDaemon, type Ctl, type Profile } from "./daemon";
@@ -81,19 +81,32 @@ function Shell() {
       if (c === null) delete edits[id]; else edits[id] = { label: c.label, color: c.color, states: c.states, risky: c.risky };
       d.send({ type: "set_setting", key: "window_pad_edits", value: edits }); return;
     }
-    if (isGlobalPad(id)) { const next = { ...(gp ?? {}) }; if (c === null) delete next[id]; else next[id] = c; sendGlobal(next); return; }
+    const global = isGlobalOn(id, gp, profile?.controls);
+    if (c) c = withSuggestions(global ? gp?.[id] : profile?.controls[id], c);   // a new action brings a suggested name and colour; a pad with an action always has a colour
+    if (global) { const next = { ...(gp ?? {}) }; if (c === null) delete next[id]; else next[id] = c; sendGlobal(next); return; }   // a global control is edited where it lives
     if (!profile) return;
     const controls = { ...profile.controls }; if (c === null) delete controls[id]; else controls[id] = c;
     commit({ ...profile, controls });
   }, [profile, commit, gp, sendGlobal, wOn, d]);
+  // The Scope switch in the Inspector: a control either belongs to this profile or is global (works in every profile; a profile's own control at the same place wins).
+  const setScope = useCallback((id: string, global: boolean) => {
+    if (!profile || isGlobalPad(id)) return;
+    const c = profile.controls[id] ?? gp?.[id]; if (!c) return;
+    const controls = { ...profile.controls }, next = { ...(gp ?? {}) };
+    if (global) { delete controls[id]; next[id] = c; } else { delete next[id]; controls[id] = c; }
+    commit({ ...profile, controls }); sendGlobal(next);
+  }, [profile, commit, gp, sendGlobal]);
   const swapControls = useCallback((x: string, y: string) => {
     if (!profile || (wOn && (WINDOW_PAD_IDS.includes(x) || WINDOW_PAD_IDS.includes(y)))) return;   // the window pads stay where they are
     const controls = { ...profile.controls }, shared = { ...(gp ?? {}) };
-    const get = (id: string) => (isGlobalPad(id) ? shared[id] : controls[id]);
-    const put = (id: string, c?: Ctl) => { const t = isGlobalPad(id) ? shared : controls; if (c) t[id] = c; else delete t[id]; };
-    const cx = get(x), cy = get(y); put(x, cy); put(y, cx); // dragging a pad into the global column makes it global, and back
-    if (!isGlobalPad(x) || !isGlobalPad(y)) commit({ ...profile, controls });
-    if (isGlobalPad(x) || isGlobalPad(y)) sendGlobal(shared);
+    const isG = (id: string) => isGlobalOn(id, gp, profile.controls);
+    const sx = isG(x), sy = isG(y), cx = (sx ? shared : controls)[x], cy = (sy ? shared : controls)[y];
+    delete (sx ? shared : controls)[x]; delete (sy ? shared : controls)[y];
+    // a control keeps its scope when it moves; into the global column it becomes global, and out of it, the profile's
+    const put = (id: string, c: Ctl | undefined, fromFixed: boolean, was: boolean) => { if (c) (isGlobalPad(id) || (was && !fromFixed) ? shared : controls)[id] = c; };
+    put(x, cy, isGlobalPad(y), sy); put(y, cx, isGlobalPad(x), sx);
+    if (JSON.stringify(controls) !== JSON.stringify(profile.controls)) commit({ ...profile, controls });
+    if (JSON.stringify(shared) !== JSON.stringify(gp ?? {})) sendGlobal(shared);
   }, [profile, commit, gp, sendGlobal, wOn]);
   useEffect(() => { for (const p of d.profiles) baseline.current[p.id] ??= structuredClone(p); }, [d.profiles]);
   const undo = useCallback(() => {
@@ -138,11 +151,11 @@ function Shell() {
   useAppMotion(profile?.id, selected, false);
   // a profile change sends a wash of its colour out from the device
   useEffect(() => { if (profile) window.setTimeout(() => pulseAt(document.querySelector(".stagecol .replica"), profile.theme.accent, 1.3), 80); }, [profile?.id]); // eslint-disable-line
-  const view = useMemo(() => (profile ? { ...profile, controls: { ...profile.controls, ...(gp ?? {}), ...(wOn ? windowLayer(d.settings) : {}) } } : profile), [profile, gp, wOn, d.settings]);   // the window pads cover the profile's own pads while on
+  const view = useMemo(() => (profile ? { ...profile, controls: { ...looseGlobal(gp), ...profile.controls, ...fixedGlobal(gp), ...(wOn ? windowLayer(d.settings) : {}) } } : profile), [profile, gp, wOn, d.settings]);   // the window pads cover the profile's own pads while on
   const model = useMemo<AppModel>(() => ({
-    d, profile: view, rawControls: profile?.controls, setCurrent, selected, setSelected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, setListen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, setSceneHl,
+    d, profile: view, rawControls: profile?.controls, setScope, setCurrent, selected, setSelected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, setListen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, setSceneHl,
     openSettings: (p) => { if (p) setPage(p); settings.show(); }, openPalette: palette.show,
-  }), [d, view, profile?.controls, setCurrent, selected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, settings.show, palette.show]);
+  }), [d, view, profile?.controls, setScope, setCurrent, selected, updateControl, swapControls, updateProfile, saveState, held, followPush, savedAt, undo, canUndo, revert, canRevert, listen, nudgeKnob, look, setLook, fx, setFx, tone, setTone, sceneHl, settings.show, palette.show]);
 
   return (
     <AppCtx.Provider value={model}>

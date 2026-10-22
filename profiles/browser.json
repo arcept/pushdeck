@@ -29,7 +29,8 @@
       "action": {
         "type": "keys",
         "keys": "cmd+r"
-      }
+      },
+      "color": "#1abcfe"
     },
     "pad-7-0": {
       "label": "New tab",
