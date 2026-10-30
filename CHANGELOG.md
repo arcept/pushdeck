@@ -4,6 +4,7 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Fixed: YouTube Music playlists and the songs in them did not load ("Couldn't load"). YouTube Music's page stopped exposing the settings the script needs, so it now looks for them in three places (the old one, a second one, and the page itself) and uses the page's own version number. When it still fails, the real reason is written to the log. `tools/test_ytm_config.py` checks all three layouts without a browser.
 - Fixed: the pads and buttons flickered whenever you pressed a button or something on the display changed. The lights were all switched off and then back on at every change; now only the pads whose colour changes are sent, and the rest are left alone.
 - The Play button (bottom left) now plays and pauses whatever is playing even when the media player is hidden with the Layout button, in every profile. A profile's own action on it still wins, as before.
 - A pad or button with an action always has a colour, and starts with a name. Choosing an action fills in a suggested name (Copy for ⌘C, the app's name, a site's address, "Close window"...) and a colour for its kind of action (shortcut blue, app green, link purple, and so on). They follow the action until you type your own name or pick your own colour. The "Off" colour is hidden while a pad has an action. On the next start, existing pads that have an action but no colour get their kind's colour (names untouched; a backup of your profiles is saved first).

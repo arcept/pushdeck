@@ -13,8 +13,17 @@ import time
 
 from .hub_util import osa
 
-# The page's own client key and version are read from its config (ytcfg) when a call runs, so no key is stored in this repo.
-CLIENT_VERSION = "1.20261006.10.00"
+# The page's own client key and version are read from the page when a call runs, so no key is stored in this repo.
+# YouTube has moved this config before (window.ytcfg went missing in Oct 2026), so it is looked up in three places, newest habit first.
+# CLIENT_VERSION is only the last resort when the page gives no version.
+CLIENT_VERSION = "1.20261027.10.00"
+CFG_JS = """(function(){
+  var c=window.ytcfg&&window.ytcfg.get?window.ytcfg:null,k,v,from;
+  if(c){k=c.get('INNERTUBE_API_KEY');v=c.get('INNERTUBE_CLIENT_VERSION');from='ytcfg'}
+  if(!k&&window.yt&&window.yt.config_){k=window.yt.config_.INNERTUBE_API_KEY;v=v||window.yt.config_.INNERTUBE_CLIENT_VERSION;from='yt.config_'}
+  if(!k){var h=document.documentElement.innerHTML,km=h.match(/"INNERTUBE_API_KEY":"([^"]+)"/),vm=h.match(/"INNERTUBE_CLIENT_VERSION":"([^"]+)"/);
+    if(km){k=km[1];v=v||(vm&&vm[1]);from='page html'}}
+  return{key:k,ver:v,from:from}})()"""
 
 QUEUE_JS = ("(function(){var it=[].slice.call(document.querySelectorAll('ytmusic-player-queue-item')),"
             "s=it.findIndex(function(e){return e.hasAttribute('selected')}),o=[];"
@@ -24,8 +33,8 @@ QUEUE_JS = ("(function(){var it=[].slice.call(document.querySelectorAll('ytmusic
 # Starts a browse call with the page's own session; the answer is left in window.__push[token] for a later read.
 API_JS = """(function(token,browseId,mode){
   window.__push=window.__push||{};window.__push[token]=null;
-  var cfg=window.ytcfg&&window.ytcfg.get?window.ytcfg:null,key=cfg&&cfg.get('INNERTUBE_API_KEY'),ver=(cfg&&cfg.get('INNERTUBE_CLIENT_VERSION'))||'__VER__';
-  if(!key){window.__push[token]={err:'no page config'};return 'no key'}
+  var cf=__CFG__,key=cf.key,ver=cf.ver||'__VER__';
+  if(!key){window.__push[token]={err:'no page config (ytcfg, yt.config_ and the page html all lack the key)'};return 'no key'}
   var sap=(document.cookie.match(/(?:^|; )SAPISID=([^;]+)/)||[])[1],origin='https://music.youtube.com',ts=Math.floor(Date.now()/1000);
   function sha1(s){return crypto.subtle.digest('SHA-1',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return('0'+x.toString(16)).slice(-2)}).join('')})}
   function txt(r){return r&&r.runs?r.runs.map(function(q){return q.text}).join(''):''}
@@ -46,10 +55,10 @@ API_JS = """(function(token,browseId,mode){
         function col(i){try{return txt(c[i].musicResponsiveListItemFlexColumnRenderer.text)}catch(e){return''}}
         if(vid&&!seen[vid+res.length]){seen[vid+res.length]=1;res.push({id:vid,t:col(0),a:col(1)})}}
       for(var k in o)walk(o[k])})(x.j);
-    window.__push[token]={s:x.s,items:res.slice(0,500)};
+    window.__push[token]={s:x.s,items:res.slice(0,500),from:cf.from};
   }).catch(function(e){window.__push[token]={err:String(e)}});
   return 'started';
-})""".replace("__VER__", CLIENT_VERSION)
+})""".replace("__CFG__", CFG_JS).replace("__VER__", CLIENT_VERSION)
 
 
 def _wrap(js: str) -> str:
@@ -101,7 +110,8 @@ class YouTubeMusic:
             return hit[1], "No playlists found"
         try:
             rows = await self._api("FEmusic_liked_playlists", "playlists")
-        except Exception:  # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
+            print("youtube music playlists failed:", exc)   # the reason goes to the log; the display keeps a short message
             return [], "Couldn't load YouTube Music playlists (is it open and signed in?)"
         items = [{"text": r["t"], "sub": r["a"].split(" • ")[-1] if " • " in r["a"] else r["a"], "uri": "ytm:playlist:" + r["id"], "can_open": True} for r in rows]
         self._cache["playlists"] = (time.time(), items)
@@ -112,7 +122,8 @@ class YouTubeMusic:
         pid = uri.rsplit(":", 1)[-1]
         try:
             rows = await self._api("VL" + pid, "songs")
-        except Exception:  # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
+            print("youtube music playlist songs failed:", exc)
             return [], "Couldn't load this playlist"
         return [{"text": r["t"], "sub": r["a"], "uri": f"ytm:song:{r['id']}"} for r in rows if r["t"]], "This playlist is empty"
 
