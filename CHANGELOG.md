@@ -4,6 +4,7 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Fixed: the pads and buttons flickered whenever you pressed a button or something on the display changed. The lights were all switched off and then back on at every change; now only the pads whose colour changes are sent, and the rest are left alone.
 - The Play button (bottom left) now plays and pauses whatever is playing even when the media player is hidden with the Layout button, in every profile. A profile's own action on it still wins, as before.
 - A pad or button with an action always has a colour, and starts with a name. Choosing an action fills in a suggested name (Copy for ⌘C, the app's name, a site's address, "Close window"...) and a colour for its kind of action (shortcut blue, app green, link purple, and so on). They follow the action until you type your own name or pick your own colour. The "Off" colour is hidden while a pad has an action. On the next start, existing pads that have an action but no colour get their kind's colour (names untouched; a backup of your profiles is saved first).
 - Any pad or button can be made global: a new "Works in every profile" switch in the control editor keeps that shortcut on the Push in every app (copy, paste, launch an app). New shortcuts still start as the profile's own. A profile's own control at the same place wins over a global one; turning the switch off keeps the control only in the current profile. Global controls show "· global" in the profile list and on hover. The right-hand pad column stays global as before.

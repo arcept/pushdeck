@@ -625,7 +625,7 @@ class Engine:
             return
         self._leds_for = key
         scale = 1.0  # brightness is applied by the hardware (SysEx 06)
-        self.push.clear_leds()
+        self.push.begin_leds()   # only what changes is sent; the rest is switched off at the end (see end_leds)
         taken = media_ui.owned(media_ui.player_def(self, prof))   # the buttons under the player are lit by the player
         for cid, ctl in self.controls_for(prof).items():
             if cid in taken:
@@ -652,6 +652,7 @@ class Engine:
             self.push.set_led(cid, rgb)
         self.push.set_led(R.REPEAT, self.repeat_color)  # always lit: the user cannot see unlit buttons
         self.push.set_led(CALIBRATE_KEY, (70, 70, 70))  # reserved global: Shift + Setup = calibration test
+        self.push.end_leds()
 
     async def _poll_downloads(self):
         try:

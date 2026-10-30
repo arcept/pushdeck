@@ -40,6 +40,7 @@ class Push:
         self.lock = threading.RLock()
         self.palette: dict[tuple, int] = {}
         self.led_state: dict[str, tuple] = {}
+        self._lit_in_frame: set | None = None   # between begin_leds() and end_leds(): the controls the new frame lights
         self.frame: Image.Image = Image.new("RGB", (W, H))
         self.frame_ref = None
         self.display_on = True
@@ -152,6 +153,8 @@ class Push:
         c = R.CONTROLS.get(control)
         if not c or "led" not in c or not self.out:
             return
+        if self._lit_in_frame is not None and color not in (None, (0, 0, 0)):
+            self._lit_in_frame.add(control)
         if self.led_state.get(control) == color:
             return
         self.led_state[control] = color
@@ -169,6 +172,18 @@ class Push:
                 self.out.send(mido.Message("note_on", channel=0, note=c["note"], velocity=idx))
             else:
                 self.out.send(mido.Message("control_change", channel=0, control=c["cc"], value=idx))
+
+    def begin_leds(self):
+        """Start a new light frame: set_led calls until end_leds() say what should be lit. Nothing is switched off first, so a pad whose
+        colour does not change is not touched (switching everything off and on again made the pads flicker)."""
+        self._lit_in_frame = set()
+
+    def end_leds(self):
+        """Switch off whatever was lit before and the frame did not light."""
+        lit, self._lit_in_frame = self._lit_in_frame or set(), None
+        for cid, col in list(self.led_state.items()):
+            if col not in (None, (0, 0, 0)) and cid not in lit:
+                self.set_led(cid, None)
 
     def clear_leds(self, force: bool = False):
         """Switch every pad/button LED off. force=True sends 'off' to all of them even if our cache says they already
