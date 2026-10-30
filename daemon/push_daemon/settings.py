@@ -19,7 +19,7 @@ DEFAULTS = {
     "claude_theme": "neon",      # the Claude session widget's look (bar + mascot; the mascot also on usage and clock): neon | plasma | classic
     "claude_follow": "busy",     # which Claude session the Claude session widget follows: busy (the one working) | front | recent
     "ask_alert": {"pads": True, "sound": True, "sound_name": "Glass"},   # when Claude asks a question: the pads ripple and glow, a chime plays now and every 20 s until it is answered
-    "limit_alert": {"on": True, "levels": [80, 90, 95], "sound": True},   # a usage window crossing these percentages: red panel, red pad ripple, low chime (see limits.py)
+    "limit_alert": {"on": True, "start": 70, "step": 5, "windows": ["five_hour", "seven_day"], "sound": True, "pads": True},   # a usage limit crossing a level: full-screen panel, pad ripple, low chime (see limits.py)
     "clock_12h": False,          # clock widgets show 12-hour time (the button on the 2 x 1 clock flips it)
     "claude_context_window": 1_000_000,  # tokens in Claude Code's context window (the context bar's 100 %)
     "onboarded": False,          # the first-run setup has been completed or skipped (Settings can run it again)

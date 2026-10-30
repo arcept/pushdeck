@@ -163,7 +163,7 @@ function LookPicker({ theme, set, on, setOn }: { theme: string; set: (v: string)
 
 function LimitPicker({ on, set, preview }: { on: boolean; set: (v: boolean) => void; preview: (win: "five_hour" | "seven_day", pct: number) => void }) {
   return (<div className="wlooks">
-    <div className="wrow" title="At 70 percent of the 5-hour or the weekly limit, and again at every 5 percent up to 100, the display shows a full-screen alert (a clock for the 5-hour session, a calendar for the week), the pads ripple and a low chime plays once. It stays up for a minute or until you press a button, and each level is announced only once."><span>Alert when usage limits get close</span><Switch checked={on} onChange={set} label={<span className="sr">Alert when usage limits get close</span>} /></div>
+    <div className="wrow" title="At the level you chose in Settings (70 percent unless changed), and again at every step up to 100, the display shows a full-screen alert (a clock for the 5-hour session, a calendar for the week), the pads ripple and a low chime plays once. It stays up for a minute or until you press a button, and each level is announced only once."><span>Alert when usage limits get close</span><Switch checked={on} onChange={set} label={<span className="sr">Alert when usage limits get close</span>} /></div>
     <div className="wrow"><span>See what the alerts look like</span><div className="wpills"><button onClick={() => preview("five_hour", 85)}>Preview 5-hour</button><button onClick={() => preview("seven_day", 90)}>Preview weekly</button></div></div>
   </div>);
 }
@@ -186,7 +186,7 @@ export function WidgetsPanel({ ed }: { ed: Editor }) {
   const setTheme = (value: string) => d.send({ type: "set_setting", key: "claude_theme", value });
   const st = (d.settings ?? {}) as Record<string, unknown>;
   const askOn = (st.ask_alert as { on?: boolean } | undefined)?.on !== false, limitOn = (st.limit_alert as { on?: boolean } | undefined)?.on !== false;
-  const setLimit = (on: boolean) => d.send({ type: "set_setting", key: "limit_alert", value: { on } });
+  const setLimit = (on: boolean) => d.send({ type: "set_setting", key: "limit_alert", value: { ...(st.limit_alert as object | undefined), on } });
   const setAsk = (on: boolean) => d.send({ type: "set_setting", key: "ask_alert", value: { on } });
   const groups = PALETTE.reduce<Record<string, Proto[]>>((a, p) => ((a[p.group] ??= []).push(p), a), {});
   const click = (p: Proto) => {

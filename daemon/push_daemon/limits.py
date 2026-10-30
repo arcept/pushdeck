@@ -10,7 +10,9 @@ import time
 
 from . import settings as settings_mod, sounds, usage
 
-LEVELS = list(range(70, 101, 5))               # 70, 75 ... 100 %: the only choice is on or off
+LEVELS = list(range(70, 101, 5))               # the default: 70, 75 ... 100 %. Settings can start later and step wider (see cfg)
+STARTS = (50, 60, 70, 80, 90, 100)             # the choices for the first level
+STEPS = (5, 10, 25, 100)                       # the choices for the gap between levels (100 = only the first level and 100 %)
 HOLD = 60.0                                    # seconds an alert stays up unless a button is pressed
 RIPPLE = 6.0                                   # seconds the pads ripple at the start
 SAME_WINDOW = 1800                             # reset times closer than this (seconds) are the same usage window
@@ -48,7 +50,13 @@ class Limits:
         self.next_check = 0.0
 
     def cfg(self):
-        return {"on": bool((self.eng.settings.get("limit_alert") or {}).get("on", True)), "levels": LEVELS, "sound": True}
+        """The alert settings (settings["limit_alert"]): on, start (first level), step, windows (which limits), sound, pads (the ripple). Missing keys keep the old behaviour."""
+        c = self.eng.settings.get("limit_alert") or {}
+        start = int(c.get("start", 70)) if int(c.get("start", 70)) in STARTS else 70
+        step = int(c.get("step", 5)) if int(c.get("step", 5)) in STEPS else 5
+        wins = [w for w in (c.get("windows") or list(WINDOWS)) if w in WINDOWS]
+        return {"on": bool(c.get("on", True)), "levels": sorted(set(range(start, 100, step)) | {100}), "sound": bool(c.get("sound", True)),
+                "pads": bool(c.get("pads", True)), "windows": wins}
 
     def tick(self):
         now = time.time()
@@ -76,7 +84,7 @@ class Limits:
                 data = fn() or {}
             except Exception:  # noqa: BLE001
                 continue
-            for win in WINDOWS:
+            for win in cfg["windows"]:
                 w = data.get(win) or {}
                 pct, resets = w.get("used_percentage"), w.get("resets_at") or 0
                 if pct is None:
@@ -120,7 +128,7 @@ class Limits:
     def show(self, item, now):
         _, alert = item
         self.alert = alert
-        self.start, self.until, self.pads_until = now, now + HOLD, now + RIPPLE
+        self.start, self.until, self.pads_until = now, now + HOLD, now + (RIPPLE if self.cfg()["pads"] else 0)
         if self.cfg()["sound"]:
             sounds.play("limit", self.eng.settings)
 

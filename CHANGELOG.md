@@ -4,6 +4,7 @@ All notable changes to Push Deck. Newest first.
 
 ## Unreleased
 
+- Claude limit alerts have their own section in Settings → General: on or off, the first level (50 to 100%), how often after that (every 5, 10 or 25%, or only at 100%), the 5-hour and weekly limits separately, the chime, the pad ripple and the question alerts. The defaults are what it did before (70%, then every 5%).
 - Fixed: YouTube Music playlists and the songs in them did not load ("Couldn't load"). YouTube Music's page stopped exposing the settings the script needs, so it now looks for them in three places (the old one, a second one, and the page itself) and uses the page's own version number. When it still fails, the real reason is written to the log. `tools/test_ytm_config.py` checks all three layouts without a browser.
 - Fixed: the pads and buttons flickered whenever you pressed a button or something on the display changed. The lights were all switched off and then back on at every change; now only the pads whose colour changes are sent, and the rest are left alone.
 - The Play button (bottom left) now plays and pauses whatever is playing even when the media player is hidden with the Layout button, in every profile. A profile's own action on it still wins, as before.
